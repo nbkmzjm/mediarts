@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+var db = require('./db.js');
+
 var _ = require('underscore');
 
 var PORT = process.env.PORT||3000;
@@ -24,41 +26,66 @@ app.get('/about', middeware.requireAuthentication,function(req, res){
 });
 
 app.get('/todos', function(req, res){
-	res.json(todos);
+	var query = req.query;
+	var where = {};
+
+	if (query.hasOwnProperty('completed') && query.completed === 'true'){
+		where.completed = true;
+	} else if (query.hasOwnProperty('completed') && query.completed === 'false'){
+		where.completed = false;
+	}
+
+	if (query.hasOwnProperty('q') && query.q.length>0){
+
+		where.description = { $like: '%'+query.q+'%' };
+	}
+
+	db.todo.findAll({where: where}).then(function (todos){
+		
+		res.json(todos);
+		
+	}, function (e){
+		res.status(500).send;
+
+	});
+
+
 })
 app.use(express.static(__dirname+'/public'));
 
 app.get('/todos/:id', function(req, res){
 	var todoId = parseInt(req.params.id);
-	var matchedTodo = _.findWhere(todos, {id: todoId});
-	// var matchedTodo;
-	
 
-	// todos.forEach(function(todo){
-	// 	if(todoId === todo.id){
-	// 		matchedTodo = todo;
-	// 	}
-	// });
+	db.todo.findById(todoId).then(function (todo){
+		if (!!todo){
+			res.json(todo.toJSON());
+		}else{
+			res.status(404).send();
+		}
+	}, function (e){
+		res.status(500).send();
 
-	if (matchedTodo){
-		res.json(matchedTodo);
-	}else{
-		res.status(404).send();
-	}
+	});
+		
 	
 });
 
-app.post('/todos', function(req, res){
-	var body = req.body;
+app.post('/todos', function (req, res){
+	var body = _.pick(req.body, 'description', 'completed');
 
-	body.id = todoNext++;
+	db.todo.create(body).then(function (todo){
+		res.json(todo);
+	}, function (e){
+		res.status(400).json(e);
+	});
 
-	todos.push(body);
-
-	console.log('description');
-	res.json(body);
+	
 });
 
-app.listen(PORT, function(){
+db.sequelize.sync().then(function(){
+	app.listen(PORT, function(){
 	console.log('Helllo Express server started on PORT '+ PORT);
+	});
+
 });
+
