@@ -82,10 +82,63 @@ app.post('/todos', function (req, res){
 	
 });
 
+app.delete('/todos/:id', function (req, res){
+	var todoId = parseInt(req.params.id, 10);
+
+	db.todo.destroy({
+		where:{
+			id:todoId
+		}
+
+	}).then(function (rowsDeleted){
+		if (rowsDeleted === 0) {
+			res.status(404).json({
+				error: 'No todo with id'
+			});
+		} else{
+			res.status(204).send();
+		}
+	}, function (){
+		res.status(500).send();
+	})
+})
+
 db.sequelize.sync().then(function(){
 	app.listen(PORT, function(){
 	console.log('Helllo Express server started on PORT '+ PORT);
 	});
+
+});
+
+app.put('/todos/:id', function(req, res){
+	var todoId = parseInt(req.params.id, 10);
+	var body = _.pick(req.body, 'description', 'completed');
+	var attr = {};
+
+	if (attr.hasOwnProperty('completed')){
+		attr.completed = body.completed
+	}
+
+	if (attr.hasOwnProperty('description')){
+		attr.description = body.description
+	}
+
+	db.todo.findById(todoId).then(function (todo){
+		if (todo){
+			todo.update(attr).then(function(){
+				res.json(todo.toJSON());
+			}, function (e){
+				res.status(400).json(e);
+
+			});
+		} else {
+			res.status(404).send();
+		}
+	}, function(){
+		res.status(400).send();
+	});
+
+
 
 });
 
