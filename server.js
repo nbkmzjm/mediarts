@@ -115,11 +115,11 @@ app.put('/todos/:id', function(req, res){
 	var body = _.pick(req.body, 'description', 'completed');
 	var attr = {};
 
-	if (attr.hasOwnProperty('completed')){
+	if (body.hasOwnProperty('completed')){
 		attr.completed = body.completed
 	}
 
-	if (attr.hasOwnProperty('description')){
+	if (body.hasOwnProperty('description')){
 		attr.description = body.description
 	}
 
