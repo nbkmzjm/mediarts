@@ -108,14 +108,14 @@ module.exports = function(sequelize, DataTypes) {
 							if(user){
 								resolve(user);
 							} else {
-								reject();
+								reject()
 							}
 						}, function (e){
-							reject();
+							reject(e);
 						})
 
 					}catch (e) {
-						reject();
+						reject(e);
 					}
 				});
 			}
