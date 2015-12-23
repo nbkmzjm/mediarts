@@ -23,7 +23,9 @@ app.get('/about', middleware.requireAuthentication, function(req, res) {
 
 app.get('/todos', middleware.requireAuthentication, function(req, res) {
 	var query = req.query;
-	var where = {};
+	var where = {
+		userId: req.user.get('id')
+	};
 
 	if (query.hasOwnProperty('completed') && query.completed === 'true') {
 		where.completed = true;
@@ -48,10 +50,16 @@ app.get('/todos', middleware.requireAuthentication, function(req, res) {
 		res.status(500).send;
 
 	});
+});
 app.get('/todos/:id', middleware.requireAuthentication, function(req, res) {
 	var todoId = parseInt(req.params.id);
 
-	db.todo.findById(todoId).then(function(todo) {
+	db.todo.findOne({
+		where: {
+			id: todoId,
+			userId: req.user.get('id')
+		}
+	}).then(function(todo) {
 		if (!!todo) {
 			res.json(todo.toJSON());
 		} else {
@@ -67,34 +75,32 @@ app.get('/todos/:id', middleware.requireAuthentication, function(req, res) {
 
 app.post('/todos', middleware.requireAuthentication, function(req, res) {
 	var body = _.pick(req.body, 'description', 'completed');
-
-	db.todo.create(body).then(function (todo) {
-		req.user.addTodo(todo).then( function(){
+	db.todo.create(body).then(function(todo) {
+		req.user.addTodo(todo).then(function() {
 			return todo.reload();
-		}).then( function (todo){
+		}).then(function(todo) {
 			res.json(todo.toJSON());
 		});
 
 
-		
+
 	}, function(e) {
 		res.status(400).json(e);
 	});
 
 
-})
+});
 app.use(express.static(__dirname + '/public'));
 
 
-
-});
 
 app.delete('/todos/:id', middleware.requireAuthentication, function(req, res) {
 	var todoId = parseInt(req.params.id, 10);
 
 	db.todo.destroy({
 		where: {
-			id: todoId
+			id: todoId,
+			userId: req.user.get('id')
 		}
 
 	}).then(function(rowsDeleted) {
@@ -125,7 +131,12 @@ app.put('/todos/:id', middleware.requireAuthentication, function(req, res) {
 		attr.description = body.description
 	}
 
-	db.todo.findById(todoId).then(function(todo) {
+	db.todo.findOne({
+		where: {
+			id: todoId,
+			userId: req.user.get('id')
+		}
+	}).then(function(todo) {
 		if (todo) {
 			todo.update(attr).then(function() {
 				res.json(todo.toJSON());
@@ -158,7 +169,7 @@ app.post('/user', function(req, res) {
 app.post('/user/login', function(req, res) {
 	var body = _.pick(req.body, 'email', 'password');
 
-	db.user.authenticate(body).then(function (user) {
+	db.user.authenticate(body).then(function(user) {
 		var token = user.generateToken('authentication')
 		res.header('Auth', user.generateToken('authentication')).json(user.toPublicJSON());
 	}, function() {
@@ -166,7 +177,9 @@ app.post('/user/login', function(req, res) {
 	});
 });
 
-db.sequelize.sync({force:true}).then(function() {
+db.sequelize.sync({
+	force: true
+}).then(function() {
 	app.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});

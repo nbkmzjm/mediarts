@@ -115,6 +115,7 @@ module.exports = function(sequelize, DataTypes) {
 						})
 
 					}catch (e) {
+						console.log(e);
 						reject(e);
 					}
 				});
