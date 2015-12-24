@@ -15,7 +15,7 @@ module.exports = function(db) {
 				if (!tokenIns){
 					throw new Error('token is not found');
 				}
-				request.token = tokenIns;
+				req.token = tokenIns;
 				return db.user.findByToken(token);
 			}).then(function (user){
 				req.user = user;
