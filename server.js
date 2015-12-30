@@ -1,24 +1,39 @@
+var PORT = process.env.PORT || 3000;
 var express = require('express');
-var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+var moment = require('moment');
+var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
+var _ = require('underscore');
 
 var db = require('./db.js');
 
-var _ = require('underscore');
-
-var PORT = process.env.PORT || 3000;
-
-
 var middleware = require('./middleware.js')(db);
 
-app.use(middleware.logger);
+var app = express();
+	app.use(middleware.logger);
+	app.use(bodyParser.json());
+	app.set("view options", {layout:false});
+	app.use(express.static(__dirname + '/public'));
 
-app.use(bodyParser.json());
 
 
-app.get('/about', middleware.requireAuthentication, function(req, res) {
-	res.send('About us');
+
+io.on('connection', function(socket) {
+	console.log('user connect to socket io');
+
+	socket.emit('message', {
+		text: 'welcome to schedule app',
+		Note: 'first'
+	});
+});
+
+app.get('/about', function(req, res) {
+	res.render('public/about.html');
+	
 });
 
 app.get('/todos', middleware.requireAuthentication, function(req, res) {
@@ -90,7 +105,7 @@ app.post('/todos', middleware.requireAuthentication, function(req, res) {
 
 
 });
-app.use(express.static(__dirname + '/public'));
+
 
 
 
@@ -198,7 +213,7 @@ app.delete('/user/logout', middleware.requireAuthentication, function(req, res) 
 db.sequelize.sync(
 	// {force: true}
 	).then(function() {
-	app.listen(PORT, function() {
+	http.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});
 
