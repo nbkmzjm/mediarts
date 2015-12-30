@@ -74,12 +74,12 @@ app.get('/todos/:id', middleware.requireAuthentication, function(req, res) {
 });
 
 app.post('/todos', middleware.requireAuthentication, function(req, res) {
-	var body = _.pick(req.body, 'description', 'completed');
-	db.todo.create(body).then(function(todo) {
-		req.user.addTodo(todo).then(function() {
-			return todo.reload();
-		}).then(function(todo) {
-			res.json(todo.toJSON());
+	var body = _.pick(req.body, 'PTODate', 'Note');
+	db.PTO.create(body).then(function(PTO) {
+		req.user.addPTO(PTO).then(function() {
+			return PTO.reload();
+		}).then(function(PTO) {
+			res.json(PTO.toJSON());
 		});
 
 
@@ -195,9 +195,9 @@ app.delete('/user/logout', middleware.requireAuthentication, function(req, res) 
 });
 
 
-db.sequelize.sync({
-	force: true
-}).then(function() {
+db.sequelize.sync(
+	// {force: true}
+	).then(function() {
 	app.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});
