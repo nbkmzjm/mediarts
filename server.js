@@ -1,5 +1,7 @@
 var PORT = process.env.PORT || 3000;
 var express = require('express');
+var app = express();
+var path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -9,15 +11,21 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
 
+
+
 var db = require('./db.js');
 
 var middleware = require('./middleware.js')(db);
 
-var app = express();
+
 	app.use(middleware.logger);
 	app.use(bodyParser.json());
-	app.set("view options", {layout:false});
-	app.use(express.static(__dirname + '/public'));
+	app.use(bodyParser());
+	// app.engine('html', require('ejs').renderFile);
+	app.set('view engine', 'ejs');
+	app.set('views', path.join(__dirname+ '/public', 'views'));
+	// app.set("view options", {layout:false});
+app.use(express.static(__dirname));
 
 
 
@@ -29,11 +37,34 @@ io.on('connection', function(socket) {
 		text: 'welcome to schedule app',
 		Note: 'first'
 	});
+
+
 });
 
+todoItems = [
+			{id:1, desc: 'foo'},
+			{id:2, desc: 'far'},
+			{id:3, desc: 'fuk'}
+		];
 app.get('/about', function(req, res) {
-	res.render('public/about.html');
-	
+
+
+	res.render('about', {
+		title: 'My App',
+		items: todoItems
+	});
+
+});
+
+app.post('/add', function (req, res){
+	var newItem = req.body.newItem;
+	console.log(newItem);
+	todoItems.push({
+		id: todoItems.length + 1,
+		desc: newItem
+	});
+	res.redirect('/about');
+
 });
 
 app.get('/todos', middleware.requireAuthentication, function(req, res) {
