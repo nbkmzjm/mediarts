@@ -20,14 +20,40 @@ var middleware = require('./middleware.js')(db);
 
 	app.use(middleware.logger);
 	app.use(bodyParser.json());
-	app.use(bodyParser());
+	app.use(bodyParser.urlencoded({extended:true}));
 	// app.engine('html', require('ejs').renderFile);
-	app.set('view engine', 'ejs');
+	app.set('view engine', 'jade');
 	app.set('views', path.join(__dirname+ '/public', 'views'));
-	// app.set("view options", {layout:false});
+	app.set("view options", {layout:true});
+	app.locals.pretty = true;
 app.use(express.static(__dirname));
 
 
+app.get('/', function (req, res){
+	res.render('index');
+});
+
+
+app.get('/newAccountForm', function (req, res){
+	res.render('users/newAccountForm');
+})
+
+app.post('/createAccount', function (req, res){
+	
+	body={};
+	body.email = req.body.email;
+	body.password = req.body.password;
+
+	db.user.create(body).then(function(user) {
+		res.redirect('/');
+	}, function (e) {
+		res.render('error',{
+			error:'Can not Create Account'
+
+	});
+
+	});
+});
 
 
 io.on('connection', function(socket) {
@@ -198,18 +224,6 @@ app.put('/todos/:id', middleware.requireAuthentication, function(req, res) {
 	});
 
 });
-
-app.post('/user', function(req, res) {
-	var body = _.pick(req.body, 'email', 'password');
-
-
-	db.user.create(body).then(function(user) {
-		res.json(user.toPublicJSON());
-	}, function (e) {
-		res.status(400).json(e);
-
-	});
-})
 
 
 app.post('/user/login', function(req, res) {

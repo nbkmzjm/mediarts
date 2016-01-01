@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+	head
+		title= title
+		meta(charset='UTF-8')
+		link(rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css")
+	body
+		ul
+
+			- for (var i=0; i< items.length; i++)
+
+				li= items[i].desc
+
+	form(action="/add" method="post")
+				
+				label Item:
+				input(type="text" name="newItem")
+			
+				br
+				input(type="submit" value='Submit')

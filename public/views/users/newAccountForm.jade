@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+	head
+		title= title
+		meta(charset='UTF-8')
+		link(rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css")
+	body
+		#login
+			form(action="/createAccount" method="post")
+				
+				label Email:
+				input(type="text" name="email")
+				br
+				label Password:
+				input(type="password" name="password")
+				br
+				input(type="submit" value='Create Account')
+				
+
