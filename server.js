@@ -10,6 +10,8 @@ var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
 
 
 
@@ -32,6 +34,21 @@ app.use(express.static(__dirname));
 app.get('/', function (req, res){
 	res.render('index');
 });
+
+// app.use('token', )
+app.get('/gettoken', function (req, res){
+	
+	
+	console.log(localStorage.getItem('token'));
+	res.send(localStorage.getItem('token'));
+});
+
+app.get('/token', function (req, res){
+	console.log('token saved');
+	localStorage.setItem('token','abcdef');
+	res.send('tokin saved');
+});
+
 
 
 app.get('/newAccountForm', function (req, res){
