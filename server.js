@@ -20,54 +20,82 @@ var db = require('./db.js');
 var middleware = require('./middleware.js')(db);
 
 
-	app.use(middleware.logger);
-	app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded({extended:true}));
-	// app.engine('html', require('ejs').renderFile);
-	app.set('view engine', 'jade');
-	app.set('views', path.join(__dirname+ '/public', 'views'));
-	app.set("view options", {layout:true});
-	app.locals.pretty = true;
+app.use(middleware.logger);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+// app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'jade');
+app.set('views', path.join(__dirname + '/public', 'views'));
+app.set("view options", {
+	layout: true
+});
+app.locals.pretty = true;
 app.use(express.static(__dirname));
 
 
-app.get('/', function (req, res){
+app.get('/', function(req, res) {
 	res.render('index');
 });
 
+app.post('/login', function(req, res) {
+
+	var body = _.pick(req.body, 'email', 'password');
+	var userInstance;
+
+	db.user.authenticate(body).then(function(user) {
+		var token = user.generateToken('authentication')
+		userInstance = user;
+		return db.token.create({
+			token: token
+		});
+
+	}).then(function(tokenInstance) {
+		console.log("tookenInstance created");
+		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
+		res.cookie('token', tokenInstance.get('token'),{maxAge:9000});
+		res.redirect('/');
+	}).catch(function(e) {
+		res.status(401).json({
+			error: e.toString()
+		});
+	});
+	
+});
 // app.use('token', )
-app.get('/gettoken', function (req, res){
-	
-	
+app.get('/gettoken', function(req, res) {
+
+
 	console.log(localStorage.getItem('token'));
 	res.send(localStorage.getItem('token'));
 });
 
-app.get('/token', function (req, res){
+app.get('/token', function(req, res) {
 	console.log('token saved');
-	localStorage.setItem('token','abcdef');
+	localStorage.setItem('token', 'abcdef');
 	res.send('tokin saved');
 });
 
 
 
-app.get('/newAccountForm', function (req, res){
+app.get('/newAccountForm', function(req, res) {
 	res.render('users/newAccountForm');
 })
 
-app.post('/createAccount', function (req, res){
-	
-	body={};
+app.post('/createAccount', function(req, res) {
+
+	body = {};
 	body.email = req.body.email;
 	body.password = req.body.password;
 
 	db.user.create(body).then(function(user) {
 		res.redirect('/');
-	}, function (e) {
-		res.render('error',{
-			error:'Can not Create Account'
+	}, function(e) {
+		res.render('error', {
+			error: 'Can not Create Account'
 
-	});
+		});
 
 	});
 });
@@ -77,18 +105,23 @@ io.on('connection', function(socket) {
 	console.log('user connect to socket io');
 
 	socket.emit('message', {
-		text: 'welcome to schedule app',
+		text: 'welcomex to schedule app',
 		Note: 'first'
 	});
 
 
 });
 
-todoItems = [
-			{id:1, desc: 'foo'},
-			{id:2, desc: 'far'},
-			{id:3, desc: 'fuk'}
-		];
+todoItems = [{
+	id: 1,
+	desc: 'foo'
+}, {
+	id: 2,
+	desc: 'far'
+}, {
+	id: 3,
+	desc: 'fuk'
+}];
 app.get('/about', function(req, res) {
 
 
@@ -99,7 +132,7 @@ app.get('/about', function(req, res) {
 
 });
 
-app.post('/add', function (req, res){
+app.post('/add', function(req, res) {
 	var newItem = req.body.newItem;
 	console.log(newItem);
 	todoItems.push({
@@ -140,46 +173,47 @@ app.get('/todos', middleware.requireAuthentication, function(req, res) {
 
 	});
 });
-app.get('/todos/:id', middleware.requireAuthentication, function(req, res) {
-	var todoId = parseInt(req.params.id);
+app.get('/todos/:id', middleware.requireAuthentication,
+	function(req, res) {
+		var todoId = parseInt(req.params.id);
 
-	db.todo.findOne({
-		where: {
-			id: todoId,
-			userId: req.user.get('id')
-		}
-	}).then(function(todo) {
-		if (!!todo) {
-			res.json(todo.toJSON());
-		} else {
-			res.status(404).send();
-		}
-	}, function(e) {
-		res.status(500).send();
+		db.todo.findOne({
+			where: {
+				id: todoId,
+				userId: req.user.get('id')
+			}
+		}).then(function(todo) {
+			if (!!todo) {
+				res.json(todo.toJSON());
+			} else {
+				res.status(404).send();
+			}
+		}, function(e) {
+			res.status(500).send();
 
-	});
-
-
-});
-
-app.post('/todos', middleware.requireAuthentication, function(req, res) {
-	var body = _.pick(req.body, 'PTODate', 'Note');
-	db.PTO.create(body).then(function(PTO) {
-		req.user.addPTO(PTO).then(function() {
-			return PTO.reload();
-		}).then(function(PTO) {
-			res.json(PTO.toJSON());
 		});
 
 
-
-	}, function(e) {
-		res.status(400).json(e);
 	});
 
+app.post('/todos', middleware.requireAuthentication,
+	function(req, res) {
+		var body = _.pick(req.body, 'PTODate', 'Note');
+		db.PTO.create(body).then(function(PTO) {
+			req.user.addPTO(PTO).then(function() {
+				return PTO.reload();
+			}).then(function(PTO) {
+				res.json(PTO.toJSON());
+			});
 
-});
 
+
+		}, function(e) {
+			res.status(400).json(e);
+		});
+
+
+	});
 
 
 
@@ -247,25 +281,27 @@ app.post('/user/login', function(req, res) {
 	var body = _.pick(req.body, 'email', 'password');
 	var userInstance;
 
-	db.user.authenticate(body).then(function (user) {
+	db.user.authenticate(body).then(function(user) {
 		var token = user.generateToken('authentication')
 		userInstance = user;
 		return db.token.create({
 			token: token
 		});
-		
-	}).then(function (tokenInstance) {
+
+	}).then(function(tokenInstance) {
 		console.log("tookenInstance created");
 		res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-	}).catch(function (e) {
-		res.status(401).json({error:e.toString()});
+	}).catch(function(e) {
+		res.status(401).json({
+			error: e.toString()
+		});
 	});
 });
 
 app.delete('/user/logout', middleware.requireAuthentication, function(req, res) {
-	req.token.destroy().then(function (){
+	req.token.destroy().then(function() {
 		res.status(204).send();
-	}).catch( function (e){
+	}).catch(function(e) {
 		res.status(500).send();
 	});
 
@@ -274,7 +310,7 @@ app.delete('/user/logout', middleware.requireAuthentication, function(req, res) 
 
 db.sequelize.sync(
 	// {force: true}
-	).then(function() {
+).then(function() {
 	http.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});
