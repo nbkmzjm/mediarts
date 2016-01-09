@@ -4,6 +4,7 @@ var app = express();
 var path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var expValidator = require('express-validator')();
 
 var moment = require('moment');
 var now = moment();
@@ -33,13 +34,25 @@ app.set("view options", {
 });
 app.locals.pretty = true;
 app.use(express.static(__dirname));
-
+app.use(expValidator);
 
 app.get('/', function(req, res) {
 	res.render('index');
 });
 
 app.post('/login', function(req, res) {
+
+	req.check('email', 'length is required').isByteLength(5);
+	req.check('email', 'Not valid email').isEmail();
+
+	var errors = req.validationErrors();
+
+	if (errors){
+		res.render('index', { 
+            message: '',
+            errors: errors
+        });
+	} 
 
 	var body = _.pick(req.body, 'email', 'password');
 	var userInstance;
@@ -55,7 +68,7 @@ app.post('/login', function(req, res) {
 		console.log("tookenInstance created");
 		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
 		res.cookie('token', tokenInstance.get('token'),{maxAge:9000});
-		res.redirect('/');
+		res.redirect('/about');
 	}).catch(function(e) {
 		res.status(401).json({
 			error: e.toString()

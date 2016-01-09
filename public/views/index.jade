@@ -5,12 +5,14 @@ html(lang="en")
 		title Jade Page
 		meta(charset='UTF-8')
 		link(rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css")
+		link(rel="stylesheet" type="text/css" href="css/style.css")
+
 
 	body
 		#login
 			form(id="login-form" action="login" method='post')
 				
-				input(type='text' id='token')
+				input(type='hidden' id='token')
 				label Username:
 				input(type="text" name="email")
 				br
@@ -19,8 +21,15 @@ html(lang="en")
 				br
 				input(type="submit" value='Log In')
 				br
+				- if (errors.length > 0)
+					p.error Please check following items:
+					
+				- each error in errors
+					li.error= error.msg
+
 				a(href='/newAccountForm') Register
 
+			
 
 
 
@@ -35,5 +44,6 @@ html(lang="en")
 		script.
 
 			$(function onload(){
+				if (isEmp)
 				$('#token').val('hello');
 			});
