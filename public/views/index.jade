@@ -10,6 +10,9 @@ html(lang="en")
 
 	body
 		#container
+			ul
+				- for (var i=0; i< items.length; i++)
+					li= items[i].userId.email
 			table#main 
 				tr
 

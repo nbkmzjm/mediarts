@@ -12,8 +12,7 @@ var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
-var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./scratch');
+
 
 
 
@@ -38,9 +37,26 @@ app.use(express.static(__dirname));
 app.use(expValidator());
 
 app.get('/', middleware.requireAuthentication, function(req, res) {
+	db.assign.findAll().then(function(assigns) {
+		console.log(typeof(assigns));
+		assigns.forEach(function(assign){
+			assign.getUser().then(function(user){
+				console.log('user is : ' + user.email)
+			})
+			console.log(assign.userId.email);
+		})
+		// console.log('eeeeeeeee' + assigns);
+		res.render('index',{items:assigns});
 
+	}, function(e) {
+		res.render('error', {
+			error: e.toString()
 
-	res.render('index');
+		});
+
+	});
+
+	// res.render('index');
 });
 
 
@@ -48,7 +64,7 @@ app.get('/sc', function(req, res) {
 
 	db.assign.findAll().then(function(assigns) {
 		console.log('eeeeeeeee' + assigns);
-		res.json(assigns);
+		res.send(assigns);
 
 	}, function(e) {
 		res.render('error', {
@@ -196,7 +212,10 @@ todoItems = [{
 
 app.get('/about', middleware.requireAuthentication, function(req, res) {
 
-
+	console.log(typeof(todoItems));
+	todoItems.forEach(function(item){
+		console.log(item.desc);
+	})
 	res.render('about', {
 		title: 'My App',
 		items: todoItems
