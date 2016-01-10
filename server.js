@@ -38,10 +38,16 @@ app.use(express.static(__dirname));
 app.use(expValidator());
 
 app.get('/', middleware.requireAuthentication, function(req, res) {
+
+
 	res.render('index');
 });
 
-app.get('/loginForm', function(req, res){
+
+
+
+
+app.get('/loginForm', function(req, res) {
 	res.render('users/loginForm')
 })
 
@@ -53,12 +59,12 @@ app.post('/login', function(req, res) {
 
 	var errors = req.validationErrors();
 
-	if (errors){
-		res.render('users/loginForm', { 
-            message: '',
-            errors: errors
-        });
-	} 
+	if (errors) {
+		res.render('users/loginForm', {
+			message: '',
+			errors: errors
+		});
+	}
 
 	var body = _.pick(req.body, 'email', 'password');
 	var userInstance;
@@ -73,22 +79,34 @@ app.post('/login', function(req, res) {
 	}).then(function(tokenInstance) {
 		console.log("tookenInstance created");
 		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-		res.cookie('token', tokenInstance.get('token'),{maxAge:900000});
+		res.cookie('token', tokenInstance.get('token'), {
+			maxAge: 900000
+		});
 		res.redirect('/');
 	}).catch(function(e) {
 		console.log(e);
-		arrErr = [{param:"account", msg:'Username and Password do not match!!!'}];
-		res.render('index', {errors:arrErr
-			});
+		arrErr = [{
+			param: "account",
+			msg: 'Username and Password do not match!!!'
+		}];
+		res.render('index', {
+			errors: arrErr
+		});
 		res.status(401).json({
-			error:e.toString()
+			error: e.toString()
 		});
 	});
-	
+
+});
+
+app.get('/logout', middleware.requireAuthentication, function(req, res) {
+	req.token.destroy().then(function() {
+		res.redirect('/loginForm');
+	}).catch(function(e) {
+		res.status(500).send();
+	});
 });
 // app.use('token', )
-
-
 
 
 
@@ -119,6 +137,20 @@ app.get('/assignInput', middleware.requireAuthentication, function(req, res) {
 });
 
 app.post('/assign', middleware.requireAuthentication, function(req, res) {
+	var body = _.pick(req.body, 'datePos', 'Note');
+	console.log('body is xxxxxxxxx: ' + body);
+	db.assign.create(body).then(function(datePos) {
+		req.user.addAssign(datePos).then(function() {
+			return assign.reload();
+		}).then(function(datePos) {
+			res.json(datePos.toJSON());
+		});
+
+
+
+	}, function(e) {
+		res.status(400).json(e);
+	});
 
 
 	res.redirect('/');
@@ -146,7 +178,7 @@ todoItems = [{
 	desc: 'fuk'
 }];
 
-app.get('/about', middleware.requireAuthentication , function(req, res) {
+app.get('/about', middleware.requireAuthentication, function(req, res) {
 
 
 	res.render('about', {
