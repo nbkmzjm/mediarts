@@ -44,15 +44,28 @@ app.get('/', middleware.requireAuthentication, function(req, res) {
 });
 
 
+app.get('/sc', function(req, res) {
 
+	db.assign.findAll().then(function(assigns) {
+		console.log('eeeeeeeee' + assigns);
+		res.json(assigns);
+
+	}, function(e) {
+		res.render('error', {
+			error: e.toString()
+
+		});
+
+	});
+})
 
 
 app.get('/loginForm', function(req, res) {
 	res.render('users/loginForm')
 })
 
-app.post('/login', function(req, res) {
 
+app.post('/login', function(req, res) {
 
 	req.check('email', 'length is required').isByteLength(5);
 	req.check('email', 'Not valid email').isEmail();
@@ -62,7 +75,7 @@ app.post('/login', function(req, res) {
 	if (errors) {
 		res.render('users/loginForm', {
 			message: '',
-			errors: errors
+			errors: errorsno
 		});
 	}
 
@@ -98,6 +111,7 @@ app.post('/login', function(req, res) {
 	});
 
 });
+
 
 app.get('/logout', middleware.requireAuthentication, function(req, res) {
 	req.token.destroy().then(function() {
@@ -135,6 +149,8 @@ app.post('/createAccount', function(req, res) {
 app.get('/assignInput', middleware.requireAuthentication, function(req, res) {
 	res.render('assignInput');
 });
+
+
 
 app.post('/assign', middleware.requireAuthentication, function(req, res) {
 	var body = _.pick(req.body, 'datePos', 'Note');
