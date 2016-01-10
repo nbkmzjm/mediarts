@@ -1,27 +1,50 @@
+
 doctype html
 html(lang="en")
 	head
-		title= title
+		title Jade Page
 		meta(charset='UTF-8')
 		link(rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css")
+
+	
+		link(rel="stylesheet" type="text/css" href="css/style.css")
+
+
 	body
-		var token = window.local
 		#login
-			form(action="/login" method="post")
+			form(id="login-form" action="login" method='post')
 				
-				label Email:
+				input(type='hidden' id='token')
+				label Username:
 				input(type="text" name="email")
 				br
 				label Password:
 				input(type="password" name="password")
 				br
-				input(type="submit" value='Login')
-		script
+				input(type="submit" value='Log In')
+				br
+				- if (errors)
+					p.error Please check following items:
+					
+					- each error in errors
+						li.error= error.msg
 
-			$(function(){
+				a(href='/newAccountForm') Register
 
-			alert('JS pa');
+			
 
+
+
+
+			
+
+
+		script(src="bower_components/js-cookie/src/js.cookie.js")		
+		script(src="public/js/jquery-2.1.4.min.js")
+		script(src="public/js/socket.io-1.3.7.js")
+		script(src="public/js/app.js")
+		script.
+
+			$(function onload(){
+				
 			});
-
-

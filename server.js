@@ -4,7 +4,8 @@ var app = express();
 var path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var expValidator = require('express-validator')();
+var expValidator = require('express-validator');
+var cookieParser = require('cookie-parser');
 
 var moment = require('moment');
 var now = moment();
@@ -20,7 +21,7 @@ var db = require('./db.js');
 
 var middleware = require('./middleware.js')(db);
 
-
+app.use(cookieParser());
 app.use(middleware.logger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -34,13 +35,18 @@ app.set("view options", {
 });
 app.locals.pretty = true;
 app.use(express.static(__dirname));
-app.use(expValidator);
+app.use(expValidator());
 
-app.get('/', function(req, res) {
+app.get('/', middleware.requireAuthentication, function(req, res) {
 	res.render('index');
 });
 
+app.get('/loginForm', function(req, res){
+	res.render('users/loginForm')
+})
+
 app.post('/login', function(req, res) {
+
 
 	req.check('email', 'length is required').isByteLength(5);
 	req.check('email', 'Not valid email').isEmail();
@@ -48,7 +54,7 @@ app.post('/login', function(req, res) {
 	var errors = req.validationErrors();
 
 	if (errors){
-		res.render('index', { 
+		res.render('users/loginForm', { 
             message: '',
             errors: errors
         });
@@ -67,28 +73,22 @@ app.post('/login', function(req, res) {
 	}).then(function(tokenInstance) {
 		console.log("tookenInstance created");
 		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-		res.cookie('token', tokenInstance.get('token'),{maxAge:9000});
-		res.redirect('/about');
+		res.cookie('token', tokenInstance.get('token'),{maxAge:900000});
+		res.redirect('/');
 	}).catch(function(e) {
+		console.log(e);
+		arrErr = [{param:"account", msg:'Username and Password do not match!!!'}];
+		res.render('index', {errors:arrErr
+			});
 		res.status(401).json({
-			error: e.toString()
+			error:e.toString()
 		});
 	});
 	
 });
 // app.use('token', )
-app.get('/gettoken', function(req, res) {
 
 
-	console.log(localStorage.getItem('token'));
-	res.send(localStorage.getItem('token'));
-});
-
-app.get('/token', function(req, res) {
-	console.log('token saved');
-	localStorage.setItem('token', 'abcdef');
-	res.send('tokin saved');
-});
 
 
 
@@ -114,6 +114,16 @@ app.post('/createAccount', function(req, res) {
 });
 
 
+app.get('/assignInput', middleware.requireAuthentication, function(req, res) {
+	res.render('assignInput');
+});
+
+app.post('/assign', middleware.requireAuthentication, function(req, res) {
+
+
+	res.redirect('/');
+});
+
 io.on('connection', function(socket) {
 	console.log('user connect to socket io');
 
@@ -135,7 +145,8 @@ todoItems = [{
 	id: 3,
 	desc: 'fuk'
 }];
-app.get('/about', function(req, res) {
+
+app.get('/about', middleware.requireAuthentication , function(req, res) {
 
 
 	res.render('about', {
@@ -211,12 +222,13 @@ app.get('/todos/:id', middleware.requireAuthentication,
 
 app.post('/todos', middleware.requireAuthentication,
 	function(req, res) {
-		var body = _.pick(req.body, 'PTODate', 'Note');
-		db.PTO.create(body).then(function(PTO) {
-			req.user.addPTO(PTO).then(function() {
-				return PTO.reload();
-			}).then(function(PTO) {
-				res.json(PTO.toJSON());
+		var body = _.pick(req.body, 'datePos', 'Note');
+		console.log(body);
+		db.assign.create(body).then(function(datePos) {
+			req.user.addAssign(datePos).then(function() {
+				return assign.reload();
+			}).then(function(datePos) {
+				res.json(datePos.toJSON());
 			});
 
 

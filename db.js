@@ -15,13 +15,13 @@ if (env === 'production'){
 
 var db = {};
 		
-db.PTO = sequelize.import(__dirname + '/models/PTO.js');
+db.assign = sequelize.import(__dirname + '/models/PTO.js');
 db.user = sequelize.import(__dirname + '/models/user.js');
 db.token = sequelize.import(__dirname + '/models/token.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.PTO.belongsTo(db.user);
-db.user.hasMany(db.PTO);
+db.assign.belongsTo(db.user);
+db.user.hasMany(db.assign);
 
 module.exports = db;

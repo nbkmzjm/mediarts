@@ -1,3 +1,9 @@
 .error{
 	color: red;
 }
+
+#main tr, #main td{
+	border: 1px solid black;
+	padding: 10;
+
+}

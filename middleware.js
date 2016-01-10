@@ -4,8 +4,8 @@ module.exports = function(db) {
 	return {
 
 		requireAuthentication: function(req, res, next) {
-			var token = req.get('Auth');
-			console.log(token);
+			var token = req.cookies.token;
+			console.log('token is: ' + token);
 
 			db.token.findOne({
 				where: {
@@ -22,6 +22,7 @@ module.exports = function(db) {
 				next();
 			}, function (e) {
 				console.log(e);
+				res.redirect('/loginform');
 				res.status(401).json({error:e.toString()});
 			});
 

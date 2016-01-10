@@ -1,8 +1,13 @@
 module.exports = function(sequelize, DataTypes) {
 
-	return sequelize.define('PTO', {
-		PTODate: {
-			type: DataTypes.DATE,
+	return sequelize.define('assign', {
+		// PTODate: {
+		// 	type: DataTypes.DATE,
+		// 	allowNull: false
+			
+		// },
+		datePos: {
+			type: DataTypes.INTEGER,
 			allowNull: false
 			
 		},
