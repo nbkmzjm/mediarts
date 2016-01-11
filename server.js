@@ -15,7 +15,6 @@ var _ = require('underscore');
 
 
 
-
 var db = require('./db.js');
 
 var middleware = require('./middleware.js')(db);
@@ -36,47 +35,48 @@ app.locals.pretty = true;
 app.use(express.static(__dirname));
 app.use(expValidator());
 
-app.get('/', middleware.requireAuthentication, function(req, res) {
-	
-	db.assign.findAll().then(function(assigns) {
-		console.log('xxxxx'+assigns[0].getUser().then(function(user){
-			return user.email;
-		}));
-		
-		assigns.forEach(function(assign){
-			
-			console.log(assign.getUser()[0]);
-			// assign.getUser().then(function(user){
-			
-				// console.log(userEmail);
-				// console.log(assign.userId.email);
-			// });
-			
-		assign.userId = "sfsfsfs";
-		
-		})
-		
-		// console.log(userEmail);
-		// console.log('eeeeeeeee' + assigns);
-		// assigns[1].userId = "hellso";
-		console.log(assigns[2].userId);
-		res.render('index',{items:assigns});
+app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
-	}, function(e) {
+	db.assign.findAll({
+		include: [db.user]
+	}).then(function(assigns) {
+		
+		// next();
+
+		return [assigns, db.user.findAll()];
+	}).spread(function(assigns, users) {
+		console.log('suerssssssssss' + JSON.stringify(users));
+		console.log('ggggggggggggg' + JSON.stringify(assigns));
+		res.render('index', {
+			users: users, 
+			assigns: assigns
+		});
+	}).catch(function(e) {
 		res.render('error', {
-			error: e.toString()
+			error: "eeeeee"+e.toString()
 
 		});
 
 	});
 
-	// res.render('index');
+
+
+	// , function(req, res){
+	// 	db.user.findAll().then(function(users){
+	// 		console.log('suerssssssssss'+JSON.stringify(users));
+	// 		console.log('ggggggggggggg'+ JSON.stringify(req.data));
+
+	// 	})
+
+	// }
 });
 
 
 app.get('/sc', function(req, res) {
 
-	db.assign.findAll().then(function(assigns) {
+	db.assign.findAll({
+		include: [db.user]
+	}).then(function(assigns) {
 		console.log('eeeeeeeee' + assigns);
 		res.send(assigns);
 
@@ -227,7 +227,7 @@ todoItems = [{
 app.get('/about', middleware.requireAuthentication, function(req, res) {
 
 	console.log(typeof(todoItems));
-	todoItems.forEach(function(item){
+	todoItems.forEach(function(item) {
 		console.log(item.desc);
 	})
 	res.render('about', {

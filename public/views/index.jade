@@ -10,15 +10,26 @@ html(lang="en")
 
 	body
 		#container
-			ul
-				- for (var i=0; i< items.length; i++)
-					li= items[i].userId.email
-			table#main 
-				tr
 
-					td 1
-					td 2
-					td 3
+			- if ()
+				p Undifinedxxx
+
+			table#main
+				tr
+				- for (var i=0; i< 14; i++)
+					td= i
+				- for (var i=0; i< users.length; i++)
+					tr
+						td= users[i].email
+						- for (var e=0; e< 14; e++)
+
+							if (typeof assigns[9] == "undefined")
+								td= a
+							else 
+
+								assigns[e].datePos == e && assigns[e].user.email == users[i].email) 
+								td= assigns[e].Note
+						
 
 
 
@@ -39,6 +50,6 @@ html(lang="en")
 		script.
 
 			$(function onload(){
-				
+				alert($('#test').text());
 			});
 
