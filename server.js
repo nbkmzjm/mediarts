@@ -37,15 +37,29 @@ app.use(express.static(__dirname));
 app.use(expValidator());
 
 app.get('/', middleware.requireAuthentication, function(req, res) {
+	
 	db.assign.findAll().then(function(assigns) {
-		console.log(typeof(assigns));
+		console.log('xxxxx'+assigns[0].getUser().then(function(user){
+			return user.email;
+		}));
+		
 		assigns.forEach(function(assign){
-			assign.getUser().then(function(user){
-				console.log('user is : ' + user.email)
-			})
-			console.log(assign.userId.email);
+			
+			console.log(assign.getUser()[0]);
+			// assign.getUser().then(function(user){
+			
+				// console.log(userEmail);
+				// console.log(assign.userId.email);
+			// });
+			
+		assign.userId = "sfsfsfs";
+		
 		})
+		
+		// console.log(userEmail);
 		// console.log('eeeeeeeee' + assigns);
+		// assigns[1].userId = "hellso";
+		console.log(assigns[2].userId);
 		res.render('index',{items:assigns});
 
 	}, function(e) {
