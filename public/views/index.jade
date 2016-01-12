@@ -21,13 +21,12 @@ html(lang="en")
 				- for (var i=0; i< users.length; i++)
 					tr
 						td= users[i].email
-						- for (var e=0; e< 14; e++)
-
+						//- - for (var e=0; e< 14; e++)
 							if (typeof assigns[9] == "undefined")
 								td= a
 							else 
 
-								assigns[e].datePos == e && assigns[e].user.email == users[i].email) 
+								assigns [e].datePos == e && assigns[e].user.email == users[i].email) 
 								td= assigns[e].Note
 						
 

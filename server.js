@@ -123,7 +123,7 @@ app.post('/login', function(req, res) {
 		console.log("tookenInstance created");
 		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
 		res.cookie('token', tokenInstance.get('token'), {
-			maxAge: 900000
+			maxAge: 9000000
 		});
 		res.redirect('/');
 	}).catch(function(e) {
@@ -415,8 +415,10 @@ app.delete('/user/logout', middleware.requireAuthentication, function(req, res) 
 
 
 db.sequelize.sync(
-	// {force: true}
+	{force: true}
 ).then(function() {
+	
+	// db.dateHeader.create()
 	http.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});
