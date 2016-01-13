@@ -31,6 +31,7 @@ app.set('views', path.join(__dirname + '/public', 'views'));
 app.set("view options", {
 	layout: true
 });
+
 app.locals.pretty = true;
 app.use(express.static(__dirname));
 app.use(expValidator());
@@ -72,6 +73,38 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 	// }
 });
+
+app.post('/mainSC', middleware.requireAuthentication, function(req, res){
+	// req.accepts('application/json');
+	console.log('mainSCCCCCC receiving'+ req.body.postdata.name);
+	db.assign.findAll({
+		include: [db.user]
+	}).then(function(assigns) {
+		
+		// next();
+
+		return [assigns, db.user.findAll(), db.dateHeader.findAll()];
+	}).spread(function(assigns, users, dateHeader) {
+		
+		console.log('suerssssssssss' + JSON.stringify(users));
+		console.log('ggggggggggggg' + JSON.stringify(assigns));
+		console.log('yyyyyyyyyy' + JSON.stringify(dateHeader));
+		res.json({users:users, 
+			dateHeader:dateHeader
+			// {
+			// users: users, 
+			// assigns: assigns,
+			// dateHeader: dateHeader
+			// }
+		});
+	}).catch(function(e) {
+		res.render('error', {
+			error: "eeeeee"+e.toString()
+
+		});
+
+	});
+})
 
 
 app.get('/sc', function(req, res) {

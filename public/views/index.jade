@@ -15,12 +15,13 @@ html(lang="en")
 
 			table#main
 				tr
-				- for (var i=0; i < 14 ; i++)
-					td= dateHeader[i].dateH
-				//- - for (var i=0; i< users.length; i++)
+					td= 'User'
+					- for (var i=0; i < 14 ; i++)
+						td= dateHeader[i].dateH
+				- for (var i=0; i< users.length; i++)
 					tr
 						td= users[i].email
-						- for (var e=0; e< 14; e++)
+						//- - for (var e=0; e< 14; e++)
 							if (typeof assigns[9] == "undefined")
 								td= a
 							else 
@@ -49,5 +50,9 @@ html(lang="en")
 
 			$(function onload(){
 				alert($('#test').text());
+				$.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).
+					done(function(data){
+					alert(data.dateHeader[0].dateH);
+					})
 			});
 
