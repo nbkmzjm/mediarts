@@ -11,17 +11,16 @@ html(lang="en")
 	body
 		#container
 
-			- if ()
-				p Undifinedxxx
+		
 
 			table#main
 				tr
-				- for (var i=0; i< 14; i++)
-					td= i
-				- for (var i=0; i< users.length; i++)
+				- for (var i=0; i < 14 ; i++)
+					td= dateHeader[i].dateH
+				//- - for (var i=0; i< users.length; i++)
 					tr
 						td= users[i].email
-						//- - for (var e=0; e< 14; e++)
+						- for (var e=0; e< 14; e++)
 							if (typeof assigns[9] == "undefined")
 								td= a
 							else 

@@ -43,13 +43,15 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 		
 		// next();
 
-		return [assigns, db.user.findAll()];
-	}).spread(function(assigns, users) {
+		return [assigns, db.user.findAll(), db.dateHeader.findAll()];
+	}).spread(function(assigns, users, dateHeader) {
 		console.log('suerssssssssss' + JSON.stringify(users));
 		console.log('ggggggggggggg' + JSON.stringify(assigns));
+		console.log('yyyyyyyyyy' + JSON.stringify(dateHeader));
 		res.render('index', {
 			users: users, 
-			assigns: assigns
+			assigns: assigns,
+			dateHeader: dateHeader
 		});
 	}).catch(function(e) {
 		res.render('error', {
@@ -415,10 +417,28 @@ app.delete('/user/logout', middleware.requireAuthentication, function(req, res) 
 
 
 db.sequelize.sync(
-	{force: true}
+	// {force: true}
 ).then(function() {
+	var arrDateHeader = [];
+	var date = now;
 	
-	// db.dateHeader.create()
+	for(var i = 1; i < 100; i++){
+		var objDateHeader = {};
+		date = now.add(1, 'days').format('MM-DD-YYYY');
+		objDateHeader.dateH = date;
+		objDateHeader.datePos = i;
+		
+		arrDateHeader.push(objDateHeader);
+		
+	};
+	console.log(arrDateHeader);
+		
+	// db.dateHeader.bulkCreate(arrDateHeader).then(function(dateHeader) {
+	// 	console.log('dateHeader created');
+	// }, function(e) {
+	// 	console.log('error created dateHeader');
+
+	// });
 	http.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});

@@ -12,11 +12,11 @@ module.exports = function(sequelize, DataTypes) {
 		datePos: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true
+			primaryKey: true
+			// autoIncrement: true
 			
 		}
 
-	}, { timestamp: false})
+	}, { timestamps: false})
 
 };
