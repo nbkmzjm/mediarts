@@ -16,7 +16,7 @@ html(lang="en")
 			table#main
 				tr
 					td= 'User'
-					- for (var i=0; i < 14 ; i++)
+					- for (var i=4; i < 14 ; i++)
 						td= dateHeader[i].dateH
 				- for (var i=0; i< users.length; i++)
 					tr
@@ -53,6 +53,7 @@ html(lang="en")
 				$.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).
 					done(function(data){
 					alert(data.dateHeader[0].dateH);
+					alert(data.users[0].email);
 					})
 			});
 

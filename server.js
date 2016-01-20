@@ -453,25 +453,30 @@ db.sequelize.sync(
 	// {force: true}
 ).then(function() {
 	var arrDateHeader = [];
-	var date = now;
+	var dateOrigin = moment(new Date([2015, 12, 31]));
+	console.log(dateOrigin);
+	var dateAdd = dateOrigin;
+	
 	
 	for(var i = 1; i < 100; i++){
 		var objDateHeader = {};
-		date = now.add(1, 'days').format('MM-DD-YYYY');
-		objDateHeader.dateH = date;
+		
+		dateAdd = dateOrigin.add(1, 'days').format('MM-DD-YYYY');
+		objDateHeader.dateH = dateAdd;
 		objDateHeader.datePos = i;
+		
 		
 		arrDateHeader.push(objDateHeader);
 		
 	};
 	console.log(arrDateHeader);
 		
-	// db.dateHeader.bulkCreate(arrDateHeader).then(function(dateHeader) {
-	// 	console.log('dateHeader created');
-	// }, function(e) {
-	// 	console.log('error created dateHeader');
+	db.dateHeader.bulkCreate(arrDateHeader).then(function(dateHeader) {
+		console.log('dateHeader created');
+	}, function(e) {
+		console.log('error created dateHeader');
 
-	// });
+	});
 	http.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});
