@@ -471,12 +471,12 @@ db.sequelize.sync(
 	};
 	console.log(arrDateHeader);
 		
-	db.dateHeader.bulkCreate(arrDateHeader).then(function(dateHeader) {
-		console.log('dateHeader created');
-	}, function(e) {
-		console.log('error created dateHeader');
+	// db.dateHeader.bulkCreate(arrDateHeader).then(function(dateHeader) {
+	// 	console.log('dateHeader created');
+	// }, function(e) {
+	// 	console.log('error created dateHeader');
 
-	});
+	// });
 	http.listen(PORT, function() {
 		console.log('Helllo Express server started on PORT ' + PORT);
 	});

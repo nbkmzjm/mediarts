@@ -49,11 +49,34 @@ html(lang="en")
 		script.
 
 			$(function onload(){
-				alert($('#test').text());
-				$.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).
-					done(function(data){
-					alert(data.dateHeader[0].dateH);
-					alert(data.users[0].email);
-					})
+				var dateSC = new Date();
+				alert(dateSC.setDate(19).toString());
+				var dateI;
+
+				var container = $('#container');
+				var table = document.createElement('table');
+					table.setAttribute('id', 'main');
+					var tr = document.createElement('tr');
+						var td = document.createElement('td');
+							td.appendChild(document.createTextNode('User'));
+						tr.appendChild(td);
+						for (var i=0; i<7; i++){
+							//- dateI = dateSC.getDate()+1;
+							dateI = dateSC.setDate(dateSC.getDate() + 1);
+							console.log(dateI.toString());
+						var td = document.createElement('td');
+							td.appendChild(document.createTextNode(dateI.getDate()));
+							tr.appendChild(td);
+							}
+						
+						
+				table.appendChild(tr);
+				container.append(table);
+
+				//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).
+				//- 	done(function(data){
+				//- 	alert(data.dateHeader[0].dateH);
+				//- 	alert(data.users[0].email);
+				//- 	})
 			});
 
