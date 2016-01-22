@@ -14,8 +14,8 @@ html(lang="en")
 		
 
 			//- table#main
-			//- 	- var test = "hello"
-			//- 	p#test dateHeader 
+			//- 	- var test = users
+			//- 	p#test= test 
 			//- 	tr
 			//- 		td= 'User'
 			//- 		- for (var i=4; i < 14 ; i++)
@@ -51,37 +51,11 @@ html(lang="en")
 		script.
 
 			$(function onload(){
-				var dateSC = new Date();
-				var userslength = '#{users.length}';
-				//- var usersemail = '#{users[0].email}';
-				//- alert(usersemail);
 				
+							
 
-
-				var container = $('#container');
-				var table = document.createElement('table');
-					table.setAttribute('id', 'main');
-					var tr1 = document.createElement('tr');
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode('User'));
-						tr1.appendChild(td);
-						for (var i=0; i<7; i++){
-							dateSC.setDate(dateSC.getDate()+1);
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode(dateSC.toDateString()));
-							tr1.appendChild(td);
-							}
-					table.appendChild(tr1);
-				for (var i=0; i< userslength; i++){
-					var tr = document.createElement('tr');
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode('#{users[0].email}'));
-						tr.appendChild(td);
-					table.appendChild(tr);
-				}
-						
-				
-				container.append(table);
+		
+				$.post('/ajaxUser').done(mainSC);
 
 				//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).
 				//- 	done(function(data){
@@ -89,4 +63,50 @@ html(lang="en")
 				//- 	alert(data.users[0].email);
 				//- 	})
 			});
+
+			function mainSC(data){
+			var users = data.users;
+			
+			var dateSC = new Date();
+			var container = $('#container');
+			var table = document.createElement('table');
+				table.setAttribute('id', 'main');
+				var tr1 = document.createElement('tr');
+					var td = document.createElement('td');
+						td.appendChild(document.createTextNode('User'));
+					tr1.appendChild(td);
+					for (var i=0; i<7; i++){
+						dateSC.setDate(dateSC.getDate()+1);
+					var td = document.createElement('td');
+						td.appendChild(document.createTextNode(dateSC.toDateString()));
+						tr1.appendChild(td);
+						}
+				table.appendChild(tr1);
+			var dateSC = new Date();
+			for (var i=0; i< users.length; i++){
+				var tr = document.createElement('tr');
+					var td = document.createElement('td');
+						td.appendChild(document.createTextNode(users[i].email));
+					tr.appendChild(td);
+
+					//- for (var x=0; x<1; x++){
+						dateSC.setDate(dateSC.getDate()+1);
+
+					$.post('/dateSC', { postdata:{userId: users[i].id, dateSC: dateSC.toLocaleDateString()}}).
+					done(function(data){});
+					
+
+					//- var td = document.createElement('td');
+					//- 	td.appendChild(document.createTextNode(dateSC.toDateString()));
+					//- 	tr1.appendChild(td);
+					//- }
+
+
+
+				table.appendChild(tr);
+			}
+					
+			
+			container.append(table);
+			}
 

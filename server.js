@@ -106,14 +106,35 @@ app.post('/mainSC', middleware.requireAuthentication, function(req, res){
 	});
 })
 
+app.post('/dateSC', middleware.requireAuthentication, function(req, res) { 
+	var userId = req.body.postdata.userId;
+	var dateSC = req.body.postdata.dateSC;
 
-app.get('/sc', function(req, res) {
+	console.log('dateSCCCCCC: '+ userId + dateSC);
 
-	db.assign.findAll({
-		include: [db.user]
-	}).then(function(assigns) {
-		console.log('eeeeeeeee' + assigns);
-		res.send(assigns);
+	db.assign.create({
+		userId:userId,
+		datePos:dateSC
+	}).then(function(assign){
+	console.log(assign);
+	
+		// console.log(ins + ":::::::"+ ini)
+	}, function(e) {
+		console.log(e);
+		res.render('error', {
+			error: e.toString()
+
+		});
+
+	});
+})
+
+
+app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
+
+	db.user.findAll().then(function(users) {
+		console.log('ajaxUser: ' + users);
+		res.json({users:users});
 
 	}, function(e) {
 		res.render('error', {

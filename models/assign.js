@@ -7,13 +7,16 @@ module.exports = function(sequelize, DataTypes) {
 			
 		// },
 		datePos: {
-			type: DataTypes.INTEGER,
-			allowNull: false
+			type: DataTypes.DATEONLY,
+			allowNull: false,
+			validate:{
+				isDate:true
+			}
 			
 		},
 		Note: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			allowNull: true,
 			validate: {
 				len: [1, 250]
 			}
