@@ -41,7 +41,7 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 	db.assign.findAll({
 		include: [db.user]
 	}).then(function(assigns) {
-		
+
 		// next();
 
 		return [assigns, db.user.findAll(), db.dateHeader.findAll()];
@@ -50,13 +50,13 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 		console.log('ggggggggggggg' + JSON.stringify(assigns));
 		console.log('yyyyyyyyyy' + JSON.stringify(dateHeader));
 		res.render('index', {
-			users: users, 
+			users: users,
 			assigns: assigns,
 			dateHeader: dateHeader
 		});
 	}).catch(function(e) {
 		res.render('error', {
-			error: "eeeeee"+e.toString()
+			error: "eeeeee" + e.toString()
 
 		});
 
@@ -74,59 +74,95 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 	// }
 });
 
-app.post('/mainSC', middleware.requireAuthentication, function(req, res){
+app.post('/mainSC', middleware.requireAuthentication, function(req, res) {
 	// req.accepts('application/json');
-	console.log('mainSCCCCCC receiving'+ req.body.postdata.name);
+	console.log('mainSCCCCCC receiving' + req.body.postdata.name);
 	db.assign.findAll({
 		include: [db.user]
 	}).then(function(assigns) {
-		
+
 		// next();
 
 		return [assigns, db.user.findAll(), db.dateHeader.findAll()];
 	}).spread(function(assigns, users, dateHeader) {
-		
+
 		console.log('suerssssssssss' + JSON.stringify(users));
 		console.log('ggggggggggggg' + JSON.stringify(assigns));
 		console.log('yyyyyyyyyy' + JSON.stringify(dateHeader));
-		res.json({users:users, 
-			dateHeader:dateHeader
-			// {
-			// users: users, 
-			// assigns: assigns,
-			// dateHeader: dateHeader
-			// }
+		res.json({
+			users: users,
+			dateHeader: dateHeader
+				// {
+				// users: users, 
+				// assigns: assigns,
+				// dateHeader: dateHeader
+				// }
 		});
 	}).catch(function(e) {
 		res.render('error', {
-			error: "eeeeee"+e.toString()
+			error: "eeeeee" + e.toString()
 
 		});
 
 	});
+
 })
 
-app.post('/dateSC', middleware.requireAuthentication, function(req, res) { 
+app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
 
-	console.log('dateSCCCCCC: '+ userId + dateSC);
+	console.log('dateSCCCCCC: ' + userId + dateSC);
 
-	db.assign.create({
-		userId:userId,
-		datePos:dateSC
-	}).then(function(assign){
-	console.log(assign);
-	
-		// console.log(ins + ":::::::"+ ini)
-	}, function(e) {
-		console.log(e);
+	db.user.findOne({
+		where: {
+			id: userId
+		}
+	}).then(function(user) {
+		return [db.assign.create({
+			datePos:dateSC
+		}), user
+		];
+
+
+	}).spread(function(assign, user){
+		user.addAssign(assign).then(function(){
+			return assign.reload();
+		})
+		console.log(user + "  "+ assign)
+	}).
+
+
+	catch(function(e) {
+		console.log("eeroorr" + e);
+
 		res.render('error', {
 			error: e.toString()
-
 		});
-
 	});
+
+
+	// db.assign.create({
+
+	// 	datePos:dateSC
+	// }).then(function(assign){
+	// 	userId.addAssign(assign).then(function(
+	// 		){
+	// 		return assign.reload();
+	// 	}).then(function(assign){
+
+	// 	});
+	// console.log(assign);
+
+	// 	// console.log(ins + ":::::::"+ ini)
+	// }).catch(function(e) {
+	// 	console.log(e);
+	// 	res.render('error', {
+	// 		error: e.toString()
+
+	// 	});
+
+	// });
 })
 
 
@@ -134,7 +170,9 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll().then(function(users) {
 		console.log('ajaxUser: ' + users);
-		res.json({users:users});
+		res.json({
+			users: users
+		});
 
 	}, function(e) {
 		res.render('error', {
@@ -477,21 +515,21 @@ db.sequelize.sync(
 	var dateOrigin = moment(new Date([2015, 12, 31]));
 	console.log(dateOrigin);
 	var dateAdd = dateOrigin;
-	
-	
-	for(var i = 1; i < 100; i++){
+
+
+	for (var i = 1; i < 100; i++) {
 		var objDateHeader = {};
-		
+
 		dateAdd = dateOrigin.add(1, 'days').format('MM-DD-YYYY');
 		objDateHeader.dateH = dateAdd;
 		objDateHeader.datePos = i;
-		
-		
+
+
 		arrDateHeader.push(objDateHeader);
-		
+
 	};
 	console.log(arrDateHeader);
-		
+
 	// db.dateHeader.bulkCreate(arrDateHeader).then(function(dateHeader) {
 	// 	console.log('dateHeader created');
 	// }, function(e) {
