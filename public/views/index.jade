@@ -89,21 +89,22 @@ html(lang="en")
 						td.appendChild(document.createTextNode(users[i].email));
 					tr.appendChild(td);
 
-					//- for (var x=0; x<1; x++){
+					for (var x=0; x<3; x++){
 						dateSC.setDate(dateSC.getDate()+1);
 
 					$.post('/dateSC', { postdata:{userId: users[i].id, dateSC: dateSC.toLocaleDateString()}}).
 					done(function(data){});
 					
 
-					//- var td = document.createElement('td');
-					//- 	td.appendChild(document.createTextNode(dateSC.toDateString()));
-					//- 	tr1.appendChild(td);
-					//- }
+					var td = document.createElement('td');
+						td.appendChild(document.createTextNode(dateSC.toDateString()));
+						tr1.appendChild(td);
+					}
 
 
 
 				table.appendChild(tr);
+				var dateSC = new Date();
 			}
 					
 			

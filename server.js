@@ -119,17 +119,25 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			id: userId
 		}
 	}).then(function(user) {
-		return [db.assign.create({
-			datePos:dateSC
-		}), user
+		return [
+			db.assign.findOrCreate({
+				where: {
+					userId: user.id,
+					datePos: dateSC
+				}
+			}),
+			user
 		];
 
 
-	}).spread(function(assign, user){
-		user.addAssign(assign).then(function(){
-			return assign.reload();
-		})
-		console.log(user + "  "+ assign)
+	}).spread(function(assign, user) {
+		user.addAssign(assign[0]).then(function() {
+			// if (assign[1]) {
+				console.log('assigned is: rrrr' + assign)
+				// return assign[0].reload();
+			// }
+		});
+		console.log(user.email + "  ")
 	}).
 
 
@@ -262,7 +270,7 @@ app.post('/createAccount', function(req, res) {
 		res.redirect('/');
 	}, function(e) {
 		res.render('error', {
-			error: 'Can not Create Account'
+			error: 'Can not Create Account due to :' + e
 
 		});
 
