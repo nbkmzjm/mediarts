@@ -89,11 +89,27 @@ html(lang="en")
 						td.appendChild(document.createTextNode(users[i].email));
 					tr.appendChild(td);
 
-					for (var x=0; x<3; x++){
-						dateSC.setDate(dateSC.getDate()+1);
+					var x = 0;
+					var y = 3
+					function delayLoop(){
+						if (x++ < 3){return;}
+							console.log(x);
+						window.setTimeout(delayLoop, 1000);
+							
+					}
+					delayLoop();
 
-					$.post('/dateSC', { postdata:{userId: users[i].id, dateSC: dateSC.toLocaleDateString()}}).
-					done(function(data){});
+					//- for (var x=0; x<3; x++){
+					//- 	dateSC.setDate(dateSC.getDate()+1);
+
+					//- setTimeout(function(){
+					//- console.log(x);
+					//- $.post('/dateSC', { postdata:{userId: users[i].id, dateSC: dateSC.toLocaleDateString()}}).
+					//- done(function(data){});
+
+
+					//- }, 1000);
+					
 					
 
 					var td = document.createElement('td');
