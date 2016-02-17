@@ -71,6 +71,7 @@ html(lang="en")
 			var container = $('#container');
 			var table = document.createElement('table');
 				table.setAttribute('id', 'main');
+				table.setAttribute('class','table')
 				var tr1 = document.createElement('tr');
 					var td = document.createElement('td');
 						td.appendChild(document.createTextNode('User'));
@@ -89,17 +90,17 @@ html(lang="en")
 						td.appendChild(document.createTextNode(users[i].email));
 					tr.appendChild(td);
 
-					var x = 0;
-					var y = 3
-					function delayLoop(){
-						if (x++ < 3){return;}
-							console.log(x);
-						window.setTimeout(delayLoop, 1000);
+					//- var x = 0;
+					//- var y = 3
+					//- function delayLoop(){
+					//- 	if (x++ < 3){return;}
+					//- 		console.log(x);
+					//- 	window.setTimeout(delayLoop, 1000);
 							
-					}
-					delayLoop();
+					//- }
+					//- delayLoop();
 
-					//- for (var x=0; x<3; x++){
+					for (var x=0; x<7; x++){
 					//- 	dateSC.setDate(dateSC.getDate()+1);
 
 					//- setTimeout(function(){
@@ -113,8 +114,13 @@ html(lang="en")
 					
 
 					var td = document.createElement('td');
-						td.appendChild(document.createTextNode(dateSC.toDateString()));
-						tr1.appendChild(td);
+						td.setAttribute('class','cell')
+						td.appendChild(document.createTextNode(""));
+						td.addEventListener('click',function(e){alert('clicked: '+ this);
+						this.style.backgroundColor = 'yellow';
+						});
+
+					tr.appendChild(td);
 					}
 
 
