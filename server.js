@@ -111,8 +111,9 @@ app.post('/mainSC', middleware.requireAuthentication, function(req, res) {
 app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
+	var taskSC = req.body.postdata.taskSC;
 
-	console.log('dateSCCCCCC: ' + userId + dateSC);
+	console.log('dateSCCCCCC: ' + userId + dateSC+ taskSC);
 
 	db.user.findOne({
 		where: {
@@ -120,10 +121,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 		}
 	}).then(function(user) {
 		return [
-			db.assign.findOrCreate({
+			db.assign.upsert({Note: taskSC},{
 				where: {
 					userId: user.id,
 					datePos: dateSC
+					
 				}
 			}),
 			user
@@ -137,7 +139,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				// return assign[0].reload();
 			// }
 		});
-		console.log(user.email + "  ")
+		
 	}).
 
 
@@ -171,7 +173,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	// 	});
 
 	// });
-})
+});
 
 
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {

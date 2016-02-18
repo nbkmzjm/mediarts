@@ -105,8 +105,7 @@ html(lang="en")
 
 					//- setTimeout(function(){
 					//- console.log(x);
-					//- $.post('/dateSC', { postdata:{userId: users[i].id, dateSC: dateSC.toLocaleDateString()}}).
-					//- done(function(data){});
+					
 
 
 					//- }, 1000);
@@ -116,15 +115,16 @@ html(lang="en")
 					var td = document.createElement('td');
 						td.setAttribute('class','cell')
 						td.appendChild(document.createTextNode(""));
-						td.addEventListener('click',function(x,i){
+						td.addEventListener('click',function(userId,dateSC){
 
 						return function(){
-							$('#PTORadio').text();
-							alert(i + "--" + x);
+							var taskSC = $('input[name=PTO]:checked').attr('value');
+							$.post('/dateSC', { postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).
+					done(function(data){});
 						};
 						//- alert('clicked: '+ x);
 						//- this.style.backgroundColor = 'yellow';
-						}(users[i].email,dateSC.toLocaleDateString()));
+						}(users[i].id, dateSC.toLocaleDateString()));
 
 					tr.appendChild(td);
 					}
@@ -144,7 +144,7 @@ html(lang="en")
 					var radio = document.createElement('input');
 						radio.setAttribute('type','radio');
 						radio.setAttribute('name','PTO');
-						radio.setAttribute('id','PTO');
+						radio.setAttribute('value','PTO');
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode('PTO'));
 					
@@ -152,7 +152,7 @@ html(lang="en")
 					var radio = document.createElement('input');
 						radio.setAttribute('type','radio');
 						radio.setAttribute('name','PTO');
-						radio.setAttribute('id','PTOR');
+						radio.setAttribute('value','PTOR');
 					li1.appendChild(radio);
 					li1.appendChild(document.createTextNode('PTOR'));
 				ul.appendChild(li);
