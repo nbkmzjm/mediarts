@@ -101,7 +101,7 @@ html(lang="en")
 					//- delayLoop();
 
 					for (var x=0; x<7; x++){
-					//- 	dateSC.setDate(dateSC.getDate()+1);
+						dateSC.setDate(dateSC.getDate()+1);
 
 					//- setTimeout(function(){
 					//- console.log(x);
@@ -116,9 +116,15 @@ html(lang="en")
 					var td = document.createElement('td');
 						td.setAttribute('class','cell')
 						td.appendChild(document.createTextNode(""));
-						td.addEventListener('click',function(e){alert('clicked: '+ this);
-						this.style.backgroundColor = 'yellow';
-						});
+						td.addEventListener('click',function(x,i){
+
+						return function(){
+							$('#PTORadio').text();
+							alert(i + "--" + x);
+						};
+						//- alert('clicked: '+ x);
+						//- this.style.backgroundColor = 'yellow';
+						}(users[i].email,dateSC.toLocaleDateString()));
 
 					tr.appendChild(td);
 					}
@@ -131,5 +137,30 @@ html(lang="en")
 					
 			
 			container.append(table);
+
+			var ul = document.createElement('ul');
+				ul.setAttribute('id','PTORadio')
+				var li = document.createElement('li');
+					var radio = document.createElement('input');
+						radio.setAttribute('type','radio');
+						radio.setAttribute('name','PTO');
+						radio.setAttribute('id','PTO');
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode('PTO'));
+					
+				var li1 = document.createElement('li');
+					var radio = document.createElement('input');
+						radio.setAttribute('type','radio');
+						radio.setAttribute('name','PTO');
+						radio.setAttribute('id','PTOR');
+					li1.appendChild(radio);
+					li1.appendChild(document.createTextNode('PTOR'));
+				ul.appendChild(li);
+				ul.appendChild(li1);
+
+
+			container.append(ul);
+
+
 			}
 
