@@ -57,8 +57,7 @@ html(lang="en")
 		
 				$.post('/ajaxUser').done(mainSC);
 
-				//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).
-				//- 	done(function(data){
+				//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).done(function(data){
 				//- 	alert(data.dateHeader[0].dateH);
 				//- 	alert(data.users[0].email);
 				//- 	})
@@ -66,7 +65,6 @@ html(lang="en")
 
 			function mainSC(data){
 			var users = data.users;
-			
 			var dateSC = new Date();
 			var container = $('#container');
 			var table = document.createElement('table');
@@ -100,13 +98,13 @@ html(lang="en")
 					//- }
 					//- delayLoop();
 
-					for (var x=0; x<7; x++){
+					    for (var x=0; x<7; x++){
 						dateSC.setDate(dateSC.getDate()+1);
 
 					//- setTimeout(function(){
 					//- console.log(x);
 					
-
+						
 
 					//- }, 1000);
 					
@@ -117,13 +115,17 @@ html(lang="en")
 						td.appendChild(document.createTextNode(""));
 						td.addEventListener('click',function(userId,dateSC){
 
-						return function(){
-							var taskSC = $('input[name=PTO]:checked').attr('value');
-							$.post('/dateSC', { postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).
-					done(function(data){});
-						};
+							return function(){
+								var taskSC = $('input[name=PTO]:checked').attr('value');
+								$.post('/dateSC', { postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(
+									//- this.append('taskSC');
+								);
+							this.style.backgroundColor = 'yellow';	
+							this.innerHTML=taskSC;
+							};
 						//- alert('clicked: '+ x);
-						//- this.style.backgroundColor = 'yellow';
+						
+
 						}(users[i].id, dateSC.toLocaleDateString()));
 
 					tr.appendChild(td);
@@ -145,6 +147,7 @@ html(lang="en")
 						radio.setAttribute('type','radio');
 						radio.setAttribute('name','PTO');
 						radio.setAttribute('value','PTO');
+						radio.setAttribute('checked','checked');
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode('PTO'));
 					

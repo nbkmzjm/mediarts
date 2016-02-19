@@ -113,7 +113,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var dateSC = req.body.postdata.dateSC;
 	var taskSC = req.body.postdata.taskSC;
 
-	console.log('dateSCCCCCC: ' + userId + dateSC+ taskSC);
+	console.log('dateSCCCCCC: ' + userId + dateSC + taskSC);
 
 	db.user.findOne({
 		where: {
@@ -121,11 +121,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 		}
 	}).then(function(user) {
 		return [
-			db.assign.upsert({Note: taskSC},{
+			db.assign.findOrCreate({
 				where: {
 					userId: user.id,
 					datePos: dateSC
-					
+
 				}
 			}),
 			user
@@ -135,11 +135,26 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	}).spread(function(assign, user) {
 		user.addAssign(assign[0]).then(function() {
 			// if (assign[1]) {
-				console.log('assigned is: rrrr' + assign)
+			console.log('assigned is: rrrr' + assign)
 				// return assign[0].reload();
-			// }
+				// }
 		});
-		
+
+		return db.assign.update({
+			Note: taskSC
+		}, {
+			where: {
+				userId: user.id,
+				datePos: dateSC
+			}
+		});
+
+		res.json({
+			Note: taskSC
+		});
+
+	}).then(function(assign){
+		console.log('noteeee: ' + assign);
 	}).
 
 
