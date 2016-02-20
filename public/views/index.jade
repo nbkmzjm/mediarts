@@ -116,12 +116,19 @@ html(lang="en")
 						td.addEventListener('click',function(userId,dateSC){
 
 							return function(){
+
+								function(userId, dateSC){
 								var taskSC = $('input[name=PTO]:checked').attr('value');
-								$.post('/dateSC', { postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(
-									//- this.append('taskSC');
-								);
-							this.style.backgroundColor = 'yellow';	
-							this.innerHTML=taskSC;
+
+									$.post('/dateSC', { postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(
+										function(){
+											
+											this.style.backgroundColor = 'yellow'
+											//- this.innerHTML=taskSC;
+										}
+									);
+								
+								};
 							};
 						//- alert('clicked: '+ x);
 						
