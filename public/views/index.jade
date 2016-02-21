@@ -98,46 +98,56 @@ html(lang="en")
 					//- }
 					//- delayLoop();
 
-					    for (var x=0; x<7; x++){
-						dateSC.setDate(dateSC.getDate()+1);
-
+				    for (var x=0; x<7; x++){
+					
+				    dateSC.setDate(dateSC.getDate()+1);
 					//- setTimeout(function(){
 					//- console.log(x);
 					
 						
-
+					
 					//- }, 1000);
-					
-					
+					$.post('/taskSC', {postdata:{userId: users[i].id, dateSC:dateSC.toLocaleDateString()}}).done(
+					function(assigndata){
+						if(!!assigndata.assign){
+							dateSC.setDate(dateSC.getDate()+1);
+							
+							var userId = assigndata.assign.userId;
+							var taskSC = assigndata.assign.Note;
 
-					var td = document.createElement('td');
-						td.setAttribute('class','cell')
-						td.appendChild(document.createTextNode(""));
-						td.addEventListener('click',function(userId,dateSC){
 
-							return function(){
+							var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(taskSC));
+								td.addEventListener('click',function(userId,dateSC){
+
+									return function(){
+										
+										
+										
+										var taskSC = $('input[name=PTO]:checked').attr('value');
+
+										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+										//- .done(test
+											//- function(data){
+											//- 	alert(JSON.stringify(data, null, 4))
+										this.style.backgroundColor = 'yellow'
+										this.innerHTML=taskSC;
+											//- }
+										//- );
+										
+									}
 								
+								//- alert('clicked: '+ x);
 								
-								
-								var taskSC = $('input[name=PTO]:checked').attr('value');
 
-								$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-								//- .done(test
-									//- function(data){
-									//- 	alert(JSON.stringify(data, null, 4))
-								this.style.backgroundColor = 'yellow'
-								this.innerHTML=taskSC;
-									//- }
-								//- );
-								
-							}
-						
-						//- alert('clicked: '+ x);
-						
+								}(userId, dateSC.toLocaleDateString()));
 
-						}(users[i].id, dateSC.toLocaleDateString()));
+							tr.appendChild(td);
+							
+						}
+					});
 
-					tr.appendChild(td);
 					}
 
 

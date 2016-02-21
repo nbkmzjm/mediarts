@@ -108,6 +108,32 @@ app.post('/mainSC', middleware.requireAuthentication, function(req, res) {
 
 })
 
+app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
+	var userId = req.body.postdata.userId;
+	var dateSC = req.body.postdata.dateSC;
+
+	console.log('taskSCCCCCCx: ' + userId + dateSC);
+	db.assign.findOne({
+		where: {
+			userId: userId,
+			datePos: dateSC
+		}
+
+	}).then(function(assign){
+		console.log('assingXXX'+ assign);
+		
+		res.json({
+				assign:assign
+			});
+		
+	}).catch(function(e) {
+		console.log("eeroorr" + e);
+
+		res.render('error', {
+			error: e.toString()
+		});
+	});
+});
 app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
