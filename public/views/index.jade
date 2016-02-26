@@ -145,12 +145,50 @@ html(lang="en")
 
 							tr.appendChild(td);
 							
+							
+						} else {
+							
+							dateSC.setDate(dateSC.getDate()+1);
+
+							var userId = assigndata.userId;
+							
+
+							var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(""));
+								td.addEventListener('click',function(userId,dateSC){
+
+									return function(){
+										
+										
+										
+										var taskSC = $('input[name=PTO]:checked').attr('value');
+
+										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+										//- .done(test
+											//- function(data){
+											//- 	alert(JSON.stringify(data, null, 4))
+										this.style.backgroundColor = 'yellow'
+										this.innerHTML=taskSC;
+											//- }
+										//- );
+										
+									}
+								
+								//- alert('clicked: '+ x);
+								
+
+								}(userId, dateSC.toLocaleDateString()));
+
+							tr.appendChild(td);
+							
+
 						}
+						table.appendChild(tr);
 					});
 
 					}
-
-
+					var tr = document.createElement('tr');
 
 				table.appendChild(tr);
 				var dateSC = new Date();

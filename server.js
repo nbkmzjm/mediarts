@@ -121,12 +121,20 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 
 	}).then(function(assign){
 		console.log('assingXXX'+ assign);
-		
-		res.json({
+		console.log('userIdXXX'+ userId);
+
+		if (!!assign){
+			res.json({
 				assign:assign
 			});
+		} else{
+			res.json({
+				userId:userId
+			});
+		};
 		
 	}).catch(function(e) {
+		
 		console.log("eeroorr" + e);
 
 		res.render('error', {
