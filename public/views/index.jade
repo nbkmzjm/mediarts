@@ -64,129 +64,183 @@ html(lang="en")
 			});
 
 			function mainSC(data){
-			var users = data.users;
-			var dateSC = new Date();
-			var container = $('#container');
-			var table = document.createElement('table');
-				table.setAttribute('id', 'main');
-				table.setAttribute('class','table')
-				var tr1 = document.createElement('tr');
-					var td = document.createElement('td');
-						td.appendChild(document.createTextNode('User'));
-					tr1.appendChild(td);
-					for (var i=0; i<7; i++){
-						dateSC.setDate(dateSC.getDate()+1);
-					var td = document.createElement('td');
-						td.appendChild(document.createTextNode(dateSC.toDateString()));
+
+				var users = data.users;
+				var arrListDateSC = [];
+				var dateSC = new Date();
+				var container = $('#container');
+				var table = document.createElement('table');
+					table.setAttribute('id', 'main');
+					table.setAttribute('class','table')
+					var tr1 = document.createElement('tr');
+						var td = document.createElement('td');
+							td.appendChild(document.createTextNode('User'));
 						tr1.appendChild(td);
-						}
-				table.appendChild(tr1);
-			var dateSC = new Date();
-			for (var i=0; i< users.length; i++){
-				var tr = document.createElement('tr');
-					var td = document.createElement('td');
-						td.appendChild(document.createTextNode(users[i].email));
-					tr.appendChild(td);
-
-					//- var x = 0;
-					//- var y = 3
-					//- function delayLoop(){
-					//- 	if (x++ < 3){return;}
-					//- 		console.log(x);
-					//- 	window.setTimeout(delayLoop, 1000);
-							
-					//- }
-					//- delayLoop();
-
-
-				    for (var x=0; x<7; x++){
-					
-				    dateSC.setDate(dateSC.getDate()+1);
-
-					$.post('/taskSC', {postdata:{userId: users[i].id, dateSC:dateSC.toLocaleDateString()}}).done(
-					function(assigndata){
-
-						var tr = document.createElement('tr');
-
-
-						if(!!assigndata.assign){
+						for (var i=0; i<7; i++){
 							dateSC.setDate(dateSC.getDate()+1);
-							
-							var userId = assigndata.assign.userId;
-							var taskSC = assigndata.assign.Note;
-
 							var td = document.createElement('td');
-								td.setAttribute('class','cell')
-								td.appendChild(document.createTextNode(taskSC));
-								td.addEventListener('click',function(userId,dateSC){
+							td.appendChild(document.createTextNode(dateSC.toDateString()));
+							tr1.appendChild(td);
+							}
+					table.appendChild(tr1);
+				var dateSC = new Date();
 
-									return function(){
-										var taskSC = $('input[name=PTO]:checked').attr('value');
+				for (var i=0; i< users.length; i++){
+					var tr = document.createElement('tr');
+						var td = document.createElement('td');
+							td.appendChild(document.createTextNode(users[i].email));
+						//- tr.appendChild(td);
 
-										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-										//- .done(test
-											//- function(data){
-											//- 	alert(JSON.stringify(data, null, 4))
-										this.style.backgroundColor = 'yellow'
-										this.innerHTML=taskSC;
-											//- }
-										//- );
-										
-									}
+						//- var x = 0;
+						//- var y = 3
+						//- function delayLoop(){
+						//- 	if (x++ < 3){return;}
+						//- 		console.log(x);
+						//- 	window.setTimeout(delayLoop, 1000);
 								
-								//- alert('clicked: '+ x);
+						//- }
+						//- delayLoop();
 
-								}(userId, dateSC.toLocaleDateString()));
 
-							tr.appendChild(td);
-													
-						} else {
-							
-							dateSC.setDate(dateSC.getDate()+1);
+					    for (var x=0; x<2; x++){
+						
+						    dateSC.setDate(dateSC.getDate()+1);
 
-							var userId = assigndata.userId;
-							
+						 //-    var td = document.createElement('td');
+							//- 			td.setAttribute('class','cell')
+							//- 			td.appendChild(document.createTextNode(''));
 
-							var td = document.createElement('td');
-								td.setAttribute('class','cell')
-								td.appendChild(document.createTextNode(""));
-								td.addEventListener('click',function(userId,dateSC){
+							//- tr.appendChild(td);
 
-									return function(){
-													
-										var taskSC = $('input[name=PTO]:checked').attr('value');
+							var taskSCData = {};
+							taskSCData.userId = users[i].id;
+							taskSCData.dateSC = dateSC.toLocaleDateString();
 
-										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-										//- .done(test
-											//- function(data){
-											//- 	alert(JSON.stringify(data, null, 4))
-										this.style.backgroundColor = 'yellow'
-										this.innerHTML=taskSC;
-											//- }
-										//- );
-										
-									}
-								
-								//- alert('clicked: '+ x);
-								
-
-								}(userId, dateSC.toLocaleDateString()));
-
-							tr.appendChild(td);
-
+							arrListDateSC.push(taskSCData);
 						}
 						
-					});
 					table.appendChild(tr);
-					}
-					
-				table.appendChild(tr);
-				var dateSC = new Date();
-			}
-			
-			container.append(table);
+					var dateSC = new Date();
+				}
+				alert(JSON.stringify(arrListDateSC, null, 4));
+				var i = 1;
+				var loopArrayDateSC = function(arr){
+				//- alert(arr[i].userId+ arr[i].dateSC);
 
-			var ul = document.createElement('ul');
+
+					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
+						function(assigndata){
+
+							if(!!assigndata.assign){
+								dateSC.setDate(dateSC.getDate()+1);
+								
+								var userId = assigndata.assign.userId;
+								var taskSC = assigndata.assign.Note;
+								//- alert(userId + '--' + taskSC);
+
+								var td = document.createElement('td');
+									td.setAttribute('class','cell')
+									td.appendChild(document.createTextNode(taskSC));
+									td.addEventListener('click',function(userId,dateSC){
+
+										return function(){
+											var taskSC = $('input[name=PTO]:checked').attr('value');
+
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+											//- .done(test
+												//- function(data){
+												//- 	alert(JSON.stringify(data, null, 4))
+											this.style.backgroundColor = 'yellow'
+											this.innerHTML=taskSC;
+												//- }
+											//- );
+											
+										}
+									
+									//- alert('clicked: '+ x);
+
+									}(userId, dateSC.toLocaleDateString()));
+
+								
+								
+
+								//- if (arr[i].userId != arr[i-1].userId){
+								//- 	var tr = document.createElement('tr');
+								//- 	tr.appendChild(td);
+								//- 	table.appendChild(tr);
+									
+									
+								//- }else{
+									tr.appendChild(td);
+								//- }
+														
+							} else {
+								//- alert('no assigndata');
+								
+								dateSC.setDate(dateSC.getDate()+1);
+
+								var userId = assigndata.userId;
+								
+
+								var td = document.createElement('td');
+									td.setAttribute('class','cell')
+									td.appendChild(document.createTextNode(""));
+									td.addEventListener('click',function(userId,dateSC){
+
+										return function(){
+														
+											var taskSC = $('input[name=PTO]:checked').attr('value');
+
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+											//- .done(test
+												//- function(data){
+												//- 	alert(JSON.stringify(data, null, 4))
+											this.style.backgroundColor = 'yellow'
+											this.innerHTML=taskSC;
+												//- }
+											//- );
+											
+										}
+									
+									
+
+									}(userId, dateSC.toLocaleDateString()));
+									
+								
+							tr.appendChild(td);
+							}
+
+						}
+							
+					);
+
+
+				//- alert(arr[i].userId + '--' + arr[i-1].userId );
+				if (arr[i].userId != arr[i-1].userId){
+					alert(arr[i].userId + '--' + arr[i-1].userId );
+					var tr1 = document.createElement('tr');
+					tr1.appendChild(td);
+					//- table.appendChild(tr);
+				
+				} else{
+					alert(arr[i].userId + '--' + arr[i-1].userId );
+					tr.appendChild(td);
+				}
+
+				i++;
+				if (i < arr.length ){
+					loopArrayDateSC(arr);
+				}
+
+				}
+
+				loopArrayDateSC(arrListDateSC);
+				table.appendChild(tr);
+				table.appendChild(tr1);
+				container.append(table);
+
+
+				var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
 				var li = document.createElement('li');
 					var radio = document.createElement('input');
@@ -208,12 +262,24 @@ html(lang="en")
 				ul.appendChild(li1);
 
 
-			container.append(ul);
-
-
+				container.append(ul);
 			}
 
-			function test(da){
-			alert('hiiiii');
-			}
+			
+
+		
+
+			
+
+
+
+			//- alert(arrListTaskSC[2].userId);
+			
+
+			
+
+
+			
+
+			
 
