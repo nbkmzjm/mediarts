@@ -77,22 +77,18 @@ html(lang="en")
 							td.appendChild(document.createTextNode('User'));
 						tr.appendChild(td);
 						for (var i=0; i<7; i++){
-							dateSC.setDate(dateSC.getDate()+1);
+							
 							var td = document.createElement('td');
 							td.appendChild(document.createTextNode(dateSC.toDateString()));
 							tr.appendChild(td);
+
+							dateSC.setDate(dateSC.getDate()+1);
 							}
 					table.appendChild(tr);
 				var dateSC = new Date();
 
 				for (var i=0; i< users.length; i++){
-					alert(users.length+'--'+users[i].email)
-					var trUser = document.createElement('tr');
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode(users[i].email));
-						trUser.appendChild(td);
-						table.appendChild(trUser);
-
+					
 						//- var x = 0;
 						//- var y = 3
 						//- function delayLoop(){
@@ -104,17 +100,28 @@ html(lang="en")
 						//- delayLoop();
 
 
-					    for (var x=0; x<7; x++){
+					    for (var x=0; x<8; x++){
 						
 						    dateSC.setDate(dateSC.getDate()+1);
 
 						 
 
 							var taskSCData = {};
-							taskSCData.userId = users[i].id;
-							taskSCData.dateSC = dateSC.toLocaleDateString();
+							
+							if (x==0){
+								taskSCData.userId = users[i].id;
+								taskSCData.dateSC = users[i].email;
+
+
+							}else{
+								taskSCData.userId = users[i].id;
+								taskSCData.dateSC = dateSC.toLocaleDateString();;
+							
+							}
 
 							arrListDateSC.push(taskSCData);
+
+							
 						}
 						
 					var dateSC = new Date();
@@ -135,88 +142,100 @@ html(lang="en")
 				var i = 0;
 				var userDelta = 0;
 				var loopArrayDateSC = function(arr){
+
+					//- if (arr[i].dateSC.indexOf("@") > -1){
+					//- 	alert('user detected');
+					//- }else{
+					//- 	alert('user not detected');
+					//- }	
 				
 
-					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
-						function(assigndata){
-							//- var userDelta = 0;
-							if(!!assigndata.assign){
-							
-								dateSC.setDate(dateSC.getDate()+1);
+						$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
+							function(assigndata){
+								//- var userDelta = 0;
+								if(!!assigndata.assign){
 								
-								var userId = assigndata.assign.userId;
-								var taskSC = assigndata.assign.Note;
-								
+									dateSC.setDate(dateSC.getDate()+1);
+									
+									var userId = assigndata.assign.userId;
+									var taskSC = assigndata.assign.Note;
+									
 
-								var td = document.createElement('td');
+									var td = document.createElement('td');
+										td.setAttribute('class','cell')
+										td.appendChild(document.createTextNode(taskSC));
+										td.addEventListener('click',function(userId,dateSC){
+
+											return function(){
+												var taskSC = $('input[name=PTO]:checked').attr('value');
+
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+
+												this.style.backgroundColor = 'yellow'
+												this.innerHTML=taskSC;
+											}
+
+										}(userId, dateSC.toLocaleDateString()));
+
+									
+								} else {
+
+									
+									dateSC.setDate(dateSC.getDate()+1);
+
+									var userId = assigndata.userId;
+																	var td = document.createElement('td');
+										td.setAttribute('class','cell')
+										td.appendChild(document.createTextNode(""));
+										td.addEventListener('click',function(userId,dateSC){
+
+											return function(){
+															
+												var taskSC = $('input[name=PTO]:checked').attr('value');
+
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+												this.style.backgroundColor = 'yellow'
+												this.innerHTML=taskSC;
+											}
+										
+										
+
+										}(userId, dateSC.toLocaleDateString()));
+										
+									
+									
+								}
+
+
+								if (userDelta != userId){
+
+
+									var td = document.createElement('td');
 									td.setAttribute('class','cell')
-									td.appendChild(document.createTextNode(taskSC));
-									td.addEventListener('click',function(userId,dateSC){
+									td.appendChild(document.createTextNode(arr[i].dateSC));
 
-										return function(){
-											var taskSC = $('input[name=PTO]:checked').attr('value');
+									window['tr' + userId] = document.createElement('tr');
+									window['tr' + userId].appendChild(td);
+									table.appendChild(window['tr' + userId]);
 
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+								}else{
+									window['tr' + userId].appendChild(td);
+									table.appendChild(window['tr' + userId]);
 
-											this.style.backgroundColor = 'yellow'
-											this.innerHTML=taskSC;
-										}
+								}	
 
-									}(userId, dateSC.toLocaleDateString()));
-
-								
-							} else {
+								userDelta = userId;
 
 								
-								dateSC.setDate(dateSC.getDate()+1);
+								i++;
+								if (i < arr.length ){
+									loopArrayDateSC(arr);
+								}
 
-								var userId = assigndata.userId;
-																var td = document.createElement('td');
-									td.setAttribute('class','cell')
-									td.appendChild(document.createTextNode("r"));
-									td.addEventListener('click',function(userId,dateSC){
 
-										return function(){
-														
-											var taskSC = $('input[name=PTO]:checked').attr('value');
-
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-											this.style.backgroundColor = 'yellow'
-											this.innerHTML=taskSC;
-										}
-									
-									
-
-									}(userId, dateSC.toLocaleDateString()));
-									
-								
-								
 							}
-
-
-							if (userDelta != userId){
-								window['tr' + userId] = document.createElement('tr');
-								window['tr' + userId].appendChild(td);
-								table.appendChild(window['tr' + userId]);
-
-							}else{
-								window['tr' + userId].appendChild(td);
-								table.appendChild(window['tr' + userId]);
-
-							}	
-
-							userDelta = userId;
-
-							
-							i++;
-							if (i < arr.length ){
-								loopArrayDateSC(arr);
-							}
-
-
-						}
-							
-					);
+								
+						);
 					
 					
 
