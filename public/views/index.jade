@@ -72,23 +72,23 @@ html(lang="en")
 				var table = document.createElement('table');
 					table.setAttribute('id', 'main');
 					table.setAttribute('class','table')
-					var tr1 = document.createElement('tr');
+					var tr = document.createElement('tr');
 						var td = document.createElement('td');
 							td.appendChild(document.createTextNode('User'));
-						tr1.appendChild(td);
+						tr.appendChild(td);
 						for (var i=0; i<7; i++){
 							dateSC.setDate(dateSC.getDate()+1);
 							var td = document.createElement('td');
 							td.appendChild(document.createTextNode(dateSC.toDateString()));
-							tr1.appendChild(td);
+							tr.appendChild(td);
 							}
-					table.appendChild(tr1);
+					table.appendChild(tr);
 				var dateSC = new Date();
 
 				for (var i=0; i< users.length; i++){
-					var tr = document.createElement('tr');
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode(users[i].email));
+					//- var tr = document.createElement('tr');
+					//- 	var td = document.createElement('td');
+					//- 		td.appendChild(document.createTextNode(users[i].email));
 						//- tr.appendChild(td);
 
 						//- var x = 0;
@@ -102,7 +102,7 @@ html(lang="en")
 						//- delayLoop();
 
 
-					    for (var x=0; x<2; x++){
+					    for (var x=0; x<3; x++){
 						
 						    dateSC.setDate(dateSC.getDate()+1);
 
@@ -119,24 +119,37 @@ html(lang="en")
 							arrListDateSC.push(taskSCData);
 						}
 						
-					table.appendChild(tr);
 					var dateSC = new Date();
 				}
-				alert(JSON.stringify(arrListDateSC, null, 4));
-				var i = 1;
+				//- alert(JSON.stringify(arrListDateSC, null, 4));
+
+				//- var z = 1;
+				//- var y = 2;
+
+				//- window['a' + z] = 'hell';
+				//- window['a' + y] = 'hellooo';
+				
+				//- alert(a2); 
+
+				var tr1 = document.createElement('tr');
+				var i = 0;
+				userDelta = 0;
 				var loopArrayDateSC = function(arr){
 				//- alert(arr[i].userId+ arr[i].dateSC);
-
+					//- if (arr[i].userId == arr[i-1].userId){
+					//- alert(arr[i].userId + '--' + arr[i-1].userId );
+					//- alert('i= '+ i + '-- userId= ' + arr[i].userId);
 
 					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
 						function(assigndata){
-
+							//- var userDelta = 0;
 							if(!!assigndata.assign){
+							
 								dateSC.setDate(dateSC.getDate()+1);
 								
 								var userId = assigndata.assign.userId;
 								var taskSC = assigndata.assign.Note;
-								//- alert(userId + '--' + taskSC);
+								//- alert('n' + userId);
 
 								var td = document.createElement('td');
 									td.setAttribute('class','cell')
@@ -147,44 +160,38 @@ html(lang="en")
 											var taskSC = $('input[name=PTO]:checked').attr('value');
 
 											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-											//- .done(test
-												//- function(data){
-												//- 	alert(JSON.stringify(data, null, 4))
+
 											this.style.backgroundColor = 'yellow'
 											this.innerHTML=taskSC;
-												//- }
-											//- );
-											
 										}
-									
-									//- alert('clicked: '+ x);
 
 									}(userId, dateSC.toLocaleDateString()));
 
-								
-								
+								//- if (userDelta != userId){
+								//- 	window['tr' + userId] = document.createElement('tr');
+								//- 	window['tr' + userId].appendChild(td);
 
-								//- if (arr[i].userId != arr[i-1].userId){
-								//- 	var tr = document.createElement('tr');
-								//- 	tr.appendChild(td);
-								//- 	table.appendChild(tr);
-									
-									
+								//- 	table.appendChild(window['tr' + userId]);
+
 								//- }else{
-									tr.appendChild(td);
+								//- 	window['tr' + userId].appendChild(td);
+
+								//- 	table.appendChild(window['tr' + userId]);
+
 								//- }
+
+								//- userDelta = userId;
 														
 							} else {
-								//- alert('no assigndata');
+
 								
 								dateSC.setDate(dateSC.getDate()+1);
 
 								var userId = assigndata.userId;
-								
-
+								//- alert('r' + userId);
 								var td = document.createElement('td');
 									td.setAttribute('class','cell')
-									td.appendChild(document.createTextNode(""));
+									td.appendChild(document.createTextNode("r"));
 									td.addEventListener('click',function(userId,dateSC){
 
 										return function(){
@@ -192,14 +199,8 @@ html(lang="en")
 											var taskSC = $('input[name=PTO]:checked').attr('value');
 
 											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-											//- .done(test
-												//- function(data){
-												//- 	alert(JSON.stringify(data, null, 4))
 											this.style.backgroundColor = 'yellow'
 											this.innerHTML=taskSC;
-												//- }
-											//- );
-											
 										}
 									
 									
@@ -207,36 +208,93 @@ html(lang="en")
 									}(userId, dateSC.toLocaleDateString()));
 									
 								
-							tr.appendChild(td);
+								//- if (userDelta != userId){
+								//- 	window['tr' + userId] = document.createElement('tr');
+								//- 	window['tr' + userId].appendChild(td);
+
+								//- 	table.appendChild(window['tr' + userId]);
+
+								//- }else{
+								//- 	window['tr' + userId].appendChild(td);
+
+								//- 	table.appendChild(window['tr' + userId]);
+
+								//- }	
+
+								//- userDelta = userId;
+								
 							}
+
+							window['tr' + userId] = document.createElement('tr');
+							window['tr' + userId].appendChild(td);
+
+							table.appendChild(window['tr' + userId]);
+
+							
+						i++;
+						if (i < arr.length ){
+							loopArrayDateSC(arr);
+						}
+
 
 						}
 							
 					);
+					
+					//- if (userDelta != arr[i].userId){
+
+					//- 	window['tr' + arr[i].userId] = document.createElement('tr');					
+
+					//- 	var td = document.createElement('td');
+					//- 		td.setAttribute('class','cell')
+					//- 		td.appendChild(document.createTextNode('R'));
+
+						
+
+					//- 	window['tr' + arr[i].userId].appendChild(td);
+
+					//- 	table.appendChild(window['tr' + arr[i].userId]);
+						
+					//- 	userDelta = arr[i].userId;
+					
+					//- } 
+
+					
+
+					
+					
+					
+					
+				
+					//- }else{
+					//- alert('new user: ' + arr[i].userId + '--' + arr[i-1].userId );
+
+					//- var tr2 = document.createElement('tr');
+					//- var td = document.createElement('td');
+					//- 	td.setAttribute('class','cell')
+					//- 	td.appendChild(document.createTextNode('N'));
+
+					//- tr2.appendChild(td);
+					//- table.appendChild(tr2);
+					//- }
+
+					
+
+					
+
+					
 
 
 				//- alert(arr[i].userId + '--' + arr[i-1].userId );
-				if (arr[i].userId != arr[i-1].userId){
-					alert(arr[i].userId + '--' + arr[i-1].userId );
-					var tr1 = document.createElement('tr');
-					tr1.appendChild(td);
-					//- table.appendChild(tr);
 				
-				} else{
-					alert(arr[i].userId + '--' + arr[i-1].userId );
-					tr.appendChild(td);
-				}
-
-				i++;
-				if (i < arr.length ){
-					loopArrayDateSC(arr);
-				}
 
 				}
+
+				
 
 				loopArrayDateSC(arrListDateSC);
-				table.appendChild(tr);
-				table.appendChild(tr1);
+				
+				
 				container.append(table);
 
 
