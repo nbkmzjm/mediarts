@@ -86,10 +86,12 @@ html(lang="en")
 				var dateSC = new Date();
 
 				for (var i=0; i< users.length; i++){
-					//- var tr = document.createElement('tr');
-					//- 	var td = document.createElement('td');
-					//- 		td.appendChild(document.createTextNode(users[i].email));
-						//- tr.appendChild(td);
+					alert(users.length+'--'+users[i].email)
+					var trUser = document.createElement('tr');
+						var td = document.createElement('td');
+							td.appendChild(document.createTextNode(users[i].email));
+						trUser.appendChild(td);
+						table.appendChild(trUser);
 
 						//- var x = 0;
 						//- var y = 3
@@ -102,15 +104,11 @@ html(lang="en")
 						//- delayLoop();
 
 
-					    for (var x=0; x<3; x++){
+					    for (var x=0; x<7; x++){
 						
 						    dateSC.setDate(dateSC.getDate()+1);
 
-						 //-    var td = document.createElement('td');
-							//- 			td.setAttribute('class','cell')
-							//- 			td.appendChild(document.createTextNode(''));
-
-							//- tr.appendChild(td);
+						 
 
 							var taskSCData = {};
 							taskSCData.userId = users[i].id;
@@ -121,6 +119,8 @@ html(lang="en")
 						
 					var dateSC = new Date();
 				}
+
+				
 				//- alert(JSON.stringify(arrListDateSC, null, 4));
 
 				//- var z = 1;
@@ -131,14 +131,11 @@ html(lang="en")
 				
 				//- alert(a2); 
 
-				var tr1 = document.createElement('tr');
+				//- var tr1 = document.createElement('tr');
 				var i = 0;
-				userDelta = 0;
+				var userDelta = 0;
 				var loopArrayDateSC = function(arr){
-				//- alert(arr[i].userId+ arr[i].dateSC);
-					//- if (arr[i].userId == arr[i-1].userId){
-					//- alert(arr[i].userId + '--' + arr[i-1].userId );
-					//- alert('i= '+ i + '-- userId= ' + arr[i].userId);
+				
 
 					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
 						function(assigndata){
@@ -149,7 +146,7 @@ html(lang="en")
 								
 								var userId = assigndata.assign.userId;
 								var taskSC = assigndata.assign.Note;
-								//- alert('n' + userId);
+								
 
 								var td = document.createElement('td');
 									td.setAttribute('class','cell')
@@ -167,29 +164,14 @@ html(lang="en")
 
 									}(userId, dateSC.toLocaleDateString()));
 
-								//- if (userDelta != userId){
-								//- 	window['tr' + userId] = document.createElement('tr');
-								//- 	window['tr' + userId].appendChild(td);
-
-								//- 	table.appendChild(window['tr' + userId]);
-
-								//- }else{
-								//- 	window['tr' + userId].appendChild(td);
-
-								//- 	table.appendChild(window['tr' + userId]);
-
-								//- }
-
-								//- userDelta = userId;
-														
+								
 							} else {
 
 								
 								dateSC.setDate(dateSC.getDate()+1);
 
 								var userId = assigndata.userId;
-								//- alert('r' + userId);
-								var td = document.createElement('td');
+																var td = document.createElement('td');
 									td.setAttribute('class','cell')
 									td.appendChild(document.createTextNode("r"));
 									td.addEventListener('click',function(userId,dateSC){
@@ -208,85 +190,35 @@ html(lang="en")
 									}(userId, dateSC.toLocaleDateString()));
 									
 								
-								//- if (userDelta != userId){
-								//- 	window['tr' + userId] = document.createElement('tr');
-								//- 	window['tr' + userId].appendChild(td);
-
-								//- 	table.appendChild(window['tr' + userId]);
-
-								//- }else{
-								//- 	window['tr' + userId].appendChild(td);
-
-								//- 	table.appendChild(window['tr' + userId]);
-
-								//- }	
-
-								//- userDelta = userId;
 								
 							}
 
-							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].appendChild(td);
 
-							table.appendChild(window['tr' + userId]);
+							if (userDelta != userId){
+								window['tr' + userId] = document.createElement('tr');
+								window['tr' + userId].appendChild(td);
+								table.appendChild(window['tr' + userId]);
+
+							}else{
+								window['tr' + userId].appendChild(td);
+								table.appendChild(window['tr' + userId]);
+
+							}	
+
+							userDelta = userId;
 
 							
-						i++;
-						if (i < arr.length ){
-							loopArrayDateSC(arr);
-						}
+							i++;
+							if (i < arr.length ){
+								loopArrayDateSC(arr);
+							}
 
 
 						}
 							
 					);
 					
-					//- if (userDelta != arr[i].userId){
-
-					//- 	window['tr' + arr[i].userId] = document.createElement('tr');					
-
-					//- 	var td = document.createElement('td');
-					//- 		td.setAttribute('class','cell')
-					//- 		td.appendChild(document.createTextNode('R'));
-
-						
-
-					//- 	window['tr' + arr[i].userId].appendChild(td);
-
-					//- 	table.appendChild(window['tr' + arr[i].userId]);
-						
-					//- 	userDelta = arr[i].userId;
 					
-					//- } 
-
-					
-
-					
-					
-					
-					
-				
-					//- }else{
-					//- alert('new user: ' + arr[i].userId + '--' + arr[i-1].userId );
-
-					//- var tr2 = document.createElement('tr');
-					//- var td = document.createElement('td');
-					//- 	td.setAttribute('class','cell')
-					//- 	td.appendChild(document.createTextNode('N'));
-
-					//- tr2.appendChild(td);
-					//- table.appendChild(tr2);
-					//- }
-
-					
-
-					
-
-					
-
-
-				//- alert(arr[i].userId + '--' + arr[i-1].userId );
-				
 
 				}
 
@@ -325,19 +257,4 @@ html(lang="en")
 
 			
 
-		
-
-			
-
-
-
-			//- alert(arrListTaskSC[2].userId);
-			
-
-			
-
-
-			
-
-			
 
