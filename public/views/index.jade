@@ -77,12 +77,12 @@ html(lang="en")
 							td.appendChild(document.createTextNode('User'));
 						tr.appendChild(td);
 						for (var i=0; i<7; i++){
-							
+							dateSC.setDate(dateSC.getDate()+1);
 							var td = document.createElement('td');
 							td.appendChild(document.createTextNode(dateSC.toDateString()));
 							tr.appendChild(td);
 
-							dateSC.setDate(dateSC.getDate()+1);
+							
 							}
 					table.appendChild(tr);
 				var dateSC = new Date();
@@ -128,7 +128,7 @@ html(lang="en")
 				}
 
 				
-				//- alert(JSON.stringify(arrListDateSC, null, 4));
+				alert(JSON.stringify(arrListDateSC, null, 4));
 
 				//- var z = 1;
 				//- var y = 2;
@@ -139,6 +139,7 @@ html(lang="en")
 				//- alert(a2); 
 
 				//- var tr1 = document.createElement('tr');
+				var dateSC = new Date();
 				var i = 0;
 				var userDelta = 0;
 				var loopArrayDateSC = function(arr){
@@ -153,9 +154,20 @@ html(lang="en")
 						$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
 							function(assigndata){
 								//- var userDelta = 0;
+
+								
+
+								//- if (!arr[i].dateSC.indexOf("@") > -1){
+								//- 	//- fl
+									
+								//- }
+								alert(dateSC.toLocaleDateString());
+								
+								
+
 								if(!!assigndata.assign){
 								
-									dateSC.setDate(dateSC.getDate()+1);
+									
 									
 									var userId = assigndata.assign.userId;
 									var taskSC = assigndata.assign.Note;
@@ -181,10 +193,10 @@ html(lang="en")
 								} else {
 
 									
-									dateSC.setDate(dateSC.getDate()+1);
+									
 
 									var userId = assigndata.userId;
-																	var td = document.createElement('td');
+										var td = document.createElement('td');
 										td.setAttribute('class','cell')
 										td.appendChild(document.createTextNode(""));
 										td.addEventListener('click',function(userId,dateSC){
@@ -205,6 +217,8 @@ html(lang="en")
 									
 									
 								}
+
+								dateSC.setDate(dateSC.getDate()+1);
 
 
 								if (userDelta != userId){
