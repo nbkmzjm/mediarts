@@ -157,11 +157,8 @@ html(lang="en")
 
 								
 
-								//- if (!arr[i].dateSC.indexOf("@") > -1){
-								//- 	//- fl
-									
-								//- }
-								alert(dateSC.toLocaleDateString());
+								
+								//- alert(dateSC.toLocaleDateString());
 								
 								
 
@@ -218,8 +215,19 @@ html(lang="en")
 									
 								}
 
-								dateSC.setDate(dateSC.getDate()+1);
-
+								
+								if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
+									//- alert(i);
+									
+									dateSC.setDate(dateSC.getDate()-7);
+								} else{
+									//- alert('not @');
+									dateSC.setDate(dateSC.getDate()+1);
+								}
+								
+								
+									
+								
 
 								if (userDelta != userId){
 
