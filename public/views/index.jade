@@ -48,6 +48,7 @@ html(lang="en")
 		script(src="public/js/jquery-2.1.4.min.js")
 		script(src="public/js/socket.io-1.3.7.js")
 		script(src="public/js/app.js")
+		script(src="public/js/date.js")
 		script.
 
 			$(function onload(){
@@ -64,11 +65,12 @@ html(lang="en")
 			});
 
 			function mainSC(data){
-
+				var curSunday = Date.today().next().saturday();
 				var users = data.users;
 				var arrListDateSC = [];
-				var dateSC = new Date();
+				var dateSC = new Date(curSunday);
 				var container = $('#container');
+				container.html("");
 				var table = document.createElement('table');
 					table.setAttribute('id', 'main');
 					table.setAttribute('class','table')
@@ -80,13 +82,19 @@ html(lang="en")
 							dateSC.setDate(dateSC.getDate()+1);
 							var td = document.createElement('td');
 							td.appendChild(document.createTextNode(dateSC.toDateString()));
+							td.addEventListener('click',function(){
+
+							alert('drop cal');
+							$.post('/ajaxUser').done(mainSC);
+							});
 							tr.appendChild(td);
 
 							
 							}
 					table.appendChild(tr);
-				var dateSC = new Date();
 
+
+				dateSC = new Date(curSunday);
 				for (var i=0; i< users.length; i++){
 					
 						//- var x = 0;
@@ -102,7 +110,7 @@ html(lang="en")
 
 					    for (var x=0; x<8; x++){
 						
-						    dateSC.setDate(dateSC.getDate()+1);
+						    
 
 						 
 
@@ -121,14 +129,14 @@ html(lang="en")
 
 							arrListDateSC.push(taskSCData);
 
-							
+							dateSC.setDate(dateSC.getDate()+1);
 						}
 						
-					var dateSC = new Date();
+					var dateSC = new Date(curSunday);
 				}
 
 				
-				alert(JSON.stringify(arrListDateSC, null, 4));
+				//- alert(JSON.stringify(arrListDateSC, null, 4));
 
 				//- var z = 1;
 				//- var y = 2;
@@ -139,7 +147,7 @@ html(lang="en")
 				//- alert(a2); 
 
 				//- var tr1 = document.createElement('tr');
-				var dateSC = new Date();
+				//- var dateSC = new Date(curMonday);
 				var i = 0;
 				var userDelta = 0;
 				var loopArrayDateSC = function(arr){
