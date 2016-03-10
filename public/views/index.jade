@@ -6,9 +6,13 @@ html(lang="en")
 		meta(charset='UTF-8')
 		link(rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css")
 		link(rel="stylesheet" type="text/css" href="css/style.css")
-
+		link(rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
+		link(href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet")
 
 	body
+		span(id = 'calBack' class="glyphicon glyphicon-step-backward")
+		input(type = 'text' id = "calendar" value = new Date().toLocaleDateString()) 
+		span(class="glyphicon glyphicon-step-forward")
 		#container
 
 		
@@ -49,7 +53,11 @@ html(lang="en")
 		script(src="public/js/socket.io-1.3.7.js")
 		script(src="public/js/app.js")
 		script(src="public/js/date.js")
-		script(src="http://code.jquery.com/ui/1.10.1/jquery-ui.js")
+		script(src="http://code.jquery.com/ui/1.10.4/jquery-ui.js")
+		script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+		
+      
+     
 		script.
 
 			$(function onload(){
@@ -75,7 +83,8 @@ html(lang="en")
 			}
 
 			function mainSC(data){
-				var curSunday = getSunday(new Date('3/9/2016'));
+				var curDate = $('#calendar').val();
+				var curSunday = getSunday(new Date(curDate));
 				//- alert(curSunday);
 				var users = data.users;
 				var arrListDateSC = [];
@@ -304,13 +313,25 @@ html(lang="en")
 				var datePicker = document.createElement('input')
 					datePicker.setAttribute('type','text');
 					datePicker.setAttribute('id','calendar');
-					datePicker.addEventListener('input', function(){
-					alert('input dect');
-					});
-				container.append(datePicker);
-				alert('hdhdhd');
+					//- datePicker.addEventListener('onSelect', function(){
+					//- alert('input dect');
+					//- });
+				//- container.append(datePicker);
+				
 
-				$("#calendar").datepicker();
+				$("#calendar").datepicker({onSelect: function(){
+				$.post('/ajaxUser').done(mainSC);
+				}});
+
+				var dateM7 = new Date($("#calendar").val());
+
+				$("#calBack").click(function(){
+					
+					dateM7.setDate(dateM7.getDate()-7);
+					$("#calendar").val(dateM7.toLocaleDateString());
+					$.post('/ajaxUser').done(mainSC);
+					//- dateM7 = null;
+				});
 
 				var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
