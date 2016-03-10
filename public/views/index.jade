@@ -303,11 +303,15 @@ html(lang="en")
 
 				var datePicker = document.createElement('input')
 					datePicker.setAttribute('type','text');
-					datePicker.setAttribute('id','calender');
+					datePicker.setAttribute('id','calendar');
+					datePicker.addEventListener('input', function(){
+					alert('input dect');
+					});
 				container.append(datePicker);
 				alert('hdhdhd');
 
 				$("#calendar").datepicker();
+
 				var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
 				var li = document.createElement('li');
