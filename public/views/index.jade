@@ -49,6 +49,7 @@ html(lang="en")
 		script(src="public/js/socket.io-1.3.7.js")
 		script(src="public/js/app.js")
 		script(src="public/js/date.js")
+		script(src="http://code.jquery.com/ui/1.10.1/jquery-ui.js")
 		script.
 
 			$(function onload(){
@@ -64,8 +65,18 @@ html(lang="en")
 				//- 	})
 			});
 
+			function getSunday(d){
+
+				var d = new Date(d);
+				var diff = d.getDate() - d.getDay();
+				
+				return new Date(d.setDate(diff));
+
+			}
+
 			function mainSC(data){
-				var curSunday = Date.today().next().saturday();
+				var curSunday = getSunday(new Date('3/9/2016'));
+				//- alert(curSunday);
 				var users = data.users;
 				var arrListDateSC = [];
 				var dateSC = new Date(curSunday);
@@ -79,7 +90,7 @@ html(lang="en")
 							td.appendChild(document.createTextNode('User'));
 						tr.appendChild(td);
 						for (var i=0; i<7; i++){
-							dateSC.setDate(dateSC.getDate()+1);
+							
 							var td = document.createElement('td');
 							td.appendChild(document.createTextNode(dateSC.toDateString()));
 							td.addEventListener('click',function(){
@@ -89,12 +100,16 @@ html(lang="en")
 							});
 							tr.appendChild(td);
 
+							dateSC.setDate(dateSC.getDate()+1);
 							
 							}
 					table.appendChild(tr);
 
+				
 
 				dateSC = new Date(curSunday);
+
+					
 				for (var i=0; i< users.length; i++){
 					
 						//- var x = 0;
@@ -123,13 +138,14 @@ html(lang="en")
 
 							}else{
 								taskSCData.userId = users[i].id;
-								taskSCData.dateSC = dateSC.toLocaleDateString();;
+								taskSCData.dateSC = dateSC.toLocaleDateString();
+								dateSC.setDate(dateSC.getDate()+1);
 							
 							}
 
 							arrListDateSC.push(taskSCData);
 
-							dateSC.setDate(dateSC.getDate()+1);
+							
 						}
 						
 					var dateSC = new Date(curSunday);
@@ -228,6 +244,10 @@ html(lang="en")
 									//- alert(i);
 									
 									dateSC.setDate(dateSC.getDate()-7);
+
+								}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
+								
+
 								} else{
 									//- alert('not @');
 									dateSC.setDate(dateSC.getDate()+1);
@@ -279,6 +299,15 @@ html(lang="en")
 				container.append(table);
 
 
+
+
+				var datePicker = document.createElement('input')
+					datePicker.setAttribute('type','text');
+					datePicker.setAttribute('id','calender');
+				container.append(datePicker);
+				alert('hdhdhd');
+
+				$("#calendar").datepicker();
 				var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
 				var li = document.createElement('li');
