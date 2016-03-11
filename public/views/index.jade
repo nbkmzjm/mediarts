@@ -12,7 +12,7 @@ html(lang="en")
 	body
 		span(id = 'calBack' class="glyphicon glyphicon-step-backward")
 		input(type = 'text' id = "calendar" value = new Date().toLocaleDateString()) 
-		span(class="glyphicon glyphicon-step-forward")
+		span(id = 'calForw' class="glyphicon glyphicon-step-forward")
 		#container
 
 		
@@ -300,38 +300,9 @@ html(lang="en")
 
 				}
 
-				
-
 				loopArrayDateSC(arrListDateSC);
-				
-				
 				container.append(table);
 
-
-
-
-				var datePicker = document.createElement('input')
-					datePicker.setAttribute('type','text');
-					datePicker.setAttribute('id','calendar');
-					//- datePicker.addEventListener('onSelect', function(){
-					//- alert('input dect');
-					//- });
-				//- container.append(datePicker);
-				
-
-				$("#calendar").datepicker({onSelect: function(){
-				$.post('/ajaxUser').done(mainSC);
-				}});
-
-				var dateM7 = new Date($("#calendar").val());
-
-				$("#calBack").click(function(){
-					
-					dateM7.setDate(dateM7.getDate()-7);
-					$("#calendar").val(dateM7.toLocaleDateString());
-					$.post('/ajaxUser').done(mainSC);
-					//- dateM7 = null;
-				});
 
 				var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
@@ -355,8 +326,51 @@ html(lang="en")
 				ul.appendChild(li1);
 
 
+				var taskOption = document.createElement('input')
+				taskOption.setAttribute('type','text');
+				taskOption.setAttribute('id','taskOption');
+				taskOption.addEventListener('blur', function(){
+					var taskOptionData = $("#taskOption").val();
+					$.post('/taskOption',{taskOption:taskOptionData}).done(function(){
+
+					});
+				
+				});
+				container.append(taskOption);
+
+
 				container.append(ul);
+
 			}
+
+
+			
+			
+
+			$("#calendar").datepicker({onSelect: function(){
+			$.post('/ajaxUser').done(mainSC);
+			}});
+
+			
+
+			$("#calBack").click(function(){
+				var dateM7 = new Date($("#calendar").val());
+				dateM7.setDate(dateM7.getDate()-7);
+				$("#calendar").val(dateM7.toLocaleDateString());
+				$.post('/ajaxUser').done(mainSC);
+				
+			});
+
+			$("#calForw").click(function(){
+				var dateM7 = new Date($("#calendar").val());
+				dateM7.setDate(dateM7.getDate()+7);
+				$("#calendar").val(dateM7.toLocaleDateString());
+				$.post('/ajaxUser').done(mainSC);
+				//- dateM7 = null;
+			});
+
+			
+			
 
 			
 

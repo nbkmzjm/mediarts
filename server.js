@@ -64,14 +64,7 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 
 
-	// , function(req, res){
-	// 	db.user.findAll().then(function(users){
-	// 		console.log('suerssssssssss'+JSON.stringify(users));
-	// 		console.log('ggggggggggggg'+ JSON.stringify(req.data));
-
-	// 	})
-
-	// }
+	
 });
 
 app.post('/mainSC', middleware.requireAuthentication, function(req, res) {
@@ -224,6 +217,17 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	// });
 });
 
+app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
+	
+	
+	var body = {};
+	body.description = req.body.taskOption
+	console.log('tttttastkInput'+ taskOption);
+
+	// db.taskOption.create
+
+
+});
 
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
