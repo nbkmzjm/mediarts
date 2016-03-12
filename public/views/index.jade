@@ -175,7 +175,7 @@ html(lang="en")
 				//- var dateSC = new Date(curMonday);
 				var i = 0;
 				var userDelta = 0;
-				var loopArrayDateSC = function(arr){
+				function loopArrayDateSC(arr){
 
 					//- if (arr[i].dateSC.indexOf("@") > -1){
 					//- 	alert('user detected');
@@ -302,28 +302,80 @@ html(lang="en")
 
 				loopArrayDateSC(arrListDateSC);
 				container.append(table);
-
-
 				var ul = document.createElement('ul');
-				ul.setAttribute('id','PTORadio')
-				var li = document.createElement('li');
-					var radio = document.createElement('input');
-						radio.setAttribute('type','radio');
-						radio.setAttribute('name','PTO');
-						radio.setAttribute('value','PTO');
+					ul.setAttribute('id','PTORadio')
+					var li = document.createElement('li');
+							li.style.color = 'blue'
+							li.style.width = '100px'
+						var radio = document.createElement('input');
+							radio.setAttribute('type','radio');
+							radio.setAttribute('name','PTO');
+							radio.setAttribute('value','');
 						radio.setAttribute('checked','checked');
 					li.appendChild(radio);
-					li.appendChild(document.createTextNode('PTO'));
-					
-				var li1 = document.createElement('li');
-					var radio = document.createElement('input');
-						radio.setAttribute('type','radio');
-						radio.setAttribute('name','PTO');
-						radio.setAttribute('value','PTOR');
-					li1.appendChild(radio);
-					li1.appendChild(document.createTextNode('PTOR'));
+					li.appendChild(document.createTextNode('NONE'));
 				ul.appendChild(li);
-				ul.appendChild(li1);
+
+				$.getJSON('/taskOption').done(function(Rdata){
+					
+					
+
+					$.each(Rdata.taskOption, function(i, taskOption){
+						var li = document.createElement('li');
+							li.style.color = 'blue'
+							li.style.width = '100px'
+							var radio = document.createElement('input');
+								radio.setAttribute('type','radio');
+								radio.setAttribute('name','PTO');
+								radio.setAttribute('value',taskOption.description);
+						//- radio.setAttribute('checked','checked');
+							li.appendChild(radio);
+							li.appendChild(document.createTextNode(taskOption.description));
+							li.addEventListener('click',function(){
+								var span = document.createElement('span')
+									span.style.color = 'red'
+									span.className = "glyphicon glyphicon-remove-circle"
+									span.id = 'delGly';
+									span.addEventListener('click', function(){
+
+										$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(){
+
+										});
+										li.removeChild(document.getElementById('delGly'))
+									});
+								li.appendChild(span)
+
+
+								
+
+							});
+
+							li.addEventListener('mouseleave',function(){
+								if ($('#delGly').length){
+									li.removeChild(document.getElementById('delGly'))
+								}
+							
+							})
+
+
+						ul.appendChild(li);
+					});
+					container.append(ul);
+				});
+
+
+				
+				
+					
+				//- var li1 = document.createElement('li');
+				//- 	var radio = document.createElement('input');
+				//- 		radio.setAttribute('type','radio');
+				//- 		radio.setAttribute('name','PTO');
+				//- 		radio.setAttribute('value','PTOR');
+				//- 	li1.appendChild(radio);
+				//- 	li1.appendChild(document.createTextNode('PTOR'));
+				
+				//- ul.appendChild(li1);
 
 
 				var taskOption = document.createElement('input')
@@ -331,15 +383,15 @@ html(lang="en")
 				taskOption.setAttribute('id','taskOption');
 				taskOption.addEventListener('blur', function(){
 					var taskOptionData = $("#taskOption").val();
-					$.post('/taskOption',{taskOption:taskOptionData}).done(function(){
-
+					$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+					
 					});
 				
 				});
 				container.append(taskOption);
 
 
-				container.append(ul);
+				
 
 			}
 

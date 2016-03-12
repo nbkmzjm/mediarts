@@ -64,7 +64,6 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 
 
-	
 });
 
 app.post('/mainSC', middleware.requireAuthentication, function(req, res) {
@@ -112,22 +111,22 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 			datePos: dateSC
 		}
 
-	}).then(function(assign){
-		console.log('assingXXX'+ assign);
-		console.log('userIdXXX'+ userId);
+	}).then(function(assign) {
+		console.log('assingXXX' + assign);
+		console.log('userIdXXX' + userId);
 
-		if (!!assign){
+		if (!!assign) {
 			res.json({
-				assign:assign
+				assign: assign
 			});
-		} else{
+		} else {
 			res.json({
-				userId:userId
+				userId: userId
 			});
 		};
-		
+
 	}).catch(function(e) {
-		
+
 		console.log("eeroorr" + e);
 
 		res.render('error', {
@@ -141,57 +140,79 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var taskSC = req.body.postdata.taskSC;
 
 	console.log('dateSCCCCCC: ' + userId + dateSC + taskSC);
+	if (taskSC!=''){
+		console.log('blank')
+		db.user.findOne({
+			where: {
+				id: userId
+			}
+		}).then(function(user) {
 
-	db.user.findOne({
-		where: {
-			id: userId
-		}
-	}).then(function(user) {
-		return [
-			db.assign.findOrCreate({
+
+			return [
+				db.assign.findOrCreate({
+					where: {
+						userId: user.id,
+						datePos: dateSC
+
+					}
+				}),
+				user
+			];
+
+
+		}).spread(function(assign, user) {
+			user.addAssign(assign[0]).then(function() {
+					// if (assign[1]) {
+				console.log('assigned is: rrrr' + assign[0].Note)
+					// return assign[0].reload();
+					// }
+			});
+
+			return db.assign.update({
+				Note: taskSC
+			}, {
 				where: {
 					userId: user.id,
 					datePos: dateSC
-
 				}
-			}),
-			user
-		];
+			});
 
+			res.json({
+				Note: taskSC
+			});
 
-	}).spread(function(assign, user) {
-		user.addAssign(assign[0]).then(function() {
-			// if (assign[1]) {
-			console.log('assigned is: rrrr' + assign)
-				// return assign[0].reload();
-				// }
+		}).then(function(assign) {
+			console.log('noteeee: ' + assign);
+		}).catch(function(e) {
+			console.log("eeroorr" + e);
+
+			res.render('error', {
+				error: e.toString()
+			});
 		});
-
-		return db.assign.update({
-			Note: taskSC
-		}, {
+	}else{
+		db.user.findOne({
 			where: {
-				userId: user.id,
-				datePos: dateSC
+				id: userId
 			}
+		}).then(function(user) {
+			return db.assign.destroy({
+						where: {
+							userId: user.id,
+							datePos: dateSC
+
+						}
+					});
+		}).catch(function(e) {
+			console.log("eeroorr" + e);
+
+			res.render('error', {
+				error: e.toString()
+			});
 		});
 
-		res.json({
-			Note: taskSC
-		});
-
-	}).then(function(assign){
-		console.log('noteeee: ' + assign);
-	}).
-
-
-	catch(function(e) {
-		console.log("eeroorr" + e);
-
-		res.render('error', {
-			error: e.toString()
-		});
-	});
+	}
 
 
 	// db.assign.create({
@@ -217,17 +238,50 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	// });
 });
 
-app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
-	
-	
-	var body = {};
-	body.description = req.body.taskOption
-	console.log('tttttastkInput'+ taskOption);
+app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 
-	// db.taskOption.create
+	db.taskOption.findAll().then(function(taskOption){
+		res.json({
+			taskOption:taskOption
+		})
+	}, function(e){
+		res.render('error', {
+			error: e.toString()
+		})
+
+	})
+
+})
+
+app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
+
+
+	db.taskOption.create({
+		description: req.body.taskOption
+	}).then(function(taskOption) {
+		res.json({
+			taskOption:taskOption
+		})
+
+	}, function(e) {
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+	
 
 
 });
+
+app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
+
+	db.taskOption.destroy({
+		where: {
+			description: req.body.taskOption
+		}
+	});
+
+})
 
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
