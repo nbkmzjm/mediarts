@@ -256,13 +256,17 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 
 
-	db.taskOption.create({
+	db.taskOption.findOrCreate({
+		where:{
 		description: req.body.taskOption
-	}).then(function(taskOption) {
-		res.json({
-			taskOption:taskOption
-		})
-
+		}
+	}).spread(function(taskOption, created) {
+			
+			res.json({
+				taskOption:taskOption,
+				created:created
+			})
+		
 	}, function(e) {
 		res.render('error', {
 			error: e.toString()

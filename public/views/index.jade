@@ -211,7 +211,9 @@ html(lang="en")
 											return function(){
 												var taskSC = $('input[name=PTO]:checked').attr('value');
 
+												setTimeout(function(){
 												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+												},1000)
 
 												this.style.backgroundColor = 'yellow'
 												this.innerHTML=taskSC;
@@ -234,8 +236,10 @@ html(lang="en")
 											return function(){
 															
 												var taskSC = $('input[name=PTO]:checked').attr('value');
-
+												setTimeout(function(){
 												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
+												},1000)
+												
 												this.style.backgroundColor = 'yellow'
 												this.innerHTML=taskSC;
 											}
@@ -317,10 +321,7 @@ html(lang="en")
 				ul.appendChild(li);
 
 				$.getJSON('/taskOption').done(function(Rdata){
-					
-					
-
-					$.each(Rdata.taskOption, function(i, taskOption){
+					function taskOptionFct(i, taskOption){
 						var li = document.createElement('li');
 							li.style.color = 'blue'
 							li.style.width = '100px'
@@ -368,7 +369,10 @@ html(lang="en")
 
 
 						ul.appendChild(li);
-					});
+					}
+					
+
+					$.each(Rdata.taskOption, taskOptionFct);
 
 						var li = document.createElement('li');
 							li.style.color = 'blue'
@@ -379,9 +383,21 @@ html(lang="en")
 								input.setAttribute('type','text');
 								input.setAttribute('id','taskOption');
 								input.addEventListener('blur', function(){
-									alert('hddlld');
-									var taskOptionData = $("#taskOption").val();
+									
+									var taskOptionData = $("#taskOption").val().toUpperCase();
+
 									$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+									
+										if (pData.created){
+											taskOptionFct(i, pData.taskOption);
+											$('#taskOption').val('')
+											ul.appendChild(li)
+										}else{
+											$('#taskOption').val('')
+										}
+
+											
+										
 									});
 								});
 							li.appendChild(input)
@@ -404,17 +420,17 @@ html(lang="en")
 				//- ul.appendChild(li1);
 
 
-				var taskOption = document.createElement('input')
-				taskOption.setAttribute('type','text');
-				taskOption.setAttribute('id','taskOption');
-				taskOption.addEventListener('blur', function(){
-					var taskOptionData = $("#taskOption").val();
-					$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+				//- var taskOption = document.createElement('input')
+				//- taskOption.setAttribute('type','text');
+				//- taskOption.setAttribute('id','taskOption');
+				//- taskOption.addEventListener('blur', function(){
+				//- 	var taskOptionData = $("#taskOption").val();
+				//- 	$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
 					
-					});
+				//- 	});
 				
-				});
-				container.append(taskOption);
+				//- });
+				//- container.append(taskOption);
 
 
 				
