@@ -141,7 +141,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 	console.log('dateSCCCCCC: ' + userId + dateSC + taskSC);
 	if (taskSC!=''){
-		console.log('blank')
+		
 		db.user.findOne({
 			where: {
 				id: userId
@@ -167,7 +167,12 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				console.log('assigned is: rrrr' + assign[0].Note)
 					// return assign[0].reload();
 					// }
+				
 			});
+
+			res.json({
+					Note: taskSC
+				});
 
 			return db.assign.update({
 				Note: taskSC
@@ -178,12 +183,12 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				}
 			});
 
-			res.json({
-				Note: taskSC
-			});
+
+
+			
 
 		}).then(function(assign) {
-			console.log('noteeee: ' + assign);
+			console.log('updateeee new taskSC: ' + assign);
 		}).catch(function(e) {
 			console.log("eeroorr" + e);
 
@@ -204,6 +209,13 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 						}
 					});
+		}).then(function(deleted){
+			alert('deleted: ' + deleted)
+			res.json({
+					deleted: deleted
+				});
+
+
 		}).catch(function(e) {
 			console.log("eeroorr" + e);
 
@@ -283,6 +295,10 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 		where: {
 			description: req.body.taskOption
 		}
+	}).then(function(deleted){
+		res.json({
+			deleted:deleted
+		});
 	});
 
 })

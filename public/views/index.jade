@@ -207,19 +207,32 @@ html(lang="en")
 										td.setAttribute('class','cell')
 										td.appendChild(document.createTextNode(taskSC));
 										td.addEventListener('click',function(userId,dateSC){
-
+																
 											return function(){
 												var taskSC = $('input[name=PTO]:checked').attr('value');
 
-												setTimeout(function(){
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-												},1000)
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 
-												this.style.backgroundColor = 'yellow'
-												this.innerHTML=taskSC;
+
+													if(!!pData.Note){
+													
+													td.innerHTML=pData.Note;
+													td.style.backgroundColor = 'yellow'
+													} else{
+
+													td.innerHTML='';
+													td.style.backgroundColor = 'red'
+													}
+												});
+												
+
+												
+												
 											}
 
-										}(userId, dateSC.toLocaleDateString()));
+										}(userId, dateSC.toLocaleDateString())
+
+										);
 
 									
 								} else {
@@ -236,12 +249,19 @@ html(lang="en")
 											return function(){
 															
 												var taskSC = $('input[name=PTO]:checked').attr('value');
-												setTimeout(function(){
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}});
-												},1000)
-												
-												this.style.backgroundColor = 'yellow'
-												this.innerHTML=taskSC;
+
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+													
+													if(!!pData.Note){
+													
+													td.innerHTML=pData.Note;
+													td.style.backgroundColor = 'yellow'
+													} else{
+
+													td.innerHTML='';
+													//- td.style.backgroundColor = 'red'
+													}
+												});
 											}
 										
 										
@@ -341,16 +361,9 @@ html(lang="en")
 									span.id = 'delGly';
 									span.addEventListener('click', function(){
 
-
-										$.post('/delTaskOption',{taskOption:taskOption.description}).done(
-
+										$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
 											ul.removeChild(li)
-											//- alert('hdhdd');
-												
-											//- ul.removeChild(li)
-											//- li.removeChild(document.getElementById('delGly'))
-											
-										);
+										});
 										
 									});
 								li.appendChild(span)
