@@ -93,7 +93,7 @@ module.exports = function(sequelize, DataTypes) {
 						resolve(user);
 
 					}, function(e) {
-						reject();
+						reject(e);
 					});
 				});
 			},
