@@ -10,10 +10,9 @@ html(lang="en")
 		link(href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet")
 
 	body
-		span(id = 'calBack' class="glyphicon glyphicon-step-backward")
-		input(type = 'text' id = "calendar" value = new Date().toLocaleDateString()) 
-		span(id = 'calForw' class="glyphicon glyphicon-step-forward")
+		
 		#container
+
 
 		
 
@@ -55,9 +54,6 @@ html(lang="en")
 		script(src="public/js/date.js")
 		script(src="http://code.jquery.com/ui/1.10.4/jquery-ui.js")
 		script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-		
-      
-     
 		script.
 
 			$(function onload(){
@@ -91,6 +87,24 @@ html(lang="en")
 				var dateSC = new Date(curSunday);
 				var container = $('#container');
 				container.html("");
+
+				var dateBackward = document.createElement('span');
+					dateBackward.id = 'dateBackward';
+					dateBackward.className = 'glyphicon glyphicon-step-backward'
+				container.append(dateBackward)
+
+				var dateCalender = document.createElement('span');
+					dateCalender.id = 'calendar';
+					dateCalender.value = new Date().toLocaleDateString()
+				container.append(dateCalender)
+
+
+				var dateForward = document.createElement('span');
+					dateForward.id = 'dateForward';
+					dateForward.className = 'glyphicon glyphicon-step-forward'
+				container.append(dateForward)
+
+
 				var table = document.createElement('table');
 					table.setAttribute('id', 'main');
 					table.setAttribute('class','table')
@@ -460,7 +474,7 @@ html(lang="en")
 
 			
 
-			$("#calBack").click(function(){
+			$("#dateBackward").click(function(){
 				var dateM7 = new Date($("#calendar").val());
 				dateM7.setDate(dateM7.getDate()-7);
 				$("#calendar").val(dateM7.toLocaleDateString());
@@ -468,7 +482,7 @@ html(lang="en")
 				
 			});
 
-			$("#calForw").click(function(){
+			$("#dateForward").click(function(){
 				var dateM7 = new Date($("#calendar").val());
 				dateM7.setDate(dateM7.getDate()+7);
 				$("#calendar").val(dateM7.toLocaleDateString());

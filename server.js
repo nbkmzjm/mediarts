@@ -336,7 +336,7 @@ app.post('/login', function(req, res) {
 	if (errors) {
 		res.render('users/loginForm', {
 			message: '',
-			errors: errorsno
+			errors: errors
 		});
 	}
 
@@ -354,7 +354,7 @@ app.post('/login', function(req, res) {
 		console.log("tookenInstance created");
 		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
 		res.cookie('token', tokenInstance.get('token'), {
-			maxAge: 9000000
+			maxAge: 900000
 		});
 		res.redirect('/');
 	}).catch(function(e) {
@@ -363,7 +363,7 @@ app.post('/login', function(req, res) {
 			param: "account",
 			msg: 'Username and Password do not match!!!'
 		}];
-		res.render('index', {
+		res.render('users/loginForm', {
 			errors: arrErr
 		});
 		res.status(401).json({
