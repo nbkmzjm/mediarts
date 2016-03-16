@@ -307,9 +307,23 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll().then(function(users) {
 		console.log('ajaxUser: ' + users);
-		res.json({
-			users: users
-		});
+		if (req.body.clickedData){
+			res.json({
+				pData: {
+					users: users,
+					clickedData: true
+				}
+			});
+		}else{
+			res.json({
+				pData: {
+					users: users,
+					clickedData: false
+				}
+			});
+		}
+		
+		
 
 	}, function(e) {
 		res.render('error', {

@@ -13,6 +13,10 @@ html(lang="en")
 		
 		#container
 
+			#calenderPick
+			#mainSC
+
+
 
 		
 
@@ -59,7 +63,7 @@ html(lang="en")
 			$(function onload(){
 				
 							
-
+				calendarPick();
 		
 				$.post('/ajaxUser').done(mainSC);
 
@@ -67,7 +71,55 @@ html(lang="en")
 				//- 	alert(data.dateHeader[0].dateH);
 				//- 	alert(data.users[0].email);
 				//- 	})
+				//- alert($('#calendar').val('bbbbbb'))
 			});
+
+			
+
+			function calendarPick(){
+
+				var calenderPick = $('#calenderPick');
+				//- calenderPick.html("");
+
+				var dateCalender = document.createElement('span');
+					dateCalender.id = 'calendar';
+					
+					dateCalender.innerHTML = new Date().toLocaleDateString()
+					
+					
+
+				var dateBackward = document.createElement('span');
+					dateBackward.id = 'dateBackward';
+					dateBackward.className = 'glyphicon glyphicon-step-backward'
+					dateBackward.addEventListener('click', function(){
+
+					var dateM7 = new Date(dateCalender.innerHTML);
+					dateM7.setDate(dateM7.getDate()-7);
+					dateCalender.innerHTML = dateM7.toLocaleDateString();
+					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+					})
+
+
+				var dateForward = document.createElement('span');
+					dateForward.id = 'dateForward';
+					dateForward.className = 'glyphicon glyphicon-step-forward'
+					dateForward.addEventListener('click', function(){
+
+					
+					var dateP7 = new Date(dateCalender.innerHTML);
+					dateP7.setDate(dateP7.getDate()+7);
+					dateCalender.innerHTML = dateP7.toLocaleDateString();
+					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+					})
+
+				calenderPick.append(dateBackward)
+				calenderPick.append(dateCalender)
+				calenderPick.append(dateForward)
+
+				
+			}
 
 			function getSunday(d){
 
@@ -79,32 +131,23 @@ html(lang="en")
 			}
 
 			function mainSC(data){
-				var curDate = $('#calendar').val();
+				
+				var mainSC = $('#mainSC');
+				mainSC.html('');
+				
+
+
+
+				//- $('#calendar').val('ddddd');
+				var curDate = $('#calendar').text();
 				var curSunday = getSunday(new Date(curDate));
-				//- alert(curSunday);
-				var users = data.users;
+				//- alert(curDate);
+				var users = data.pData.users;
 				var arrListDateSC = [];
 				var dateSC = new Date(curSunday);
-				var container = $('#container');
-				container.html("");
+								
 
-				var dateBackward = document.createElement('span');
-					dateBackward.id = 'dateBackward';
-					dateBackward.className = 'glyphicon glyphicon-step-backward'
-				container.append(dateBackward)
-
-				var dateCalender = document.createElement('span');
-					dateCalender.id = 'calendar';
-					dateCalender.value = new Date().toLocaleDateString()
-				container.append(dateCalender)
-
-
-				var dateForward = document.createElement('span');
-					dateForward.id = 'dateForward';
-					dateForward.className = 'glyphicon glyphicon-step-forward'
-				container.append(dateForward)
-
-
+				
 				var table = document.createElement('table');
 					table.setAttribute('id', 'main');
 					table.setAttribute('class','table')
@@ -339,7 +382,7 @@ html(lang="en")
 				}
 
 				loopArrayDateSC(arrListDateSC);
-				container.append(table);
+				mainSC.append(table);
 				var ul = document.createElement('ul');
 					ul.setAttribute('id','PTORadio')
 					var li = document.createElement('li');
@@ -429,7 +472,7 @@ html(lang="en")
 								});
 							li.appendChild(input)
 						ul.appendChild(li)
-					container.append(ul);
+					mainSC.append(ul);
 				});
 
 
