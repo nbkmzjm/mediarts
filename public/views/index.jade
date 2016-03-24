@@ -186,6 +186,16 @@ html(lang="en")
 
 			dateSC = new Date(curSunday);
 
+
+
+			var today = new Date()
+			var lockoutDate = new Date('4/24/16')
+			var lockoutDateX = new Date('4/24/16')
+			lockoutDateX.setDate(lockoutDateX.getDate()-21)
+			
+			var date21LK = 	new Date(lockoutDateX)
+			
+
 				
 			for (var i=0; i< users.length; i++){
 				
@@ -252,146 +262,159 @@ html(lang="en")
 				//- }	
 			
 
-					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
-						function(assigndata){
-							//- var userDelta = 0;
+				$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
+					function(assigndata){
+						//- var userDelta = 0;
 
+						
+
+						
+						//- alert(dateSC.toLocaleDateString());
+						
+						
+
+						if(!!assigndata.assign){
+						
+							
+							
+							var userId = assigndata.assign.userId;
+							var taskSC = assigndata.assign.Note;
 							
 
-							
-							//- alert(dateSC.toLocaleDateString());
-							
-							
-
-							if(!!assigndata.assign){
-							
-								
-								
-								var userId = assigndata.assign.userId;
-								var taskSC = assigndata.assign.Note;
-								
-
-								var td = document.createElement('td');
-									td.setAttribute('class','cell')
-									td.appendChild(document.createTextNode(taskSC));
-									td.addEventListener('click',function(userId,dateSC){
-															
-										return function(){
-											var taskSC = $('input[name=PTO]:checked').attr('value');
-
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-
-												//- alert(pData.authorized);
-
-												if (pData.authorized == false) {
-													alert('You are not authorized for this action')
-												}else if(!!pData.Note){
-												
-												td.innerHTML=pData.Note;
-												td.style.backgroundColor = 'yellow'
-												} else{
-
-												td.innerHTML='';
-												td.style.backgroundColor = 'red'
-												}
-											});
-											
-
-											
-											
-										}
-
-									}(userId, dateSC.toLocaleDateString())
-
-									);
-
-								
-							} else {
-
-								
-								
-
-								var userId = assigndata.userId;
-									var td = document.createElement('td');
-									td.setAttribute('class','cell')
-									td.appendChild(document.createTextNode(""));
-									td.addEventListener('click',function(userId,dateSC){
-
-										return function(){
+							var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(taskSC));
+								td.addEventListener('click',function(userId,dateSC){
 														
-											var taskSC = $('input[name=PTO]:checked').attr('value');
+									return function(){
 
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-												
-												if (pData.authorized == false) {
-													alert('You are not authorized for this action')
-												}else if(!!pData.Note){
-												
-												td.innerHTML=pData.Note;
-												td.style.backgroundColor = 'yellow'
-												} else{
+										
 
-												td.innerHTML='';
-												//- td.style.backgroundColor = 'red'
-												}
-											});
+										var selDate = new Date(dateSC)
+										alert('selDate:'+ selDate +'---'+lockoutDate+ '---'+ lockoutDateX)
+										if (selDate<lockoutDate){
+											alert('lock')
 										}
-									
-									
 
-									}(userId, dateSC.toLocaleDateString()));
-									
-								
-								
-							}
+										//- alert(date21LK.toLocaleDateString())
+
+										var taskSC = $('input[name=PTO]:checked').attr('value');
+
+										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+
+											//- alert(pData.authorized);
+
+											if (pData.authorized == false) {
+												alert('You are not authorized for this action')
+											}else if(!!pData.Note){
+											
+											td.innerHTML=pData.Note;
+											td.style.backgroundColor = 'yellow'
+											} else{
+
+											td.innerHTML='';
+											td.style.backgroundColor = 'red'
+											}
+										});
+										
+
+										
+										
+									}
+
+								}(userId, dateSC.toLocaleDateString())
+
+								);
 
 							
-							if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
-								//- alert(i);
-								
-								dateSC.setDate(dateSC.getDate()-7);
+						} else {
 
-							}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
-							
-
-							} else{
-								//- alert('not @');
-								dateSC.setDate(dateSC.getDate()+1);
-							}
 							
 							
-								
-							
 
-							if (userDelta != userId){
-
-
+							var userId = assigndata.userId;
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
-								td.appendChild(document.createTextNode(arr[i].dateSC));
+								td.appendChild(document.createTextNode(""));
+								td.addEventListener('click',function(userId,dateSC){
 
-								window['tr' + userId] = document.createElement('tr');
-								window['tr' + userId].appendChild(td);
-								table.appendChild(window['tr' + userId]);
+									return function(){
 
-							}else{
-								window['tr' + userId].appendChild(td);
-								table.appendChild(window['tr' + userId]);
+										//- var today =
+													
+										var taskSC = $('input[name=PTO]:checked').attr('value');
 
-							}	
+										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+											
+											if (pData.authorized == false) {
+												alert('You are not authorized for this action')
+											}else if(!!pData.Note){
+											
+											td.innerHTML=pData.Note;
+											td.style.backgroundColor = 'yellow'
+											} else{
 
-							userDelta = userId;
+											td.innerHTML='';
+											//- td.style.backgroundColor = 'red'
+											}
+										});
+									}
+								
+								
 
+								}(userId, dateSC.toLocaleDateString()));
+								
 							
-							i++;
-							if (i < arr.length ){
-								loopArrayDateSC(arr);
-							}
-
-
+							
 						}
+
+						
+						if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
+							//- alert(i);
 							
-					);
+							dateSC.setDate(dateSC.getDate()-7);
+
+						}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
+						
+
+						} else{
+							//- alert('not @');
+							dateSC.setDate(dateSC.getDate()+1);
+						}
+						
+						
+							
+						
+
+						if (userDelta != userId){
+
+
+							var td = document.createElement('td');
+							td.setAttribute('class','cell')
+							td.appendChild(document.createTextNode(arr[i].dateSC));
+
+							window['tr' + userId] = document.createElement('tr');
+							window['tr' + userId].appendChild(td);
+							table.appendChild(window['tr' + userId]);
+
+						}else{
+							window['tr' + userId].appendChild(td);
+							table.appendChild(window['tr' + userId]);
+
+						}	
+
+						userDelta = userId;
+
+						
+						i++;
+						if (i < arr.length ){
+							loopArrayDateSC(arr);
+						}
+
+
+					}
+						
+				);
 				
 				
 
