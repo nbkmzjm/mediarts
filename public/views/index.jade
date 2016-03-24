@@ -281,8 +281,11 @@ html(lang="en")
 
 											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 
+												//- alert(pData.authorized);
 
-												if(!!pData.Note){
+												if (pData.authorized == false) {
+													alert('You are not authorized for this action')
+												}else if(!!pData.Note){
 												
 												td.innerHTML=pData.Note;
 												td.style.backgroundColor = 'yellow'
@@ -320,7 +323,9 @@ html(lang="en")
 
 											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 												
-												if(!!pData.Note){
+												if (pData.authorized == false) {
+													alert('You are not authorized for this action')
+												}else if(!!pData.Note){
 												
 												td.innerHTML=pData.Note;
 												td.style.backgroundColor = 'yellow'

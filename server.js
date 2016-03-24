@@ -139,11 +139,17 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
 	var taskSC = req.body.postdata.taskSC;
-	var curUserId = req.user.userId
-	console.log 
+	var curUserId = req.user.id
+	console.log('jjjjj'+curUserId) 
 
 	console.log('dateSCCCCCC: ' + userId + dateSC + taskSC);
-	if (taskSC!=''){
+
+	if (userId != curUserId){
+		console.log('aaauu')
+		res.json({authorized: false});
+
+
+	} else if (taskSC!=''){
 		
 		db.user.findOne({
 			where: {
