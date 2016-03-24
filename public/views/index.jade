@@ -1,4 +1,3 @@
-
 doctype html
 html(lang="en")
 	head
@@ -12,6 +11,7 @@ html(lang="en")
 	body
 		
 		#container
+			//- input(type='text' id='calendar')
 
 			#calenderPick
 			#mainSC
@@ -52,486 +52,497 @@ html(lang="en")
 
 
 			
-		script(src="public/js/jquery-2.1.4.min.js")
-		script(src="public/js/socket.io-1.3.7.js")
-		script(src="public/js/app.js")
-		script(src="public/js/date.js")
-		script(src="http://code.jquery.com/ui/1.10.4/jquery-ui.js")
-		script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-		script.
+	script(src="public/js/jquery-2.1.4.min.js")
+	script(src="public/js/socket.io-1.3.7.js")
+	script(src="public/js/app.js")
+	script(src="public/js/date.js")
+	script(src="http://code.jquery.com/ui/1.10.4/jquery-ui.js")
+	script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+	script.
 
-			$(function onload(){
-				
-							
-				calendarPick();
+		$(function (){
+			
+						
+			calendarPick();
+	
+			$.post('/ajaxUser').done(mainSC);
+
+			//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).done(function(data){
+			//- 	alert(data.dateHeader[0].dateH);
+			//- 	alert(data.users[0].email);
+			//- 	})
+			//- alert($('#calendar').val('bbbbbb'))
+
+			//- $("#calendar").datepicker({onSelect: function(){
+			//- 	$.post('/ajaxUser').done(mainSC);
+			//- }});
+		});
+
 		
-				$.post('/ajaxUser').done(mainSC);
 
-				//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).done(function(data){
-				//- 	alert(data.dateHeader[0].dateH);
-				//- 	alert(data.users[0].email);
-				//- 	})
-				//- alert($('#calendar').val('bbbbbb'))
-			});
+		function calendarPick(){
+
+			var calenderPick = $('#calenderPick');
+			//- calenderPick.html("");
+
+			var dateCalender = document.createElement('input');
+				dateCalender.id = 'calendar';
+				
+				dateCalender.value = new Date().toLocaleDateString()
+				//- dateCalender.datepicker({onSelect: function(){
+				//- 	}});
+				dateCalender.addEventListener('focus', function(){
+					$("#calendar").datepicker({onSelect: function(){
+						$.post('/ajaxUser').done(mainSC);
+					}});
+				})
+				
+				
+
+			var dateBackward = document.createElement('span');
+				dateBackward.id = 'dateBackward';
+				dateBackward.className = 'glyphicon glyphicon-step-backward'
+				dateBackward.addEventListener('click', function(){
+
+				var dateM7 = new Date(dateCalender.value);
+				dateM7.setDate(dateM7.getDate()-7);
+				dateCalender.value = dateM7.toLocaleDateString();
+				$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+				})
+
+
+			var dateForward = document.createElement('span');
+				dateForward.id = 'dateForward';
+				dateForward.className = 'glyphicon glyphicon-step-forward'
+				dateForward.addEventListener('click', function(){
+
+				
+				var dateP7 = new Date(dateCalender.value);
+				dateP7.setDate(dateP7.getDate()+7);
+				dateCalender.value = dateP7.toLocaleDateString();
+				$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+				})
+
+			calenderPick.append(dateBackward)
+			calenderPick.append(dateCalender)
+			calenderPick.append(dateForward)
+
+			
+		}
+
+		function getSunday(d){
+
+			var d = new Date(d);
+			var diff = d.getDate() - d.getDay();
+			
+			return new Date(d.setDate(diff));
+
+		}
+
+		function mainSC(data){
+			
+			var mainSC = $('#mainSC');
+			mainSC.html('');
+			
+
+
+
+			//- $('#calendar').val('ddddd');
+			var curDate = $('#calendar').val();
+			var curSunday = getSunday(new Date(curDate));
+			//- alert(curDate);
+			var users = data.pData.users;
+			var arrListDateSC = [];
+			var dateSC = new Date(curSunday);
+							
+
+			
+			var table = document.createElement('table');
+				table.setAttribute('id', 'main');
+				table.setAttribute('class','table')
+				var tr = document.createElement('tr');
+					var td = document.createElement('td');
+						td.appendChild(document.createTextNode('User'));
+					tr.appendChild(td);
+					for (var i=0; i<7; i++){
+						
+						var td = document.createElement('td');
+						td.appendChild(document.createTextNode(dateSC.toDateString()));
+						td.addEventListener('click',function(){
+
+						alert('drop cal');
+						$.post('/ajaxUser').done(mainSC);
+						});
+						tr.appendChild(td);
+
+						dateSC.setDate(dateSC.getDate()+1);
+						
+						}
+				table.appendChild(tr);
 
 			
 
-			function calendarPick(){
-
-				var calenderPick = $('#calenderPick');
-				//- calenderPick.html("");
-
-				var dateCalender = document.createElement('span');
-					dateCalender.id = 'calendar';
-					
-					dateCalender.innerHTML = new Date().toLocaleDateString()
-					
-					
-
-				var dateBackward = document.createElement('span');
-					dateBackward.id = 'dateBackward';
-					dateBackward.className = 'glyphicon glyphicon-step-backward'
-					dateBackward.addEventListener('click', function(){
-
-					var dateM7 = new Date(dateCalender.innerHTML);
-					dateM7.setDate(dateM7.getDate()-7);
-					dateCalender.innerHTML = dateM7.toLocaleDateString();
-					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
-
-					})
-
-
-				var dateForward = document.createElement('span');
-					dateForward.id = 'dateForward';
-					dateForward.className = 'glyphicon glyphicon-step-forward'
-					dateForward.addEventListener('click', function(){
-
-					
-					var dateP7 = new Date(dateCalender.innerHTML);
-					dateP7.setDate(dateP7.getDate()+7);
-					dateCalender.innerHTML = dateP7.toLocaleDateString();
-					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
-
-					})
-
-				calenderPick.append(dateBackward)
-				calenderPick.append(dateCalender)
-				calenderPick.append(dateForward)
+			dateSC = new Date(curSunday);
 
 				
-			}
-
-			function getSunday(d){
-
-				var d = new Date(d);
-				var diff = d.getDate() - d.getDay();
+			for (var i=0; i< users.length; i++){
 				
-				return new Date(d.setDate(diff));
-
-			}
-
-			function mainSC(data){
-				
-				var mainSC = $('#mainSC');
-				mainSC.html('');
-				
-
-
-
-				//- $('#calendar').val('ddddd');
-				var curDate = $('#calendar').text();
-				var curSunday = getSunday(new Date(curDate));
-				//- alert(curDate);
-				var users = data.pData.users;
-				var arrListDateSC = [];
-				var dateSC = new Date(curSunday);
-								
-
-				
-				var table = document.createElement('table');
-					table.setAttribute('id', 'main');
-					table.setAttribute('class','table')
-					var tr = document.createElement('tr');
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode('User'));
-						tr.appendChild(td);
-						for (var i=0; i<7; i++){
+					//- var x = 0;
+					//- var y = 3
+					//- function delayLoop(){
+					//- 	if (x++ < 3){return;}
+					//- 		console.log(x);
+					//- 	window.setTimeout(delayLoop, 1000);
 							
-							var td = document.createElement('td');
-							td.appendChild(document.createTextNode(dateSC.toDateString()));
-							td.addEventListener('click',function(){
+					//- }
+					//- delayLoop();
 
-							alert('drop cal');
-							$.post('/ajaxUser').done(mainSC);
-							});
-							tr.appendChild(td);
 
+				    for (var x=0; x<8; x++){
+					
+					    
+
+					 
+
+						var taskSCData = {};
+						
+						if (x==0){
+							taskSCData.userId = users[i].id;
+							taskSCData.dateSC = users[i].email;
+
+
+						}else{
+							taskSCData.userId = users[i].id;
+							taskSCData.dateSC = dateSC.toLocaleDateString();
 							dateSC.setDate(dateSC.getDate()+1);
-							
-							}
-					table.appendChild(tr);
-
-				
-
-				dateSC = new Date(curSunday);
-
-					
-				for (var i=0; i< users.length; i++){
-					
-						//- var x = 0;
-						//- var y = 3
-						//- function delayLoop(){
-						//- 	if (x++ < 3){return;}
-						//- 		console.log(x);
-						//- 	window.setTimeout(delayLoop, 1000);
-								
-						//- }
-						//- delayLoop();
-
-
-					    for (var x=0; x<8; x++){
 						
-						    
-
-						 
-
-							var taskSCData = {};
-							
-							if (x==0){
-								taskSCData.userId = users[i].id;
-								taskSCData.dateSC = users[i].email;
-
-
-							}else{
-								taskSCData.userId = users[i].id;
-								taskSCData.dateSC = dateSC.toLocaleDateString();
-								dateSC.setDate(dateSC.getDate()+1);
-							
-							}
-
-							arrListDateSC.push(taskSCData);
-
-							
 						}
+
+						arrListDateSC.push(taskSCData);
+
 						
-					var dateSC = new Date(curSunday);
-				}
+					}
+					
+				var dateSC = new Date(curSunday);
+			}
 
-				
-				//- alert(JSON.stringify(arrListDateSC, null, 4));
+			
+			//- alert(JSON.stringify(arrListDateSC, null, 4));
 
-				//- var z = 1;
-				//- var y = 2;
+			//- var z = 1;
+			//- var y = 2;
 
-				//- window['a' + z] = 'hell';
-				//- window['a' + y] = 'hellooo';
-				
-				//- alert(a2); 
+			//- window['a' + z] = 'hell';
+			//- window['a' + y] = 'hellooo';
+			
+			//- alert(a2); 
 
-				//- var tr1 = document.createElement('tr');
-				//- var dateSC = new Date(curMonday);
-				var i = 0;
-				var userDelta = 0;
-				function loopArrayDateSC(arr){
+			//- var tr1 = document.createElement('tr');
+			//- var dateSC = new Date(curMonday);
+			var i = 0;
+			var userDelta = 0;
+			function loopArrayDateSC(arr){
 
-					//- if (arr[i].dateSC.indexOf("@") > -1){
-					//- 	alert('user detected');
-					//- }else{
-					//- 	alert('user not detected');
-					//- }	
-				
+				//- if (arr[i].dateSC.indexOf("@") > -1){
+				//- 	alert('user detected');
+				//- }else{
+				//- 	alert('user not detected');
+				//- }	
+			
 
-						$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
-							function(assigndata){
-								//- var userDelta = 0;
+					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
+						function(assigndata){
+							//- var userDelta = 0;
 
+							
+
+							
+							//- alert(dateSC.toLocaleDateString());
+							
+							
+
+							if(!!assigndata.assign){
+							
+								
+								
+								var userId = assigndata.assign.userId;
+								var taskSC = assigndata.assign.Note;
 								
 
-								
-								//- alert(dateSC.toLocaleDateString());
-								
-								
-
-								if(!!assigndata.assign){
-								
-									
-									
-									var userId = assigndata.assign.userId;
-									var taskSC = assigndata.assign.Note;
-									
-
-									var td = document.createElement('td');
-										td.setAttribute('class','cell')
-										td.appendChild(document.createTextNode(taskSC));
-										td.addEventListener('click',function(userId,dateSC){
-																
-											return function(){
-												var taskSC = $('input[name=PTO]:checked').attr('value');
-
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-
-
-													if(!!pData.Note){
-													
-													td.innerHTML=pData.Note;
-													td.style.backgroundColor = 'yellow'
-													} else{
-
-													td.innerHTML='';
-													td.style.backgroundColor = 'red'
-													}
-												});
-												
-
-												
-												
-											}
-
-										}(userId, dateSC.toLocaleDateString())
-
-										);
-
-									
-								} else {
-
-									
-									
-
-									var userId = assigndata.userId;
-										var td = document.createElement('td');
-										td.setAttribute('class','cell')
-										td.appendChild(document.createTextNode(""));
-										td.addEventListener('click',function(userId,dateSC){
-
-											return function(){
+								var td = document.createElement('td');
+									td.setAttribute('class','cell')
+									td.appendChild(document.createTextNode(taskSC));
+									td.addEventListener('click',function(userId,dateSC){
 															
-												var taskSC = $('input[name=PTO]:checked').attr('value');
+										return function(){
+											var taskSC = $('input[name=PTO]:checked').attr('value');
 
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-													
-													if(!!pData.Note){
-													
-													td.innerHTML=pData.Note;
-													td.style.backgroundColor = 'yellow'
-													} else{
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 
-													td.innerHTML='';
-													//- td.style.backgroundColor = 'red'
-													}
-												});
-											}
-										
-										
 
-										}(userId, dateSC.toLocaleDateString()));
-										
-									
-									
-								}
+												if(!!pData.Note){
+												
+												td.innerHTML=pData.Note;
+												td.style.backgroundColor = 'yellow'
+												} else{
+
+												td.innerHTML='';
+												td.style.backgroundColor = 'red'
+												}
+											});
+											
+
+											
+											
+										}
+
+									}(userId, dateSC.toLocaleDateString())
+
+									);
 
 								
-								if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
-									//- alert(i);
-									
-									dateSC.setDate(dateSC.getDate()-7);
+							} else {
 
-								}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
-								
-
-								} else{
-									//- alert('not @');
-									dateSC.setDate(dateSC.getDate()+1);
-								}
 								
 								
-									
-								
 
-								if (userDelta != userId){
-
-
+								var userId = assigndata.userId;
 									var td = document.createElement('td');
 									td.setAttribute('class','cell')
-									td.appendChild(document.createTextNode(arr[i].dateSC));
+									td.appendChild(document.createTextNode(""));
+									td.addEventListener('click',function(userId,dateSC){
 
-									window['tr' + userId] = document.createElement('tr');
-									window['tr' + userId].appendChild(td);
-									table.appendChild(window['tr' + userId]);
+										return function(){
+														
+											var taskSC = $('input[name=PTO]:checked').attr('value');
 
-								}else{
-									window['tr' + userId].appendChild(td);
-									table.appendChild(window['tr' + userId]);
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+												
+												if(!!pData.Note){
+												
+												td.innerHTML=pData.Note;
+												td.style.backgroundColor = 'yellow'
+												} else{
 
-								}	
+												td.innerHTML='';
+												//- td.style.backgroundColor = 'red'
+												}
+											});
+										}
+									
+									
 
-								userDelta = userId;
-
+									}(userId, dateSC.toLocaleDateString()));
+									
 								
-								i++;
-								if (i < arr.length ){
-									loopArrayDateSC(arr);
-								}
-
-
+								
 							}
+
+							
+							if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
+								//- alert(i);
 								
-						);
-					
-					
+								dateSC.setDate(dateSC.getDate()-7);
 
-				}
+							}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
+							
 
-				loopArrayDateSC(arrListDateSC);
-				mainSC.append(table);
-				var ul = document.createElement('ul');
-					ul.setAttribute('id','PTORadio')
+							} else{
+								//- alert('not @');
+								dateSC.setDate(dateSC.getDate()+1);
+							}
+							
+							
+								
+							
+
+							if (userDelta != userId){
+
+
+								var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(arr[i].dateSC));
+
+								window['tr' + userId] = document.createElement('tr');
+								window['tr' + userId].appendChild(td);
+								table.appendChild(window['tr' + userId]);
+
+							}else{
+								window['tr' + userId].appendChild(td);
+								table.appendChild(window['tr' + userId]);
+
+							}	
+
+							userDelta = userId;
+
+							
+							i++;
+							if (i < arr.length ){
+								loopArrayDateSC(arr);
+							}
+
+
+						}
+							
+					);
+				
+				
+
+			}
+
+			loopArrayDateSC(arrListDateSC);
+			mainSC.append(table);
+			var ul = document.createElement('ul');
+				ul.setAttribute('id','PTORadio')
+				var li = document.createElement('li');
+						li.style.color = 'blue'
+						li.style.width = '100px'
+					var radio = document.createElement('input');
+						radio.setAttribute('type','radio');
+						radio.setAttribute('name','PTO');
+						radio.setAttribute('value','');
+					radio.setAttribute('checked','checked');
+				li.appendChild(radio);
+				li.appendChild(document.createTextNode('NONE'));
+			ul.appendChild(li);
+
+			$.getJSON('/taskOption').done(function(Rdata){
+				function taskOptionFct(i, taskOption){
 					var li = document.createElement('li');
-							li.style.color = 'blue'
-							li.style.width = '100px'
+						li.style.color = 'blue'
+						li.style.width = '100px'
 						var radio = document.createElement('input');
 							radio.setAttribute('type','radio');
 							radio.setAttribute('name','PTO');
-							radio.setAttribute('value','');
-						radio.setAttribute('checked','checked');
-					li.appendChild(radio);
-					li.appendChild(document.createTextNode('NONE'));
-				ul.appendChild(li);
+							radio.setAttribute('value',taskOption.description);
+					//- radio.setAttribute('checked','checked');
+						li.appendChild(radio);
+						li.appendChild(document.createTextNode(taskOption.description));
+						li.addEventListener('click',function(){
 
-				$.getJSON('/taskOption').done(function(Rdata){
-					function taskOptionFct(i, taskOption){
-						var li = document.createElement('li');
-							li.style.color = 'blue'
-							li.style.width = '100px'
-							var radio = document.createElement('input');
-								radio.setAttribute('type','radio');
-								radio.setAttribute('name','PTO');
-								radio.setAttribute('value',taskOption.description);
-						//- radio.setAttribute('checked','checked');
-							li.appendChild(radio);
-							li.appendChild(document.createTextNode(taskOption.description));
-							li.addEventListener('click',function(){
+							var span = document.createElement('span')
+								span.innerHTML = '';
+								span.style.color = 'red'
+								span.className = "glyphicon glyphicon-remove-circle"
+								span.id = 'delGly';
+								span.addEventListener('click', function(){
 
-								var span = document.createElement('span')
-									span.innerHTML = '';
-									span.style.color = 'red'
-									span.className = "glyphicon glyphicon-remove-circle"
-									span.id = 'delGly';
-									span.addEventListener('click', function(){
-
-										$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
-											ul.removeChild(li)
-										});
-										
+									$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
+										ul.removeChild(li)
 									});
-								li.appendChild(span)
-
-
-								
-
-							});
-
-							li.addEventListener('mouseleave',function(){
-								if ($('#delGly').length){
-									li.removeChild(document.getElementById('delGly'))
-								}
-							
-							})
-
-
-						ul.appendChild(li);
-					}
-					
-
-					$.each(Rdata.taskOption, taskOptionFct);
-
-						var li = document.createElement('li');
-							li.style.color = 'blue'
-							li.style.width = '100px'
-							var input = document.createElement('input');
-								input.style.width = '100px'
-								input.setAttribute('placeholder','Add Option');
-								input.setAttribute('type','text');
-								input.setAttribute('id','taskOption');
-								input.addEventListener('blur', function(){
 									
-									var taskOptionData = $("#taskOption").val().toUpperCase();
-
-									$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-									
-										if (pData.created){
-											taskOptionFct(i, pData.taskOption);
-											$('#taskOption').val('')
-											ul.appendChild(li)
-										}else{
-											$('#taskOption').val('')
-										}
-
-											
-										
-									});
 								});
-							li.appendChild(input)
-						ul.appendChild(li)
-					mainSC.append(ul);
-				});
+							li.appendChild(span)
 
 
-				
-				
-					
-				//- var li1 = document.createElement('li');
-				//- 	var radio = document.createElement('input');
-				//- 		radio.setAttribute('type','radio');
-				//- 		radio.setAttribute('name','PTO');
-				//- 		radio.setAttribute('value','PTOR');
-				//- 	li1.appendChild(radio);
-				//- 	li1.appendChild(document.createTextNode('PTOR'));
-				
-				//- ul.appendChild(li1);
+							
+
+						});
+
+						li.addEventListener('mouseleave',function(){
+							if ($('#delGly').length){
+								li.removeChild(document.getElementById('delGly'))
+							}
+						
+						})
 
 
-				//- var taskOption = document.createElement('input')
-				//- taskOption.setAttribute('type','text');
-				//- taskOption.setAttribute('id','taskOption');
-				//- taskOption.addEventListener('blur', function(){
-				//- 	var taskOptionData = $("#taskOption").val();
-				//- 	$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-					
-				//- 	});
-				
-				//- });
-				//- container.append(taskOption);
-
-
+					ul.appendChild(li);
+				}
 				
 
-			}
+				$.each(Rdata.taskOption, taskOptionFct);
+
+					var li = document.createElement('li');
+						li.style.color = 'blue'
+						li.style.width = '100px'
+						var input = document.createElement('input');
+							input.style.width = '100px'
+							input.setAttribute('placeholder','Add Option');
+							input.setAttribute('type','text');
+							input.setAttribute('id','taskOption');
+							input.addEventListener('blur', function(){
+								
+								var taskOptionData = $("#taskOption").val().toUpperCase();
+
+								$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+								
+									if (pData.created){
+										taskOptionFct(i, pData.taskOption);
+										$('#taskOption').val('')
+										ul.appendChild(li)
+									}else{
+										$('#taskOption').val('')
+									}
+
+										
+									
+								});
+							});
+						li.appendChild(input)
+					ul.appendChild(li)
+				mainSC.append(ul);
+			});
 
 
 			
 			
+				
+			//- var li1 = document.createElement('li');
+			//- 	var radio = document.createElement('input');
+			//- 		radio.setAttribute('type','radio');
+			//- 		radio.setAttribute('name','PTO');
+			//- 		radio.setAttribute('value','PTOR');
+			//- 	li1.appendChild(radio);
+			//- 	li1.appendChild(document.createTextNode('PTOR'));
+			
+			//- ul.appendChild(li1);
 
-			$("#calendar").datepicker({onSelect: function(){
+
+			//- var taskOption = document.createElement('input')
+			//- taskOption.setAttribute('type','text');
+			//- taskOption.setAttribute('id','taskOption');
+			//- taskOption.addEventListener('blur', function(){
+			//- 	var taskOptionData = $("#taskOption").val();
+			//- 	$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+				
+			//- 	});
+			
+			//- });
+			//- container.append(taskOption);
+
+
+			
+
+		}
+
+
+		
+		//- $("#calendar").datepicker({onSelect: function(){
+		//- 	$.post('/ajaxUser').done(mainSC);
+		//- }});
+
+	
+
+		
+
+		$("#dateBackward").click(function(){
+			var dateM7 = new Date($("#calendar").val());
+			dateM7.setDate(dateM7.getDate()-7);
+			$("#calendar").val(dateM7.toLocaleDateString());
 			$.post('/ajaxUser').done(mainSC);
-			}});
-
 			
+		});
 
-			$("#dateBackward").click(function(){
-				var dateM7 = new Date($("#calendar").val());
-				dateM7.setDate(dateM7.getDate()-7);
-				$("#calendar").val(dateM7.toLocaleDateString());
-				$.post('/ajaxUser').done(mainSC);
-				
-			});
-
-			$("#dateForward").click(function(){
-				var dateM7 = new Date($("#calendar").val());
-				dateM7.setDate(dateM7.getDate()+7);
-				$("#calendar").val(dateM7.toLocaleDateString());
-				$.post('/ajaxUser').done(mainSC);
-				//- dateM7 = null;
-			});
+		$("#dateForward").click(function(){
+			var dateM7 = new Date($("#calendar").val());
+			dateM7.setDate(dateM7.getDate()+7);
+			$("#calendar").val(dateM7.toLocaleDateString());
+			$.post('/ajaxUser').done(mainSC);
+			//- dateM7 = null;
+		});
 
 			
 			

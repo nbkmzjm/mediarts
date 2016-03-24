@@ -210,14 +210,14 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 						}
 					});
 		}).then(function(deleted){
-			alert('deleted: ' + deleted)
+			console.log('deleted: ' + deleted)
 			res.json({
 					deleted: deleted
 				});
 
 
 		}).catch(function(e) {
-			console.log("eeroorr" + e);
+			console.log("eeroorrx" + e);
 
 			res.render('error', {
 				error: e.toString()
@@ -225,6 +225,8 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 		});
 
 	}
+
+
 
 
 	// db.assign.create({
@@ -481,6 +483,10 @@ app.get('/about', middleware.requireAuthentication, function(req, res) {
 	});
 
 });
+
+app.get('/test', function(req, res){
+	res.render('test')
+})
 
 app.post('/add', function(req, res) {
 	var newItem = req.body.newItem;
