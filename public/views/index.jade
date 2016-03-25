@@ -44,7 +44,7 @@ html(lang="en")
 			
 
 
-	a(href='/assignInput') Assign Input
+	
 	br
 	a(href='/logout') Logout
 
@@ -190,10 +190,15 @@ html(lang="en")
 
 			var today = new Date()
 			var lockoutDate = new Date('4/24/16')
-			var lockoutDateX = new Date('4/24/16')
-			lockoutDateX.setDate(lockoutDateX.getDate()-21)
+			var date21LK = new Date()
+			date21LK.setDate(lockoutDate.getDate()-21)
+				alert(today+'---'+date21LK)
+			if (today > date21LK){
+				lockoutDate.setDate(lockoutDate.getDate()+28)
+					alert('new lockoutDate: '+ lockoutDate)
+				}
 			
-			var date21LK = 	new Date(lockoutDateX)
+			//- var date21LK = 	new Date(lockoutDateX)
 			
 
 				
@@ -290,32 +295,33 @@ html(lang="en")
 
 										
 
-										var selDate = new Date(dateSC)
-										alert('selDate:'+ selDate +'---'+lockoutDate+ '---'+ lockoutDateX)
-										if (selDate<lockoutDate){
-											alert('lock')
+									var selDate = new Date(dateSC)
+										
+									if (selDate<lockoutDate){
+										alert('lock')
+									}else{
+
+									
+
+									var taskSC = $('input[name=PTO]:checked').attr('value');
+
+									$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+
+										//- alert(pData.authorized);
+
+										if (pData.authorized == false) {
+											alert('You are not authorized for this action')
+										}else if(!!pData.Note){
+										
+										td.innerHTML=pData.Note;
+										td.style.backgroundColor = 'yellow'
+										} else{
+
+										td.innerHTML='';
+										td.style.backgroundColor = 'red'
 										}
-
-										//- alert(date21LK.toLocaleDateString())
-
-										var taskSC = $('input[name=PTO]:checked').attr('value');
-
-										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-
-											//- alert(pData.authorized);
-
-											if (pData.authorized == false) {
-												alert('You are not authorized for this action')
-											}else if(!!pData.Note){
-											
-											td.innerHTML=pData.Note;
-											td.style.backgroundColor = 'yellow'
-											} else{
-
-											td.innerHTML='';
-											td.style.backgroundColor = 'red'
-											}
-										});
+									});
+									}
 										
 
 										
@@ -340,7 +346,12 @@ html(lang="en")
 
 									return function(){
 
-										//- var today =
+										var selDate = new Date(dateSC)
+										
+										if (selDate<lockoutDate){
+											alert('lock')
+										}else{
+
 													
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 
@@ -358,6 +369,7 @@ html(lang="en")
 											//- td.style.backgroundColor = 'red'
 											}
 										});
+										}
 									}
 								
 								
