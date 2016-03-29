@@ -67,6 +67,10 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 });
 
+app.post('/sysObj', middleware.requireAuthentication, function(req, res){
+
+})
+
 
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res) {

@@ -17,7 +17,8 @@ if (env === 'production'){
 var db = {};
 		
 db.assign = sequelize.import(__dirname + '/models/assign.js');
-db.taskOption = sequelize.import(__dirname + '/models/taskOption.js');db.taskOption = sequelize.import(__dirname + '/models/sysObj.js');
+db.taskOption = sequelize.import(__dirname + '/models/taskOption.js');
+db.taskOption = sequelize.import(__dirname + '/models/sysObj.js');
 db.dateHeader = sequelize.import(__dirname + '/models/dateHeader.js');
 db.user = sequelize.import(__dirname + '/models/user.js');
 db.token = sequelize.import(__dirname + '/models/token.js');
