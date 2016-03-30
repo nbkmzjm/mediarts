@@ -188,14 +188,19 @@ html(lang="en")
 
 
 
+			$.post('/sysObj', {pData:{lockoutDate:true, date21LK:true}}).done(function(rData){
+				
+			alert(JSON.stringify(rData, null, 4))
+			})
+
 			var today = new Date('6/15/16')
 			var lockoutDate = new Date('4/24/16')
 			var date21LK = new Date('4/24/16')
 			date21LK.setDate(lockoutDate.getDate()-21)
-				alert(today+'---'+date21LK)
+				//- alert(today+'---'+date21LK)
 			if (today > date21LK){
 				lockoutDate.setDate(lockoutDate.getDate()+28)
-					alert('new lockoutDate: '+ lockoutDate)
+					//- alert('new lockoutDate: '+ lockoutDate)
 				}
 			
 			//- var date21LK = 	new Date(lockoutDateX)
@@ -434,6 +439,13 @@ html(lang="en")
 
 			loopArrayDateSC(arrListDateSC);
 			mainSC.append(table);
+
+
+			var SCNote = document.createElement('p')
+			SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ lockoutDate.toLocaleDateString()
+			mainSC.append(SCNote)
+
+
 			var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
 				var li = document.createElement('li');
@@ -568,21 +580,7 @@ html(lang="en")
 
 		
 
-		$("#dateBackward").click(function(){
-			var dateM7 = new Date($("#calendar").val());
-			dateM7.setDate(dateM7.getDate()-7);
-			$("#calendar").val(dateM7.toLocaleDateString());
-			$.post('/ajaxUser').done(mainSC);
-			
-		});
-
-		$("#dateForward").click(function(){
-			var dateM7 = new Date($("#calendar").val());
-			dateM7.setDate(dateM7.getDate()+7);
-			$("#calendar").val(dateM7.toLocaleDateString());
-			$.post('/ajaxUser').done(mainSC);
-			//- dateM7 = null;
-		});
+		
 
 			
 			

@@ -67,8 +67,19 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 });
 
-app.post('/sysObj', middleware.requireAuthentication, function(req, res){
+function sysObj(name){
+	
 
+}
+
+app.post('/sysObj', middleware.requireAuthentication, function(req, res){
+	var lockoutDate = req.body.pData.lockoutDate
+	var date21LK = req.body.pData.date21LK
+
+	console.log(lockoutDate +'---'+ date21LK)
+
+	db.sysObj.findOne
+	test()
 })
 
 
