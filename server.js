@@ -73,13 +73,32 @@ function sysObj(name){
 }
 
 app.post('/sysObj', middleware.requireAuthentication, function(req, res){
-	var lockoutDate = req.body.pData.lockoutDate
+	var varList = req.body.pData
 	var date21LK = req.body.pData.date21LK
+	var rData = {}
+	console.log(varList[0])
+	
+	
+	db.sysObj.findAll({
+		where:{
+			name: varList
+		} 
+	}).then(function(sysObj){
 
-	console.log(lockoutDate +'---'+ date21LK)
+		sysObj.forEach(function(x,i){
+		console.log(x.name)
+		})
+		
+		
+		
+	});
 
-	db.sysObj.findOne
-	test()
+
+	
+	
+	
+	
+	
 })
 
 
@@ -336,7 +355,7 @@ app.post('/login', function(req, res) {
 	}).then(function(tokenInstance) {
 		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
 		res.cookie('token', tokenInstance.get('token'), {
-			maxAge: 900000
+			maxAge: 9000000
 		});
 		res.redirect('/');
 	}).catch(function(e) {

@@ -188,7 +188,7 @@ html(lang="en")
 
 
 
-			$.post('/sysObj', {pData:{lockoutDate:true, date21LK:true}}).done(function(rData){
+			$.post('/sysObj', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
 				
 			alert(JSON.stringify(rData, null, 4))
 			})
