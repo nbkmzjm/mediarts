@@ -145,42 +145,36 @@ html(lang="en")
 			
 			var mainSC = $('#mainSC');
 			mainSC.html('');
-			
 
-
-
-			//- $('#calendar').val('ddddd');
 			var curDate = $('#calendar').val();
 			var curSunday = getSunday(new Date(curDate));
-			//- alert(curDate);
-			var users = data.pData.users;
-			var arrListDateSC = [];
+			
 			var dateSC = new Date(curSunday);
 							
 
 			
 			var table = document.createElement('table');
-				table.setAttribute('id', 'main');
-				table.setAttribute('class','table')
-				var tr = document.createElement('tr');
+			table.setAttribute('id', 'main');
+			table.setAttribute('class','table')
+			var tr = document.createElement('tr');
+				var td = document.createElement('td');
+					td.appendChild(document.createTextNode('User'));
+				tr.appendChild(td);
+				for (var i=0; i<7; i++){
+					
 					var td = document.createElement('td');
-						td.appendChild(document.createTextNode('User'));
+					td.appendChild(document.createTextNode(dateSC.toDateString()));
+					td.addEventListener('click',function(){
+
+					alert('drop cal');
+					$.post('/ajaxUser').done(mainSC);
+					});
 					tr.appendChild(td);
-					for (var i=0; i<7; i++){
-						
-						var td = document.createElement('td');
-						td.appendChild(document.createTextNode(dateSC.toDateString()));
-						td.addEventListener('click',function(){
 
-						alert('drop cal');
-						$.post('/ajaxUser').done(mainSC);
-						});
-						tr.appendChild(td);
-
-						dateSC.setDate(dateSC.getDate()+1);
-						
-						}
-				table.appendChild(tr);
+					dateSC.setDate(dateSC.getDate()+1);
+					
+					}
+			table.appendChild(tr);
 
 			
 
@@ -200,69 +194,37 @@ html(lang="en")
 				//- alert(today+'---'+date21LK)
 			if (today > date21LK){
 				lockoutDate.setDate(lockoutDate.getDate()+28)
-					//- alert('new lockoutDate: '+ lockoutDate)
-				}
+			}
 			
-			//- var date21LK = 	new Date(lockoutDateX)
 			
-
+			var users = data.pData.users;
+			var arrListDateSC = [];
 				
 			for (var i=0; i< users.length; i++){
-				
-					//- var x = 0;
-					//- var y = 3
-					//- function delayLoop(){
-					//- 	if (x++ < 3){return;}
-					//- 		console.log(x);
-					//- 	window.setTimeout(delayLoop, 1000);
-							
-					//- }
-					//- delayLoop();
-
-
+			
 				    for (var x=0; x<8; x++){
-					
-					    
-
-					 
-
 						var taskSCData = {};
 						
 						if (x==0){
 							taskSCData.userId = users[i].id;
 							taskSCData.dateSC = users[i].email;
-
-
 						}else{
 							taskSCData.userId = users[i].id;
 							taskSCData.dateSC = dateSC.toLocaleDateString();
 							dateSC.setDate(dateSC.getDate()+1);
-						
 						}
-
 						arrListDateSC.push(taskSCData);
-
-						
 					}
 					
 				var dateSC = new Date(curSunday);
 			}
 
-			
-			//- alert(JSON.stringify(arrListDateSC, null, 4));
 
-			//- var z = 1;
-			//- var y = 2;
 
-			//- window['a' + z] = 'hell';
-			//- window['a' + y] = 'hellooo';
-			
-			//- alert(a2); 
-
-			//- var tr1 = document.createElement('tr');
-			//- var dateSC = new Date(curMonday);
 			var i = 0;
 			var userDelta = 0;
+
+			Using array to assign userID and dateSc to cell of shcedule  
 			function loopArrayDateSC(arr){
 
 				//- if (arr[i].dateSC.indexOf("@") > -1){
@@ -271,97 +233,68 @@ html(lang="en")
 				//- 	alert('user not detected');
 				//- }	
 			
-
+				//- Check and pull taskSC from assign DB and sign blank if no data found
 				$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
 					function(assigndata){
-						//- var userDelta = 0;
-
-						
-
-						
-						//- alert(dateSC.toLocaleDateString());
-						
-						
 
 						if(!!assigndata.assign){
-						
-							
-							
 							var userId = assigndata.assign.userId;
 							var taskSC = assigndata.assign.Note;
-							
 
 							var td = document.createElement('td');
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(taskSC));
 								td.addEventListener('click',function(userId,dateSC){
-														
 									return function(){
 
-										
+										var selDate = new Date(dateSC)
+											
+										if (selDate<lockoutDate){
+											alert('lock')
+										}else{
+											var taskSC = $('input[name=PTO]:checked').attr('value');
 
-									var selDate = new Date(dateSC)
-										
-									if (selDate<lockoutDate){
-										alert('lock')
-									}else{
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 
-									
+												if (pData.authorized == false) {
+													alert('You are not authorized for this action')
+												}else if(!!pData.Note){
+												
+												td.innerHTML=pData.Note;
+												td.style.backgroundColor = 'yellow'
+												} else{
 
-									var taskSC = $('input[name=PTO]:checked').attr('value');
-
-									$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-
-										//- alert(pData.authorized);
-
-										if (pData.authorized == false) {
-											alert('You are not authorized for this action')
-										}else if(!!pData.Note){
-										
-										td.innerHTML=pData.Note;
-										td.style.backgroundColor = 'yellow'
-										} else{
-
-										td.innerHTML='';
-										td.style.backgroundColor = 'red'
+												td.innerHTML='';
+												td.style.backgroundColor = 'red'
+												}
+											});
 										}
-									});
-									}
-										
-
-										
-										
 									}
 
-								}(userId, dateSC.toLocaleDateString())
-
-								);
-
-							
+								}(userId, dateSC.toLocaleDateString()));
 						} else {
-
-							
-							
-
 							var userId = assigndata.userId;
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(""));
+
+								//- Click into the cell request PTO
 								td.addEventListener('click',function(userId,dateSC){
 
 									return function(){
 
 										var selDate = new Date(dateSC)
 										
+										//- Prevent user to request after lockoutDate
 										if (selDate<lockoutDate){
 											alert('lock')
 										}else{
-
-													
 										var taskSC = $('input[name=PTO]:checked').attr('value');
+
 
 										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 											
+											//- Only allow signed in user to edit their request
 											if (pData.authorized == false) {
 												alert('You are not authorized for this action')
 											}else if(!!pData.Note){
@@ -376,36 +309,21 @@ html(lang="en")
 										});
 										}
 									}
-								
-								
-
 								}(userId, dateSC.toLocaleDateString()));
-								
-							
-							
 						}
 
-						
+						//- Reset schedule date position for new user
 						if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
-							//- alert(i);
-							
 							dateSC.setDate(dateSC.getDate()-7);
-
 						}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
-						
 
 						} else{
-							//- alert('not @');
 							dateSC.setDate(dateSC.getDate()+1);
 						}
-						
-						
-							
-						
 
+
+						//- add new row for next user if user ID changed detected
 						if (userDelta != userId){
-
-
 							var td = document.createElement('td');
 							td.setAttribute('class','cell')
 							td.appendChild(document.createTextNode(arr[i].dateSC));
@@ -413,28 +331,19 @@ html(lang="en")
 							window['tr' + userId] = document.createElement('tr');
 							window['tr' + userId].appendChild(td);
 							table.appendChild(window['tr' + userId]);
-
 						}else{
 							window['tr' + userId].appendChild(td);
 							table.appendChild(window['tr' + userId]);
-
 						}	
-
 						userDelta = userId;
-
 						
+						//- Keep looping until end of Array
 						i++;
 						if (i < arr.length ){
 							loopArrayDateSC(arr);
 						}
-
-
 					}
-						
 				);
-				
-				
-
 			}
 
 			loopArrayDateSC(arrListDateSC);

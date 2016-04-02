@@ -75,23 +75,25 @@ function sysObj(name){
 app.post('/sysObj', middleware.requireAuthentication, function(req, res){
 	var varList = req.body.pData
 	var date21LK = req.body.pData.date21LK
-	var rData = {}
-	console.log(varList[0])
+	
+	
 	
 	
 	db.sysObj.findAll({
 		where:{
 			name: varList
 		} 
-	}).then(function(sysObj){
-
-		sysObj.forEach(function(x,i){
-		console.log(x.name)
+	}).then(function(sysObjs){
+		var sysObjList = {}
+		sysObjs.forEach(function(sysObj,i){
+		sysObjList[sysObj.name] = sysObj.value
+		
 		})
 		
-		
-		
+		res.json({rData:sysObjList})
 	});
+
+	
 
 
 	
