@@ -203,24 +203,35 @@ html(lang="en")
 
 			$.post('/sysObjRead', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
 				
-			alert(JSON.stringify(rData, null, 4))
+				//- alert(JSON.stringify(rData, null, 4))
 
-			var today = new Date('4/5/16')
-			var lockoutDate = new Date(rData.lockoutDate)
-			var date21LK = new Date(rData.lockoutDate)
-			date21LK.setDate(lockoutDate.getDate()-21)
-				//- alert(today+'---'+date21LK)
-			if (today > date21LK){
-				lockoutDate.setDate(lockoutDate.getDate()+28)
+				var today = new Date('10/30/16')
+				var lockoutDate = new Date(rData.lockoutDate||'4/24/16')
+				var date21LK = new Date(rData.lockoutDate||'4/24/16')
+				date21LK.setDate(lockoutDate.getDate()-21)
+					//- alert(today+'---'+date21LK)
+				if (today > date21LK){
 
-				$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toLocaleDateString()}}).done(function(rData){
+					lockoutDate.setDate(lockoutDate.getDate()+28)
+
+					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toLocaleDateString()}}).done(function(rData){
+						
+						alert(rData.lockoutDate);
+						
 						//- output lock out Note 
-					//- var SCNote = document.createElement('p')
-					//- SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ lockoutDate.toLocaleDateString()
-					//- mainSC.append(SCNote)
-				});
+						var SCNote = document.createElement('p')
+						SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
+						mainSC.append(SCNote)
+					});
 
-			}
+				}else{
+					//- output lock out Note 
+					
+					var SCNote = document.createElement('p')
+					SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
+					mainSC.append(SCNote)
+				}
+
 
 
 
