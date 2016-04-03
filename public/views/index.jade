@@ -203,79 +203,84 @@ html(lang="en")
 
 			$.post('/sysObjRead', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
 				
-				//- alert(JSON.stringify(rData, null, 4))
+				//- alert(JSON.stringify(arrListDateSC, null, 4))
 
-				var today = new Date('10/30/16')
+				var today = new Date('6/30/17')
 				var lockoutDate = new Date(rData.lockoutDate||'4/24/16')
 				var date21LK = new Date(rData.lockoutDate||'4/24/16')
 				date21LK.setDate(lockoutDate.getDate()-21)
 					//- alert(today+'---'+date21LK)
-				if (today > date21LK){
-
-					lockoutDate.setDate(lockoutDate.getDate()+28)
-
-					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toLocaleDateString()}}).done(function(rData){
-						
-						alert(rData.lockoutDate);
-						
-						//- output lock out Note 
-						var SCNote = document.createElement('p')
-						SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
-						mainSC.append(SCNote)
-					});
-
-				}else{
-					//- output lock out Note 
-					
-					var SCNote = document.createElement('p')
-					SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
-					mainSC.append(SCNote)
-				}
 
 
+				var i = 0;
+				var userDelta = 0;
+				//- Using array to assign userID and dateSc to cell of shcedule table 
+				function loopArrayDateSC(arr){
+				
+					//- Pull taskSC from assign DB with provided userID and dateSC DB 
+					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
+						function(assigndata){
 
+							//- display taskSC if found otherwise display blank
+							if(!!assigndata.assign){
+								var userId = assigndata.assign.userId;
+								var taskSC = assigndata.assign.Note;
 
-			})
+								var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(taskSC));
+								td.addEventListener('click',function(userId,dateSC){
+									return function(){
 
-			
-			
-	
+										var selDate = new Date(dateSC)
+											
+										if (selDate<lockoutDate){
+											alert('lock')
+										}else{
+											var taskSC = $('input[name=PTO]:checked').attr('value');
 
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 
+													if (pData.authorized == false) {
+													alert('You are not authorized for this action')
+												}else if(!!pData.Note){
+												
+												td.innerHTML=pData.Note;
+												td.style.backgroundColor = 'yellow'
+												} else{
 
-			var i = 0;
-			var userDelta = 0;
+												td.innerHTML='';
+												td.style.backgroundColor = 'red'
+												}
+											});
+										}
+									}
 
-			loopArrayDateSC(arrListDateSC);
-			mainSC.append(table);
+								}(userId, dateSC.toLocaleDateString()));
+							} else {
+								var userId = assigndata.userId;
+								var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(""));
 
-			//- Using array to assign userID and dateSc to cell of shcedule table 
-			function loopArrayDateSC(arr){
-			
-				//- Pull taskSC from assign DB with provided userID and dateSC DB 
-				$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
-					function(assigndata){
+								//- Click into the cell request PTO
+								td.addEventListener('click',function(userId,dateSC){
 
-						//- display taskSC if found otherwise display blank
-						if(!!assigndata.assign){
-							var userId = assigndata.assign.userId;
-							var taskSC = assigndata.assign.Note;
+									return function(){
 
-							var td = document.createElement('td');
-							td.setAttribute('class','cell')
-							td.appendChild(document.createTextNode(taskSC));
-							td.addEventListener('click',function(userId,dateSC){
-								return function(){
-
-									var selDate = new Date(dateSC)
+										var selDate = new Date(dateSC)
 										
-									if (selDate<lockoutDate){
-										alert('lock')
-									}else{
+										//- Prevent user to request after lockoutDate
+										if (selDate<lockoutDate){
+											alert('lock')
+										}else{
+										//- retrieved taskOption value from radio botton
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 
+										//- save or update taskOption value into DB if not existed
 										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-
+											
+											//- Only allow signed in user to edit their request
 											if (pData.authorized == false) {
 												alert('You are not authorized for this action')
 											}else if(!!pData.Note){
@@ -285,92 +290,76 @@ html(lang="en")
 											} else{
 
 											td.innerHTML='';
-											td.style.backgroundColor = 'red'
+											//- td.style.backgroundColor = 'red'
 											}
 										});
-									}
-								}
-
-							}(userId, dateSC.toLocaleDateString()));
-						} else {
-							var userId = assigndata.userId;
-							var td = document.createElement('td');
-							td.setAttribute('class','cell')
-							td.appendChild(document.createTextNode(""));
-
-							//- Click into the cell request PTO
-							td.addEventListener('click',function(userId,dateSC){
-
-								return function(){
-
-									var selDate = new Date(dateSC)
-									
-									//- Prevent user to request after lockoutDate
-									if (selDate<lockoutDate){
-										alert('lock')
-									}else{
-									//- retrieved taskOption value from radio botton
-									var taskSC = $('input[name=PTO]:checked').attr('value');
-
-									//- save or update taskOption value into DB if not existed
-									$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-										
-										//- Only allow signed in user to edit their request
-										if (pData.authorized == false) {
-											alert('You are not authorized for this action')
-										}else if(!!pData.Note){
-										
-										td.innerHTML=pData.Note;
-										td.style.backgroundColor = 'yellow'
-										} else{
-
-										td.innerHTML='';
-										//- td.style.backgroundColor = 'red'
 										}
-									});
 									}
-								}
-							}(userId, dateSC.toLocaleDateString()));
+								}(userId, dateSC.toLocaleDateString()));
+							}
+
+							//- Reset schedule date position for new user
+							if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
+								dateSC.setDate(dateSC.getDate()-7);
+							}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
+
+							} else{
+								dateSC.setDate(dateSC.getDate()+1);
+							}
+
+
+							//- add new row for next user if user ID changed detected
+							if (userDelta != userId){
+								var td = document.createElement('td');
+								td.setAttribute('class','cell')
+								td.appendChild(document.createTextNode(arr[i].dateSC));
+
+								window['tr' + userId] = document.createElement('tr');
+								window['tr' + userId].appendChild(td);
+								table.appendChild(window['tr' + userId]);
+							}else{
+								window['tr' + userId].appendChild(td);
+								table.appendChild(window['tr' + userId]);
+							}	
+							userDelta = userId;
+							
+							//- Keep looping until end of Array
+							i++;
+							if (i < arr.length ){
+								loopArrayDateSC(arr);
+							}
 						}
-
-						//- Reset schedule date position for new user
-						if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
-							dateSC.setDate(dateSC.getDate()-7);
-						}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
-
-						} else{
-							dateSC.setDate(dateSC.getDate()+1);
-						}
+					);
+				}
 
 
-						//- add new row for next user if user ID changed detected
-						if (userDelta != userId){
-							var td = document.createElement('td');
-							td.setAttribute('class','cell')
-							td.appendChild(document.createTextNode(arr[i].dateSC));
 
-							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].appendChild(td);
-							table.appendChild(window['tr' + userId]);
-						}else{
-							window['tr' + userId].appendChild(td);
-							table.appendChild(window['tr' + userId]);
-						}	
-						userDelta = userId;
+				
+				if (today > date21LK){
+
+					lockoutDate.setDate(lockoutDate.getDate()+28)
+
+					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toLocaleDateString()}}).done(function(rData){
 						
-						//- Keep looping until end of Array
-						i++;
-						if (i < arr.length ){
-							loopArrayDateSC(arr);
-						}
-					}
-				);
-			}
+						//- output lock out Note
+						$('#SCNote').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
+						//- var SCNote = document.createElement('p')
+						//- SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
+						//- mainSC.append(SCNote)
+						//- loopArrayDateSC(arrListDateSC);
+						//- mainSC.append(table);
+					});
 
-			
+				}
+					//- output lock out Note 
+				loopArrayDateSC(arrListDateSC);
+				mainSC.append(table);	
 
-			
-
+				var SCNote = document.createElement('p')
+				SCNote.id = 'SCNote'
+				SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
+				mainSC.append(SCNote)
+			})
 
 			var ul = document.createElement('ul');
 			ul.setAttribute('id','PTORadio')
