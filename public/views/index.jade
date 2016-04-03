@@ -175,28 +175,9 @@ html(lang="en")
 					
 					}
 			table.appendChild(tr);
-
-			
-
 			dateSC = new Date(curSunday);
 
-
-
-			$.post('/sysObj', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
-				
-			alert(JSON.stringify(rData, null, 4))
-			})
-
-			var today = new Date('6/15/16')
-			var lockoutDate = new Date('4/24/16')
-			var date21LK = new Date('4/24/16')
-			date21LK.setDate(lockoutDate.getDate()-21)
-				//- alert(today+'---'+date21LK)
-			if (today > date21LK){
-				lockoutDate.setDate(lockoutDate.getDate()+28)
-			}
-			
-			
+			//- Create DateSC array with userID and dateSC
 			var users = data.pData.users;
 			var arrListDateSC = [];
 				
@@ -220,81 +201,70 @@ html(lang="en")
 			}
 
 
+			$.post('/sysObjRead', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
+				
+			alert(JSON.stringify(rData, null, 4))
+
+			var today = new Date('4/5/16')
+			var lockoutDate = new Date(rData.lockoutDate)
+			var date21LK = new Date(rData.lockoutDate)
+			date21LK.setDate(lockoutDate.getDate()-21)
+				//- alert(today+'---'+date21LK)
+			if (today > date21LK){
+				lockoutDate.setDate(lockoutDate.getDate()+28)
+
+				$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toLocaleDateString()}}).done(function(rData){
+						//- output lock out Note 
+					//- var SCNote = document.createElement('p')
+					//- SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ lockoutDate.toLocaleDateString()
+					//- mainSC.append(SCNote)
+				});
+
+			}
+
+
+
+			})
+
+			
+			
+	
+
+
 
 			var i = 0;
 			var userDelta = 0;
 
-			Using array to assign userID and dateSc to cell of shcedule  
-			function loopArrayDateSC(arr){
+			loopArrayDateSC(arrListDateSC);
+			mainSC.append(table);
 
-				//- if (arr[i].dateSC.indexOf("@") > -1){
-				//- 	alert('user detected');
-				//- }else{
-				//- 	alert('user not detected');
-				//- }	
+			//- Using array to assign userID and dateSc to cell of shcedule table 
+			function loopArrayDateSC(arr){
 			
-				//- Check and pull taskSC from assign DB and sign blank if no data found
+				//- Pull taskSC from assign DB with provided userID and dateSC DB 
 				$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
 					function(assigndata){
 
+						//- display taskSC if found otherwise display blank
 						if(!!assigndata.assign){
 							var userId = assigndata.assign.userId;
 							var taskSC = assigndata.assign.Note;
 
 							var td = document.createElement('td');
-								td.setAttribute('class','cell')
-								td.appendChild(document.createTextNode(taskSC));
-								td.addEventListener('click',function(userId,dateSC){
-									return function(){
+							td.setAttribute('class','cell')
+							td.appendChild(document.createTextNode(taskSC));
+							td.addEventListener('click',function(userId,dateSC){
+								return function(){
 
-										var selDate = new Date(dateSC)
-											
-										if (selDate<lockoutDate){
-											alert('lock')
-										}else{
-											var taskSC = $('input[name=PTO]:checked').attr('value');
-
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-
-												if (pData.authorized == false) {
-													alert('You are not authorized for this action')
-												}else if(!!pData.Note){
-												
-												td.innerHTML=pData.Note;
-												td.style.backgroundColor = 'yellow'
-												} else{
-
-												td.innerHTML='';
-												td.style.backgroundColor = 'red'
-												}
-											});
-										}
-									}
-
-								}(userId, dateSC.toLocaleDateString()));
-						} else {
-							var userId = assigndata.userId;
-								var td = document.createElement('td');
-								td.setAttribute('class','cell')
-								td.appendChild(document.createTextNode(""));
-
-								//- Click into the cell request PTO
-								td.addEventListener('click',function(userId,dateSC){
-
-									return function(){
-
-										var selDate = new Date(dateSC)
+									var selDate = new Date(dateSC)
 										
-										//- Prevent user to request after lockoutDate
-										if (selDate<lockoutDate){
-											alert('lock')
-										}else{
+									if (selDate<lockoutDate){
+										alert('lock')
+									}else{
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 
-
 										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
-											
-											//- Only allow signed in user to edit their request
+
 											if (pData.authorized == false) {
 												alert('You are not authorized for this action')
 											}else if(!!pData.Note){
@@ -304,12 +274,52 @@ html(lang="en")
 											} else{
 
 											td.innerHTML='';
-											//- td.style.backgroundColor = 'red'
+											td.style.backgroundColor = 'red'
 											}
 										});
-										}
 									}
-								}(userId, dateSC.toLocaleDateString()));
+								}
+
+							}(userId, dateSC.toLocaleDateString()));
+						} else {
+							var userId = assigndata.userId;
+							var td = document.createElement('td');
+							td.setAttribute('class','cell')
+							td.appendChild(document.createTextNode(""));
+
+							//- Click into the cell request PTO
+							td.addEventListener('click',function(userId,dateSC){
+
+								return function(){
+
+									var selDate = new Date(dateSC)
+									
+									//- Prevent user to request after lockoutDate
+									if (selDate<lockoutDate){
+										alert('lock')
+									}else{
+									//- retrieved taskOption value from radio botton
+									var taskSC = $('input[name=PTO]:checked').attr('value');
+
+									//- save or update taskOption value into DB if not existed
+									$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+										
+										//- Only allow signed in user to edit their request
+										if (pData.authorized == false) {
+											alert('You are not authorized for this action')
+										}else if(!!pData.Note){
+										
+										td.innerHTML=pData.Note;
+										td.style.backgroundColor = 'yellow'
+										} else{
+
+										td.innerHTML='';
+										//- td.style.backgroundColor = 'red'
+										}
+									});
+									}
+								}
+							}(userId, dateSC.toLocaleDateString()));
 						}
 
 						//- Reset schedule date position for new user
@@ -346,145 +356,105 @@ html(lang="en")
 				);
 			}
 
-			loopArrayDateSC(arrListDateSC);
-			mainSC.append(table);
+			
 
-
-			var SCNote = document.createElement('p')
-			SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ lockoutDate.toLocaleDateString()
-			mainSC.append(SCNote)
+			
 
 
 			var ul = document.createElement('ul');
-				ul.setAttribute('id','PTORadio')
+			ul.setAttribute('id','PTORadio')
 				var li = document.createElement('li');
-						li.style.color = 'blue'
-						li.style.width = '100px'
+				li.style.color = 'blue'
+				li.style.width = '100px'
 					var radio = document.createElement('input');
-						radio.setAttribute('type','radio');
-						radio.setAttribute('name','PTO');
-						radio.setAttribute('value','');
+					radio.setAttribute('type','radio');
+					radio.setAttribute('name','PTO');
+					radio.setAttribute('value','');
 					radio.setAttribute('checked','checked');
 				li.appendChild(radio);
 				li.appendChild(document.createTextNode('NONE'));
 			ul.appendChild(li);
 
 			$.getJSON('/taskOption').done(function(Rdata){
+
+				//- function to list taskOption from return data
 				function taskOptionFct(i, taskOption){
 					var li = document.createElement('li');
-						li.style.color = 'blue'
-						li.style.width = '100px'
+					li.style.color = 'blue'
+					li.style.width = '100px'
 						var radio = document.createElement('input');
-							radio.setAttribute('type','radio');
-							radio.setAttribute('name','PTO');
-							radio.setAttribute('value',taskOption.description);
+						radio.setAttribute('type','radio');
+						radio.setAttribute('name','PTO');
+						radio.setAttribute('value',taskOption.description);
 					//- radio.setAttribute('checked','checked');
-						li.appendChild(radio);
-						li.appendChild(document.createTextNode(taskOption.description));
-						li.addEventListener('click',function(){
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode(taskOption.description));
 
-							var span = document.createElement('span')
-								span.innerHTML = '';
-								span.style.color = 'red'
-								span.className = "glyphicon glyphicon-remove-circle"
-								span.id = 'delGly';
-								span.addEventListener('click', function(){
+					//- click on list item to bring up the 'x'
+					li.addEventListener('click',function(){
 
-									$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
-										ul.removeChild(li)
-									});
-									
-								});
-							li.appendChild(span)
+						var span = document.createElement('span')
+						span.innerHTML = '';
+						span.style.color = 'red'
+						span.className = "glyphicon glyphicon-remove-circle"
+						span.id = 'delGly';
+						//- click the 'x' to remove from list
+						span.addEventListener('click', function(){
 
-
+							$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
+								ul.removeChild(li)
+							});
 							
-
 						});
-
-						li.addEventListener('mouseleave',function(){
-							if ($('#delGly').length){
-								li.removeChild(document.getElementById('delGly'))
-							}
-						
-						})
-
+						li.appendChild(span)
+					});
+					//- the 'x' disapear on mouseleave
+					li.addEventListener('mouseleave',function(){
+						if ($('#delGly').length){
+							li.removeChild(document.getElementById('delGly'))
+						}
+					})
 
 					ul.appendChild(li);
 				}
 				
-
+				//- execute taskOption function with rData
 				$.each(Rdata.taskOption, taskOptionFct);
 
-					var li = document.createElement('li');
-						li.style.color = 'blue'
-						li.style.width = '100px'
-						var input = document.createElement('input');
-							input.style.width = '100px'
-							input.setAttribute('placeholder','Add Option');
-							input.setAttribute('type','text');
-							input.setAttribute('id','taskOption');
-							input.addEventListener('blur', function(){
-								
-								var taskOptionData = $("#taskOption").val().toUpperCase();
+				//- create text box to add new taskOption
+				var li = document.createElement('li');
+				li.style.color = 'blue'
+				li.style.width = '100px'
+					var input = document.createElement('input');
+					input.style.width = '100px'
+					input.setAttribute('placeholder','Add Option');
+					input.setAttribute('type','text');
+					input.setAttribute('id','taskOption');
 
-								$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-								
-									if (pData.created){
-										taskOptionFct(i, pData.taskOption);
-										$('#taskOption').val('')
-										ul.appendChild(li)
-									}else{
-										$('#taskOption').val('')
-									}
+					//- add new option to DB when leaving the text box
+					input.addEventListener('blur', function(){
+						
+						var taskOptionData = $("#taskOption").val().toUpperCase();
 
-										
-									
-								});
-							});
-						li.appendChild(input)
-					ul.appendChild(li)
+						$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+						
+							if (pData.created){
+								taskOptionFct(i, pData.taskOption);
+								$('#taskOption').val('')
+								ul.appendChild(li)
+							}else{
+								$('#taskOption').val('')
+							}
+						});
+					});
+					li.appendChild(input)
+				ul.appendChild(li)
 				mainSC.append(ul);
 			});
-
-
-			
-			
-				
-			//- var li1 = document.createElement('li');
-			//- 	var radio = document.createElement('input');
-			//- 		radio.setAttribute('type','radio');
-			//- 		radio.setAttribute('name','PTO');
-			//- 		radio.setAttribute('value','PTOR');
-			//- 	li1.appendChild(radio);
-			//- 	li1.appendChild(document.createTextNode('PTOR'));
-			
-			//- ul.appendChild(li1);
-
-
-			//- var taskOption = document.createElement('input')
-			//- taskOption.setAttribute('type','text');
-			//- taskOption.setAttribute('id','taskOption');
-			//- taskOption.addEventListener('blur', function(){
-			//- 	var taskOptionData = $("#taskOption").val();
-			//- 	$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-				
-			//- 	});
-			
-			//- });
-			//- container.append(taskOption);
-
-
-			
-
 		}
 
 
 		
-		//- $("#calendar").datepicker({onSelect: function(){
-		//- 	$.post('/ajaxUser').done(mainSC);
-		//- }});
-
 	
 
 		

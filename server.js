@@ -72,12 +72,9 @@ function sysObj(name){
 
 }
 
-app.post('/sysObj', middleware.requireAuthentication, function(req, res){
+app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
 	var varList = req.body.pData
 	var date21LK = req.body.pData.date21LK
-	
-	
-	
 	
 	db.sysObj.findAll({
 		where:{
@@ -90,18 +87,27 @@ app.post('/sysObj', middleware.requireAuthentication, function(req, res){
 		
 		})
 		
-		res.json({rData:sysObjList})
+		res.json(sysObjList)
 	});
-
-	
-
-
-	
-	
-	
-	
-	
 })
+
+app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
+	var name = req.body.pData.name
+	var value = req.body.pData.value
+	console.log(name+'--'+value)
+	db.sysObj.upsert({
+			name: name,
+			value: value
+	}).then(function(created){
+		console.log(created)
+		res.json(created)
+	}).catch(function(e){
+		console.log(e)
+	});
+})
+
+
+
 
 
 
@@ -384,8 +390,6 @@ app.get('/logout', middleware.requireAuthentication, function(req, res) {
 		res.status(500).send();
 	});
 });
-// app.use('token', )
-
 
 
 app.get('/newAccountForm', function(req, res) {
@@ -410,11 +414,6 @@ app.post('/createAccount', function(req, res) {
 });
 
 
-
-
-
-
-
 io.on('connection', function(socket) {
 	console.log('user connect to socket io');
 
@@ -427,12 +426,9 @@ io.on('connection', function(socket) {
 });
 
 
-
 app.get('/test', function(req, res){
 	res.render('test')
 })
-
-
 
 
 app.post('/user/login', function(req, res) {
