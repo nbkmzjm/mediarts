@@ -223,6 +223,7 @@ html(lang="en")
 					$.post('/taskSC', {postdata:{userId: arr[i].userId, dateSC:arr[i].dateSC}}).done(
 						function(assigndata){
 							alert(JSON.stringify(assigndata, null, 4))
+								
 
 
 							//- //- display taskSC if found otherwise display blank

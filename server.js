@@ -127,8 +127,8 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 		}
 
 	}).then(function(assign) {
-		// console.log('assingXXX' + assign);
-		// console.log('userIdXXX' + userId);
+		console.log('assingXXX' + assign);
+		console.log('userIdXXX' + userId);
 
 		if (!!assign) {
 			res.json({
@@ -144,11 +144,12 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 
 		console.log("eeroorr" + e);
 
-		res.render('error', {
+		res.json({
 			error: e.toString()
 		});
 	});
 });
+
 app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
