@@ -112,7 +112,9 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 
 
 
-
+app.post('/sclog', middleware.requireAuthentication, function(req, res) {
+	res.render
+});
 
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
@@ -120,6 +122,10 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 	var dateSC = req.body.postdata.dateSC;
 
 	// console.log('taskSCCCCCCx: ' + userId + dateSC);
+	res.json({
+			userId: userId,
+			dateSC: dateSC
+		});
 	db.assign.findOne({
 		where: {
 			userId: userId,
