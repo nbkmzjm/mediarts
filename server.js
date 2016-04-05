@@ -150,9 +150,9 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 
 		console.log("eeroorr" + e);
 
-		res.json({
-			error: e.toString()
-		});
+		// res.json({
+		// 	error: e.toString()
+		// });
 	});
 });
 
