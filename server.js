@@ -122,10 +122,10 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 	var dateSC = req.body.postdata.dateSC;
 
 	// console.log('taskSCCCCCCx: ' + userId + dateSC);
-	res.json({
-			userId: userId,
-			dateSC: dateSC
-		});
+	// res.json({
+	// 		userId: userId,
+	// 		dateSC: dateSC
+	// 	});
 	db.assign.findOne({
 		where: {
 			userId: userId,
