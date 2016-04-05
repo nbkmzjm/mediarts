@@ -14,8 +14,9 @@ html(lang="en")
 			//- input(type='text' id='calendar')
 
 			#calenderPick
-				p
-				#mainSC
+			#mainSC
+			#SCNoteDiv
+			#taskOptionDiv
 
 
 
@@ -246,7 +247,7 @@ html(lang="en")
 
 											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
 
-													if (pData.authorized == false) {
+												if (pData.authorized == false) {
 													alert('You are not authorized for this action')
 												}else if(!!pData.Note){
 												
@@ -336,9 +337,6 @@ html(lang="en")
 						}
 					);
 				}
-
-
-
 				
 				if (today > date21LK){
 
@@ -363,8 +361,10 @@ html(lang="en")
 				var SCNote = document.createElement('p')
 				SCNote.id = 'SCNote'
 				SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
-				mainSC.append(SCNote)
-			})
+				$('#SCNoteDiv').html(SCNote)
+			});
+
+
 
 			var ul = document.createElement('ul');
 			ul.setAttribute('id','PTORadio')
@@ -374,11 +374,25 @@ html(lang="en")
 					var radio = document.createElement('input');
 					radio.setAttribute('type','radio');
 					radio.setAttribute('name','PTO');
-					radio.setAttribute('value','');
+					radio.setAttribute('value','SELECT');
 					radio.setAttribute('checked','checked');
 				li.appendChild(radio);
-				li.appendChild(document.createTextNode('NONE'));
+				li.appendChild(document.createTextNode('SELECT'));
+
+				var li1 = document.createElement('li');
+				li1.style.color = 'blue'
+				li1.style.width = '100px'
+					var radio = document.createElement('input');
+					radio.setAttribute('type','radio');
+					radio.setAttribute('name','PTO');
+					radio.setAttribute('value','DELETE');
+					
+				li1.appendChild(radio);
+				li1.appendChild(document.createTextNode('DELETE'));
+
+
 			ul.appendChild(li);
+			ul.appendChild(li1);
 
 			$.getJSON('/taskOption').done(function(Rdata){
 
@@ -454,7 +468,7 @@ html(lang="en")
 					});
 					li.appendChild(input)
 				ul.appendChild(li)
-				mainSC.append(ul);
+				$('#taskOptionDiv').html(ul);
 			});
 		}
 

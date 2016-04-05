@@ -169,7 +169,41 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 		res.json({authorized: false});
 
 
-	} else if (taskSC!=''){
+	} else if (taskSC=='SELECT'){
+		
+
+
+	} else if (taskSC=='DELETE'){
+		db.user.findOne({
+			where: {
+				id: userId
+			}
+		}).then(function(user) {
+			return db.assign.destroy({
+						where: {
+							userId: user.id,
+							datePos: dateSC
+
+						}
+					});
+		}).then(function(deleted){
+			console.log('deleted: ' + deleted)
+			res.json({
+					deleted: deleted
+				});
+
+
+		}).catch(function(e) {
+			console.log("eeroorrx" + e);
+
+			res.render('error', {
+				error: e.toString()
+			});
+		});
+
+
+
+	} else {
 		
 		db.user.findOne({
 			where: {
@@ -221,34 +255,6 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				error: e.toString()
 			});
 		});
-	}else{
-		db.user.findOne({
-			where: {
-				id: userId
-			}
-		}).then(function(user) {
-			return db.assign.destroy({
-						where: {
-							userId: user.id,
-							datePos: dateSC
-
-						}
-					});
-		}).then(function(deleted){
-			console.log('deleted: ' + deleted)
-			res.json({
-					deleted: deleted
-				});
-
-
-		}).catch(function(e) {
-			console.log("eeroorrx" + e);
-
-			res.render('error', {
-				error: e.toString()
-			});
-		});
-
 	}
 
 
