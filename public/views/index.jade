@@ -279,7 +279,7 @@ html(lang="en")
 										
 										//- Prevent user to request after lockoutDate
 										if (selDate<lockoutDate){
-											alert('lock')
+											alert($('#SCNote').text())
 										}else{
 										//- retrieved taskOption value from radio botton
 										var taskSC = $('input[name=PTO]:checked').attr('value');

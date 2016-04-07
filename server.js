@@ -37,6 +37,20 @@ app.locals.pretty = true;
 app.use(express.static(__dirname));
 app.use(expValidator());
 
+app.use('/test', function(req, res, next){
+	dtime = 'Time : '+ new Date().toLocaleDateString()
+	console.log(dtime)
+
+	next();
+	res.send(dtime)
+})
+
+app.get('/test', function(req, res){
+	// res.render('test')
+	res.send('hey hey')
+})
+
+
 app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 	db.assign.findAll({
@@ -67,10 +81,6 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 });
 
-function sysObj(name){
-	
-
-}
 
 app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
 	var varList = req.body.pData
@@ -94,7 +104,7 @@ app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
 app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 	var name = req.body.pData.name
 	var value = req.body.pData.value
-	console.log(name+'--'+value)
+	// console.log(name+'--'+value)
 	db.sysObj.upsert({
 			name: name,
 			value: value
@@ -133,8 +143,8 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 		}
 
 	}).then(function(assign) {
-		console.log('assingXXX' + assign);
-		console.log('userIdXXX' + userId);
+		// console.log('assingXXX' + assign);
+		// console.log('userIdXXX' + userId);
 
 		if (!!assign) {
 			res.json({
@@ -148,7 +158,7 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 
 	}).catch(function(e) {
 
-		console.log("eeroorr" + e);
+		// console.log("eeroorr" + e);
 
 		// res.json({
 		// 	error: e.toString()
@@ -187,14 +197,14 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 						}
 					});
 		}).then(function(deleted){
-			console.log('deleted: ' + deleted)
+			// console.log('deleted: ' + deleted)
 			res.json({
 					deleted: deleted
 				});
 
 
 		}).catch(function(e) {
-			console.log("eeroorrx" + e);
+			// console.log("eeroorrx" + e);
 
 			res.render('error', {
 				error: e.toString()
@@ -443,9 +453,8 @@ io.on('connection', function(socket) {
 });
 
 
-app.get('/test', function(req, res){
-	res.render('test')
-})
+
+
 
 
 app.post('/user/login', function(req, res) {
