@@ -1,27 +1,63 @@
+
+
+
 extends ./layout.jade
 
-	
-block title 
-	title Home
+block title
 
-
-
-block content
+		title Home
+		
+		
+block content	
+		
 	#container
 		//- input(type='text' id='calendar')
 
 		#calenderPick
 		#mainSC
-			p hellosfsdfs
+			p hello
 		#SCNoteDiv
 		#taskOptionDiv
+
+
+
+	
+
+		//- table#main
+		//- 	- var test = users
+		//- 	p#test= test 
+		//- 	tr
+		//- 		td= 'User'
+		//- 		- for (var i=4; i < 14 ; i++)
+		//- 			td= dateHeader[i].dateH
+		//- 	- for (var i=0; i< users.length; i++)
+		//- 		tr
+		//- 			td= users[i].email
+					//- - for (var e=0; e< 14; e++)
+						if (typeof assigns[9] == "undefined")
+							td= a
+						else 
+
+							assigns [e].datePos == e && assigns[e].user.email == users[i].email) 
+							td= assigns[e].Note
+						
+
+
+
+			
+
+
+	
+	br
 	a(href='/logout') Logout
 
+			
 
-append scripts 
-	script(src="public/fnLib/homeFn.js")
+append scripts
+			
+	
 	script.
-		
+
 		$(function (){
 			
 						
@@ -29,13 +65,79 @@ append scripts
 	
 			$.post('/ajaxUser').done(mainSC);
 
+			//- $.post('/mainSC', { postdata:{name: "John", time: "2pm" }}).done(function(data){
+			//- 	alert(data.dateHeader[0].dateH);
+			//- 	alert(data.users[0].email);
+			//- 	})
+			//- alert($('#calendar').val('bbbbbb'))
+
+			//- $("#calendar").datepicker({onSelect: function(){
+			//- 	$.post('/ajaxUser').done(mainSC);
+			//- }});
 		});
 
 		
 
-		
+		function calendarPick(){
 
-		
+			var calenderPick = $('#calenderPick');
+			//- calenderPick.html("");
+
+			var dateCalender = document.createElement('input');
+				dateCalender.id = 'calendar';
+				
+				dateCalender.value = new Date().toLocaleDateString()
+				//- dateCalender.datepicker({onSelect: function(){
+				//- 	}});
+				dateCalender.addEventListener('focus', function(){
+					$("#calendar").datepicker({onSelect: function(){
+						$.post('/ajaxUser').done(mainSC);
+					}});
+				})
+				
+				
+
+			var dateBackward = document.createElement('span');
+				dateBackward.id = 'dateBackward';
+				dateBackward.className = 'glyphicon glyphicon-step-backward'
+				dateBackward.addEventListener('click', function(){
+
+				var dateM7 = new Date(dateCalender.value);
+				dateM7.setDate(dateM7.getDate()-7);
+				dateCalender.value = dateM7.toLocaleDateString();
+				$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+				})
+
+
+			var dateForward = document.createElement('span');
+				dateForward.id = 'dateForward';
+				dateForward.className = 'glyphicon glyphicon-step-forward'
+				dateForward.addEventListener('click', function(){
+
+				
+				var dateP7 = new Date(dateCalender.value);
+				dateP7.setDate(dateP7.getDate()+7);
+				dateCalender.value = dateP7.toLocaleDateString();
+				$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+				})
+
+			calenderPick.append(dateBackward)
+			calenderPick.append(dateCalender)
+			calenderPick.append(dateForward)
+
+			
+		}
+
+		function getSunday(d){
+
+			var d = new Date(d);
+			var diff = d.getDate() - d.getDay();
+			
+			return new Date(d.setDate(diff));
+
+		}
 
 		function mainSC(data){
 			
@@ -46,6 +148,8 @@ append scripts
 			var curSunday = getSunday(new Date(curDate));
 			
 			var dateSC = new Date(curSunday);
+			
+							
 
 			
 			var table = document.createElement('table');
@@ -59,6 +163,11 @@ append scripts
 					
 					var td = document.createElement('td');
 					td.appendChild(document.createTextNode(dateSC.toDateString()));
+					td.addEventListener('click',function(){
+
+					alert('drop cal');
+					$.post('/ajaxUser').done(mainSC);
+					});
 					tr.appendChild(td);
 
 					dateSC.setDate(dateSC.getDate()+1);
@@ -358,4 +467,19 @@ append scripts
 				$('#taskOptionDiv').html(ul);
 			});
 		}
+
+
+		
+	
+
+		
+
+		
+
+			
+			
+
+			
+
+
 

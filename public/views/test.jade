@@ -1,25 +1,18 @@
-doctype html
-html(lang="en")
-	head
-		title Jade Page
-		meta(charset='UTF-8')
-		link(rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css")
-		link(rel="stylesheet" type="text/css" href="css/style.css")
-		link(rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
-		link(href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet")
+extends ./layout.jade
 
-	body
-		#container
-			p(id='test') hell
+	
+block title 
+	title Title From TEST
 
 
 
-	script(src="public/js/jquery-2.1.4.min.js")
-	script(src="public/js/socket.io-1.3.7.js")
-	//- script(src="public/js/app.js")
+block content
+	#container
+		p(id='test') content from test
+
+append scripts 
+
 	script(src="public/js/date.js")
-	script(src="http://code.jquery.com/ui/1.10.4/jquery-ui.js")
-	script(src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
 	script.
 		$(function(){
 			var newP = document.createElement('p')

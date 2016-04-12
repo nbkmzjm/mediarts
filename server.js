@@ -37,17 +37,17 @@ app.locals.pretty = true;
 app.use(express.static(__dirname));
 app.use(expValidator());
 
-app.use('/test', function(req, res, next){
-	dtime = 'Time : '+ new Date().toLocaleDateString()
-	console.log(dtime)
+// app.use('/test', function(req, res, next){
+// 	dtime = 'Time : '+ new Date().toLocaleDateString()
+// 	console.log(dtime)
 
-	next();
-	res.send(dtime)
-})
+// 	next();
+// 	res.send(dtime)
+// })
 
 app.get('/test', function(req, res){
-	// res.render('test')
-	res.send('hey hey')
+	res.render('test')
+	// res.send('hey hey')
 })
 
 
@@ -486,6 +486,12 @@ app.delete('/user/logout', middleware.requireAuthentication, function(req, res) 
 	});
 
 });
+
+var user = require('./server/serverUser.js');
+app.use('/users', user);
+
+
+
 
 
 db.sequelize.sync(
