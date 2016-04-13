@@ -358,65 +358,11 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 })
 
 
-app.get('/loginForm', function(req, res) {
-	res.render('users/loginForm')
-})
 
 
-app.post('/login', function(req, res) {
-
-	req.check('email', 'length is required').isByteLength(5);
-	req.check('email', 'Not valid email').isEmail();
-
-	var errors = req.validationErrors();
-
-	if (errors) {
-		res.render('users/loginForm', {
-			message: '',
-			errors: errors
-		});
-	}
-
-	var body = _.pick(req.body, 'email', 'password');
-	var userInstance;
-
-	db.user.authenticate(body).then(function(user) {
-		var token = user.generateToken('authentication')
-		userInstance = user;
-		return db.token.create({
-			token: token
-		});
-
-	}).then(function(tokenInstance) {
-		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-		res.cookie('token', tokenInstance.get('token'), {
-			maxAge: 9000000
-		});
-		res.redirect('/');
-	}).catch(function(e) {
-		console.log(e);
-		arrErr = [{
-			param: "account",
-			msg: 'Username and Password do not match!!!'
-		}];
-		res.render('users/loginForm', {
-			errors: arrErr
-		});
-		res.status(401).json({
-			error: e.toString()
-		});
-	});
-
-});
 
 
-app.get('/logout', middleware.requireAuthentication, function(req, res) {
-	req.token.destroy().then(function() {
-		res.redirect('/loginForm');
-	}).catch(function(e) {
-		res.status(500).send();
-	});
-});
+
 
 
 app.get('/newAccountForm', function(req, res) {
@@ -457,37 +403,38 @@ io.on('connection', function(socket) {
 
 
 
-app.post('/user/login', function(req, res) {
-	var body = _.pick(req.body, 'email', 'password');
-	var userInstance;
+// app.post('/user/login', function(req, res) {
+// 	var body = _.pick(req.body, 'email', 'password');
+// 	var userInstance;
 
-	db.user.authenticate(body).then(function(user) {
-		var token = user.generateToken('authentication')
-		userInstance = user;
-		return db.token.create({
-			token: token
-		});
+// 	db.user.authenticate(body).then(function(user) {
+// 		var token = user.generateToken('authentication')
+// 		userInstance = user;
+// 		return db.token.create({
+// 			token: token
+// 		});
 
-	}).then(function(tokenInstance) {
-		console.log("tookenInstance created");
-		res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-	}).catch(function(e) {
-		res.status(401).json({
-			error: e.toString()
-		});
-	});
-});
+// 	}).then(function(tokenInstance) {
+// 		console.log("tookenInstance created");
+// 		res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
+// 	}).catch(function(e) {
+// 		res.status(401).json({
+// 			error: e.toString()
+// 		});
+// 	});
+// });
 
-app.delete('/user/logout', middleware.requireAuthentication, function(req, res) {
-	req.token.destroy().then(function() {
-		res.status(204).send();
-	}).catch(function(e) {
-		res.status(500).send();
-	});
+// app.delete('/user/logout', middleware.requireAuthentication, function(req, res) {
+// 	req.token.destroy().then(function() {
+// 		res.status(204).send();
+// 	}).catch(function(e) {
+// 		res.status(500).send();
+// 	});
 
-});
+// });
 
 var user = require('./server/serverUser.js');
+// var user = express.static(__dirname + '/server');
 app.use('/users', user);
 
 

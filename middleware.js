@@ -22,7 +22,7 @@ module.exports = function(db) {
 				next();
 			}, function (e) {
 				console.log(e);
-				res.redirect('/loginform');
+				res.redirect('users/loginform');
 				res.status(401).json({error:e.toString()});
 			});
 
