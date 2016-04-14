@@ -37,13 +37,6 @@ app.locals.pretty = true;
 app.use(express.static(__dirname));
 app.use(expValidator());
 
-// app.use('/test', function(req, res, next){
-// 	dtime = 'Time : '+ new Date().toLocaleDateString()
-// 	console.log(dtime)
-
-// 	next();
-// 	res.send(dtime)
-// })
 
 app.get('/test', function(req, res){
 	res.render('test')
@@ -56,9 +49,7 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 	db.assign.findAll({
 		include: [db.user]
 	}).then(function(assigns) {
-
 		// next();
-
 		return [assigns, db.user.findAll(), db.dateHeader.findAll()];
 	}).spread(function(assigns, users, dateHeader) {
 		// console.log('suerssssssssss' + JSON.stringify(users));
@@ -72,13 +63,8 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 	}).catch(function(e) {
 		res.render('error', {
 			error: "eeeeee" + e.toString()
-
 		});
-
 	});
-
-
-
 });
 
 
@@ -94,12 +80,11 @@ app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
 		var sysObjList = {}
 		sysObjs.forEach(function(sysObj,i){
 		sysObjList[sysObj.name] = sysObj.value
-		
 		})
-		
 		res.json(sysObjList)
 	});
 })
+
 
 app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 	var name = req.body.pData.name
@@ -114,37 +99,22 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 			console.log(value)
 			res.json({lockoutDate:value})
 		}
-		
 	}).catch(function(e){
 		console.log(e)
 	});
 })
 
 
-
-app.post('/sclog', middleware.requireAuthentication, function(req, res) {
-	res.render
-});
-
-
 app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
 
-	// console.log('taskSCCCCCCx: ' + userId + dateSC);
-	// res.json({
-	// 		userId: userId,
-	// 		dateSC: dateSC
-	// 	});
 	db.assign.findOne({
 		where: {
 			userId: userId,
 			datePos: dateSC
 		}
-
 	}).then(function(assign) {
-		// console.log('assingXXX' + assign);
-		// console.log('userIdXXX' + userId);
 
 		if (!!assign) {
 			res.json({
@@ -158,11 +128,6 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 
 	}).catch(function(e) {
 
-		// console.log("eeroorr" + e);
-
-		// res.json({
-		// 	error: e.toString()
-		// });
 	});
 });
 
@@ -172,18 +137,13 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var taskSC = req.body.postdata.taskSC;
 	var curUserId = req.user.id
 
-	// console.log('dateSCCCCCC: ' + userId + dateSC + taskSC);
-
 	if (userId != curUserId){
 		console.log('aaauu')
 		res.json({authorized: false});
-
-
 	} else if (taskSC=='SELECT'){
-		
-
 
 	} else if (taskSC=='DELETE'){
+
 		db.user.findOne({
 			where: {
 				id: userId
@@ -193,26 +153,18 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 						where: {
 							userId: user.id,
 							datePos: dateSC
-
 						}
 					});
 		}).then(function(deleted){
-			// console.log('deleted: ' + deleted)
 			res.json({
 					deleted: deleted
 				});
 
-
 		}).catch(function(e) {
-			// console.log("eeroorrx" + e);
-
 			res.render('error', {
 				error: e.toString()
 			});
 		});
-
-
-
 	} else {
 		
 		db.user.findOne({
@@ -220,23 +172,18 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				id: userId
 			}
 		}).then(function(user) {
-
-
 			return [
 				db.assign.findOrCreate({
 					where: {
 						userId: user.id,
 						datePos: dateSC
-
 					}
 				}),
 				user
 			];
-
-
 		}).spread(function(assign, user) {
 			user.addAssign(assign[0]).then(function() {
-								
+
 			});
 
 			res.json({
@@ -252,10 +199,6 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				}
 			});
 
-
-
-			
-
 		}).then(function(assign) {
 			console.log('updateeee new taskSC: ' + assign);
 		}).catch(function(e) {
@@ -266,12 +209,8 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			});
 		});
 	}
-
-
-
-
-	
 });
+
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 
@@ -290,7 +229,6 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 
 app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 
-
 	db.taskOption.findOrCreate({
 		where:{
 		description: req.body.taskOption
@@ -307,10 +245,8 @@ app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 			error: e.toString()
 		})
 	});
-	
-
-
 });
+
 
 app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 
@@ -326,10 +262,10 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 
 })
 
+
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll().then(function(users) {
-		
 		if (req.body.clickedData){
 			res.json({
 				pData: {
@@ -345,13 +281,9 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 				}
 			});
 		}
-		
-		
-
 	}, function(e) {
 		res.render('error', {
 			error: e.toString()
-
 		});
 
 	});
@@ -361,30 +293,6 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 
 
-
-
-
-
-app.get('/newAccountForm', function(req, res) {
-	res.render('users/newAccountForm');
-})
-
-app.post('/createAccount', function(req, res) {
-
-	body = {};
-	body.email = req.body.email;
-	body.password = req.body.password;
-
-	db.user.create(body).then(function(user) {
-		res.redirect('/');
-	}, function(e) {
-		res.render('error', {
-			error: 'Can not Create Account due to :' + e
-
-		});
-
-	});
-});
 
 
 io.on('connection', function(socket) {
@@ -398,40 +306,6 @@ io.on('connection', function(socket) {
 
 });
 
-
-
-
-
-
-// app.post('/user/login', function(req, res) {
-// 	var body = _.pick(req.body, 'email', 'password');
-// 	var userInstance;
-
-// 	db.user.authenticate(body).then(function(user) {
-// 		var token = user.generateToken('authentication')
-// 		userInstance = user;
-// 		return db.token.create({
-// 			token: token
-// 		});
-
-// 	}).then(function(tokenInstance) {
-// 		console.log("tookenInstance created");
-// 		res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-// 	}).catch(function(e) {
-// 		res.status(401).json({
-// 			error: e.toString()
-// 		});
-// 	});
-// });
-
-// app.delete('/user/logout', middleware.requireAuthentication, function(req, res) {
-// 	req.token.destroy().then(function() {
-// 		res.status(204).send();
-// 	}).catch(function(e) {
-// 		res.status(500).send();
-// 	});
-
-// });
 
 var user = require('./server/serverUser.js');
 // var user = express.static(__dirname + '/server');

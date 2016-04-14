@@ -12,10 +12,33 @@ router.get('/', function(req, res){
 })
 
 
-router.get('/newUser', function(req, res){
+router.get('/newUser', middleware.requireAuthentication, function(req, res){
 
 	res.send('Form for new users')
 })
+
+
+router.get('/newAccountForm', function(req, res) {
+	res.render('users/newAccountForm');
+})
+
+
+router.post('/createAccount', function(req, res) {
+
+	body = {};
+	body.email = req.body.email;
+	body.password = req.body.password;
+
+	db.user.create(body).then(function(user) {
+		res.redirect('/');
+	}, function(e) {
+		res.render('error', {
+			error: 'Can not Create Account due to :' + e
+
+		});
+
+	});
+});
 
 
 router.post('/login', function(req, res) {
