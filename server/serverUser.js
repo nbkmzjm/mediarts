@@ -8,7 +8,7 @@ var middleware = require('../middleware.js')(db);
 
 router.get('/', function(req, res){
 
-	res.send('this is User Home')
+	res.render('users/usersHome')
 })
 
 

@@ -5,6 +5,12 @@ block title
 	title Home
 
 
+block header
+	#header
+	include ../views/layout/header.jade
+
+block horMenu
+	include ../views/layout/horMenu.jade
 
 block content
 	#container
@@ -34,11 +40,24 @@ append scripts
 		
 
 		
+		var getKeys = function(obj){
+		   var keys = [];
+		   for(var key in obj){
+		      keys.push(key);
+		   }
+		   return keys;
+		}
+
+			
+		
+		
+	
+
 
 		
 
 		function mainSC(data){
-			
+			this.data = data
 			var mainSC = $('#mainSC');
 			mainSC.html('');
 
@@ -81,7 +100,7 @@ append scripts
 							taskSCData.dateSC = users[i].email;
 						}else{
 							taskSCData.userId = users[i].id;
-							taskSCData.dateSC = dateSC.toLocaleDateString();
+							taskSCData.dateSC = dateSC.toFullDate();
 							dateSC.setDate(dateSC.getDate()+1);
 						}
 						arrListDateSC.push(taskSCData);
@@ -93,8 +112,9 @@ append scripts
 
 			$.post('/sysObjRead', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
 				
+				
 				//- alert(JSON.stringify(arrListDateSC, null, 4))
-
+				
 				var today = new Date()
 				var lockoutDate = new Date(rData.lockoutDate||'4/24/16')
 				var date21LK = new Date(rData.lockoutDate||'4/24/16')
@@ -149,7 +169,7 @@ append scripts
 										}
 									}
 
-								}(userId, dateSC.toLocaleDateString()));
+								}(userId, dateSC.toFullDate()));
 							} else {
 								var userId = assigndata.userId;
 								var td = document.createElement('td');
@@ -188,13 +208,13 @@ append scripts
 										});
 										}
 									}
-								}(userId, dateSC.toLocaleDateString()));
+								}(userId, dateSC.toFullDate()));
 							}
 
 							//- Reset schedule date position for new user
-							if (arr[i].dateSC.indexOf("@") > -1 && i!=0){
+							if (arr[i].dateSC.lastIndexOf("/") !== 5 && i!=0){
 								dateSC.setDate(dateSC.getDate()-7);
-							}else if (arr[i].dateSC.indexOf("@") > -1 && i==0) {
+							}else if (arr[i].dateSC.indexOf("/") !== 5 && i==0) {
 
 							} else{
 								dateSC.setDate(dateSC.getDate()+1);
@@ -229,7 +249,7 @@ append scripts
 
 					lockoutDate.setDate(lockoutDate.getDate()+28)
 
-					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toLocaleDateString()}}).done(function(rData){
+					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toFullDate()}}).done(function(rData){
 						
 						//- output lock out Note
 						$('#SCNote').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
