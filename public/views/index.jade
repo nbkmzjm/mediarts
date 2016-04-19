@@ -1,4 +1,4 @@
-extends ./layout.jade
+extends ./layout/layout.jade
 
 	
 block title 
@@ -21,7 +21,7 @@ block content
 			p hellosfsdfs
 		#SCNoteDiv
 		#taskOptionDiv
-	a(href='/users/logout') Logout
+	
 
 
 append scripts 
@@ -29,11 +29,11 @@ append scripts
 	script.
 		
 		$(function (){
-			
-						
+									
 			calendarPick();
 	
 			$.post('/ajaxUser').done(mainSC);
+
 
 		});
 

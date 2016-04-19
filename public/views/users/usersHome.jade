@@ -1,1 +1,33 @@
-p this is User Page
+extends ../layout/layout.jade
+
+	
+block title 
+	title Users
+
+block header
+	#header
+	include ../layout/header.jade
+
+block horMenu
+	include ../layout/horMenu.jade
+
+block content
+	#container
+		p User Home
+	
+
+append scripts 
+	script(src="public/fnLib/homeFn.js")
+	script.
+
+		$(function(){
+
+			$('#horMenuList li').removeClass('active');
+			$('#user').addClass('active');
+
+			var table = document.createElement('table')
+			table.id = 'userList'
+			table.className = 'table'
+			
+
+		})

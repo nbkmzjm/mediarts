@@ -2,11 +2,15 @@
 	nav(class="navbar navbar-default")
 		div(class="container-fluid")
 			div(class="navbar-header")
-				a(class="navbar-brand", href="#") BCPSchedule
-			ul(class="nav navbar-nav")
-				li(class="active")
+				a(class="navbar-brand", href="#") BCP Schedule
+			ul(class="nav navbar-nav" id='horMenuList')
+				li(class='active')
 					a(href="/") Home
+				li( id='user')
+					a(href="/users") Users
 				li
-					a(href="users/") Users
+					a(href="#") Admin
+			ul(class="nav navbar-nav navbar-right")
 				li
-					a(href="#") Admin 
+					a(href="/users/logout" class="btn btn-info btn-md")
+						span(class="glyphicon glyphicon-log-out")  Sign-Out

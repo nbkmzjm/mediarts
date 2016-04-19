@@ -34,7 +34,9 @@ app.set("view options", {
 });
 
 app.locals.pretty = true;
+console.log(__dirname)
 app.use(express.static(__dirname));
+app.use('/users', express.static(__dirname));
 app.use(expValidator());
 
 
