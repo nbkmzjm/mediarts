@@ -5,6 +5,11 @@
 #main tr, #main td{
 	width: 150px;
 	border: 1px solid black;
-	padding: 10;
+	padding: 10px;
+	text-align: center;
 
+}
+
+#main tr:nth-child(even){
+	background-color: #f2f2f2
 }

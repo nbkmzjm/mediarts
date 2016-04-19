@@ -1,12 +1,10 @@
-extends ./layout/layout.jade
+extends ../views/layout/layout.jade
 
 	
 block title 
 	title Home
 
-
 block header
-	#header
 	include ../views/layout/header.jade
 
 block horMenu
@@ -18,7 +16,6 @@ block content
 
 		#calenderPick
 		#mainSC
-			p hellosfsdfs
 		#SCNoteDiv
 		#taskOptionDiv
 	
@@ -29,11 +26,11 @@ append scripts
 	script.
 		
 		$(function (){
-									
+			
+						
 			calendarPick();
 	
 			$.post('/ajaxUser').done(mainSC);
-
 
 		});
 
@@ -69,7 +66,7 @@ append scripts
 			
 			var table = document.createElement('table');
 			table.setAttribute('id', 'main');
-			table.setAttribute('class','table')
+			table.setAttribute('class','table table-striped')
 			var tr = document.createElement('tr');
 				var td = document.createElement('td');
 					td.appendChild(document.createTextNode('User'));
