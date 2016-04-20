@@ -27,7 +27,34 @@ append scripts
 
 			var table = document.createElement('table')
 			table.id = 'userList'
-			table.className = 'table'
+			table.className = 'table table-striped'
+				var tr = document.createElement('tr')
+				var arrayField = ['Name', 'Email', 'Title']
+
+				arrayField.forEach(function(item){
+					
+					var th = document.createElement('th')
+					th.appendChild(document.createTextNode(item))
+					tr.appendChild(th)
+				})
+
+				var tbody = document.createElement('th')
+				//- var th = document.createElement('th')
+				//- 	var td = document.createElement('td')
+				//- 	td.appendChild(document.createTextNode('First'))
+				//- 	th.appendChild(td)
+				//- 	var td = document.createElement('td')
+				//- 	td.appendChild(document.createTextNode('Last'))
+				//- 	th.appendChild(td)
+				//- 	var td = document.createElement('td')
+				//- 	td.appendChild(document.createTextNode('Email'))
+				//- 	th.appendChild(td)
+				//- 	var td = document.createElement('td')
+				//- 	td.appendChild(document.createTextNode('Title'))
+				//- 	th.appendChild(td)
+					
+				table.appendChild(tr)
+			container.appendChild(table)
 			
 
 		})
