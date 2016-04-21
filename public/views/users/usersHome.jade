@@ -41,16 +41,20 @@ block content
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="password") Password
 						div(class="col-sm-4")
-							input(type="text" class="form-control" id="password" name="password" placeholder="Enter Password")
+							input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="title") Title
 						div(class="col-sm-4")
-							select(name="title")
+							select(name="title" class="form-control" id="title")
 								option(value="none") Select One
 								option(value="pharmacist") Pharmacist
 								option(value="manager") Manager
 								option(value="tech2") Technician 2
 								option(value="tech3") Technician 3
+					div(class="form-group")
+						label(class="control-label col-sm-2" for="title") Active
+						div(class="col-sm-4")
+							input(type="checkbox" class="form-control" name="active" value='true')
 					div(class="form-group")
 						div(class="col-sm-offset-2 col-sm-3")
 							button(type="submit" class="btn btn-primary") Submit

@@ -128,3 +128,34 @@ module.exports = function(sequelize, DataTypes) {
 	});
  	return user;
 };
+
+
+
+	// name: {
+	// 		type: DataTypes.STRING,
+	// 		allowNull: false,
+	// 	},
+
+	// 	email: {
+	// 		type: DataTypes.STRING,
+	// 		allowNull: false,
+	// 		unique: true,
+	// 		validate: {
+	// 			isEmail: true
+	// 		}
+	// 	},
+
+	// 	username: {
+	// 		type: DataTypes.STRING,
+	// 		allowNull: false,
+	// 	},
+
+	// 	title: {
+	// 		type: DataTypes.STRING,
+	// 		allowNull: false,
+	// 	},
+
+	// 	active: {
+	// 		type: DataTypes.B,
+	// 		allowNull: false,
+	// 	},

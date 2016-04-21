@@ -28,7 +28,8 @@ router.post('/editUser', function(req, res) {
 	req.check('name', 'Full Name must be within 5-30 characters').len(5,30);
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5,20)
-	req.check('password', 'Username must be within 5-20 characters').len(5,20)
+	req.check('password', 'Password must be within 5-20 characters').len(5,20)
+	req.check('title', 'Title must be assigned').len(3)
 
 	var errors = req.validationErrors()
 
@@ -36,19 +37,19 @@ router.post('/editUser', function(req, res) {
 		res.render('users/usersHome',{errors:errors, JSONdata:JSON.stringify({tabx:'userForm'})})
 	}
 
-	var body = _pick(req.body, 'name', 'email', 'password', 'title')
+	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
 	
 	console.log(JSON.stringify(body, null, 4))
 
-	db.user.create(body).then(function(user) {
-		res.redirect('/');
-	}, function(e) {
-		res.render('error', {
-			error: 'Can not Create Account due to :' + e
+	// db.user.create(body).then(function(user) {
+	// 	res.redirect('/');
+	// }, function(e) {
+	// 	res.render('error', {
+	// 		error: 'Can not Create Account due to :' + e
 
-		});
+	// 	});
 
-	});
+	// });
 });
 
 
