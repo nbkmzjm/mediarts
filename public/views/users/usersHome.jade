@@ -14,36 +14,37 @@ block horMenu
 block content
 	#container
 		ul(class="nav nav-tabs")
-			li(class="active")
+			li(class="active" id='userListTab')
 				a(data-toggle="tab" href="#userList") Users
-			li
+			li(id='userFormTab')
 				a(data-toggle="tab" href="#userForm") Add User
 
 		div(class="tab-content")
 			div(id="userList" class="tab-pane fade in active")
 				p UserList
 			div(id="userForm" class="tab-pane")
+				
 				br
-				form(class="form-horizontal" role="form")
+				form(class="form-horizontal" action="/users/editUser" method="POST")
 					div(class="form-group")
-						label(class="control-label col-sm-1" for="name") Name
-						div(class="col-sm-3")
-							input(type="email" class="form-control" id="name" name="name" placeholder="Enter Name")
+						label(class="control-label col-sm-2" for="name") Full Name
+						div(class="col-sm-4")
+							input(type="text" class="form-control" id="name" name="name" placeholder="Enter Full Name")
 					div(class="form-group")
-						label(class="control-label col-sm-1" for="email") Email
-						div(class="col-sm-3")
+						label(class="control-label col-sm-2" for="email") Email
+						div(class="col-sm-4")
 							input(type="email" class="form-control" id="email" name="email" placeholder="Enter Email")
 					div(class="form-group")
-						label(class="control-label col-sm-1" for="username") Username
-						div(class="col-sm-3")
-							input(type="email" class="form-control" id="username" name="username" placeholder="Enter Username")
+						label(class="control-label col-sm-2" for="username") Username
+						div(class="col-sm-4")
+							input(type="text" class="form-control" id="username" name="username" placeholder="Enter Username")
 					div(class="form-group")
-						label(class="control-label col-sm-1" for="password") Password
-						div(class="col-sm-3")
-							input(type="email" class="form-control" id="password" name="password" placeholder="Enter Password")
+						label(class="control-label col-sm-2" for="password") Password
+						div(class="col-sm-4")
+							input(type="text" class="form-control" id="password" name="password" placeholder="Enter Password")
 					div(class="form-group")
-						label(class="control-label col-sm-1" for="title") Title
-						div(class="col-sm-3")
+						label(class="control-label col-sm-2" for="title") Title
+						div(class="col-sm-4")
 							select(name="title")
 								option(value="none") Select One
 								option(value="pharmacist") Pharmacist
@@ -51,8 +52,13 @@ block content
 								option(value="tech2") Technician 2
 								option(value="tech3") Technician 3
 					div(class="form-group")
-						div(class="col-sm-offset-1 col-sm-3")
+						div(class="col-sm-offset-2 col-sm-3")
 							button(type="submit" class="btn btn-primary") Submit
+
+					- if (errors)
+						p.error Please check following items:
+						- each error in errors
+							li.error= error.msg
     
 
 
@@ -62,9 +68,16 @@ block content
 
 append scripts 
 	script(src="public/fnLib/homeFn.js")
-	script.
+	script(type="text/javascript").
 
 		$(function(){
+			var JSONdata = !{JSONdata}
+			if(JSONdata.tabx='userForm'){
+				$('#userListTab').attr('class', '')
+				$('#userFormTab').attr('class', 'active')
+				$('#userList').attr('class', 'tab-pane')
+				$('#userForm').attr('class', 'tab-pane fade in active')
+			}
 
 			$('#horMenuList li').removeClass('active');
 			$('#user').addClass('active');
@@ -99,6 +112,9 @@ append scripts
 					
 				table.appendChild(tr)
 			userList.appendChild(table)
+
+			
+			
 			
 
 		})

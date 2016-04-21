@@ -23,11 +23,22 @@ router.get('/newAccountForm', function(req, res) {
 })
 
 
-router.post('/createAccount', function(req, res) {
+router.post('/editUser', function(req, res) {
 
-	body = {};
-	body.email = req.body.email;
-	body.password = req.body.password;
+	req.check('name', 'Full Name must be within 5-30 characters').len(5,30);
+	req.check('email', 'Email is not valid').isEmail();
+	req.check('username', 'Username must be within 5-20 characters').len(5,20)
+	req.check('password', 'Username must be within 5-20 characters').len(5,20)
+
+	var errors = req.validationErrors()
+
+	if (errors){
+		res.render('users/usersHome',{errors:errors, JSONdata:JSON.stringify({tabx:'userForm'})})
+	}
+
+	var body = _pick(req.body, 'name', 'email', 'password', 'title')
+	
+	console.log(JSON.stringify(body, null, 4))
 
 	db.user.create(body).then(function(user) {
 		res.redirect('/');
