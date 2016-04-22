@@ -52,8 +52,8 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 		include: [db.user]
 	}).then(function(assigns) {
 		// next();
-		return [assigns, db.user.findAll(), db.dateHeader.findAll()];
-	}).spread(function(assigns, users, dateHeader) {
+		return [assigns, db.user.findAll()];
+	}).spread(function(assigns, users) {
 		// console.log('suerssssssssss' + JSON.stringify(users));
 		// console.log('ggggggggggggg' + JSON.stringify(assigns));
 		// console.log('yyyyyyyyyy' + JSON.stringify(dateHeader));

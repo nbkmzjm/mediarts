@@ -16,7 +16,7 @@ html(lang="en")
 				
 				input(type='hidden' id='token')
 				label Username:
-				input(type="text" name="email")
+				input(type="text" name="username")
 				br
 				label Password:
 				input(type="password" name="password")
@@ -29,7 +29,7 @@ html(lang="en")
 					- each error in errors
 						li.error= error.msg
 
-				a(href='/users/newAccountForm') Register
+				a(href='/users') Register
 			
 				
 		script(src="public/js/jquery-2.1.4.min.js")

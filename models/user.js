@@ -6,6 +6,13 @@ var jwt = require('jsonwebtoken');
 module.exports = function(sequelize, DataTypes) {
 
 	var user = sequelize.define('user', {
+		name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			set: function(value){
+				this.setDataValue('name', value.toUpperCase())
+			}
+		},
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -13,6 +20,20 @@ module.exports = function(sequelize, DataTypes) {
 			validate: {
 				isEmail: true
 			}
+		},
+		username: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true
+		},
+		title: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		active: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+			
 		},
 		salt: {
 			type: DataTypes.STRING,
@@ -77,13 +98,13 @@ module.exports = function(sequelize, DataTypes) {
 			authenticate: function(body) {
 				return new Promise(function(resolve, reject) {
 
-					if (typeof body.email !== 'string' || typeof body.password !== 'string') {
+					if (typeof body.username !== 'string' || typeof body.password !== 'string') {
 						return reject();
 					}
 
 					user.findOne({
 						where: {
-							email: body.email.toLowerCase()
+							username: body.username
 						}
 					}).then(function(user) {
 						if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))) {
@@ -131,31 +152,4 @@ module.exports = function(sequelize, DataTypes) {
 
 
 
-	// name: {
-	// 		type: DataTypes.STRING,
-	// 		allowNull: false,
-	// 	},
-
-	// 	email: {
-	// 		type: DataTypes.STRING,
-	// 		allowNull: false,
-	// 		unique: true,
-	// 		validate: {
-	// 			isEmail: true
-	// 		}
-	// 	},
-
-	// 	username: {
-	// 		type: DataTypes.STRING,
-	// 		allowNull: false,
-	// 	},
-
-	// 	title: {
-	// 		type: DataTypes.STRING,
-	// 		allowNull: false,
-	// 	},
-
-	// 	active: {
-	// 		type: DataTypes.B,
-	// 		allowNull: false,
-	// 	},
+	

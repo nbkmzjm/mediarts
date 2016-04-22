@@ -41,22 +41,22 @@ router.post('/editUser', function(req, res) {
 	
 	console.log(JSON.stringify(body, null, 4))
 
-	// db.user.create(body).then(function(user) {
-	// 	res.redirect('/');
-	// }, function(e) {
-	// 	res.render('error', {
-	// 		error: 'Can not Create Account due to :' + e
+	db.user.create(body).then(function(user) {
+		res.redirect('/');
+	}, function(e) {
+		res.render('error', {
+			error: 'Can not Create Account due to :' + e
 
-	// 	});
+		});
 
-	// });
+	});
 });
 
 
 router.post('/login', function(req, res) {
 
-	req.check('email', 'length is required').isByteLength(5);
-	req.check('email', 'Not valid email').isEmail();
+	req.check('username', 'Username is required').isByteLength(5);
+	req.check('username', 'Password is required').isByteLength(5);
 
 	var errors = req.validationErrors();
 
@@ -67,7 +67,7 @@ router.post('/login', function(req, res) {
 		});
 	}
 
-	var body = _.pick(req.body, 'email', 'password');
+	var body = _.pick(req.body, 'username', 'password');
 	var userInstance;
 
 	db.user.authenticate(body).then(function(user) {
