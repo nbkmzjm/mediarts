@@ -21,7 +21,7 @@ block content
 
 		div(class="tab-content")
 			div(id="userList" class="tab-pane fade in active")
-				p UserList
+				
 			div(id="userForm" class="tab-pane")
 				
 				br
@@ -74,11 +74,14 @@ block content
 
 append scripts 
 	script(src="public/fnLib/homeFn.js")
-	script(type="text/javascript").
+	script.
 
 		$(function(){
-			var JSONdata = !{JSONdata}
-			if(JSONdata.tabx='userForm'){
+			
+			var JSONdata = !{JSONdata};
+						
+			if (JSONdata.tabx=='userForm'){
+
 				$('#userListTab').attr('class', '')
 				$('#userFormTab').attr('class', 'active')
 				$('#userList').attr('class', 'tab-pane')
@@ -92,20 +95,39 @@ append scripts
 			table.id = 'userList'
 			table.className = 'table table-striped'
 				var tr = document.createElement('tr')
-				var arrayField = ['Name', 'Email', 'Title']
+				var arrayField = ['Name', 'Email', 'Title', 'Active']
 
-				arrayField.forEach(function(item){
+				arrayField.forEach(function(field){
 					
 					var th = document.createElement('th')
-					th.appendChild(document.createTextNode(item))
+					th.appendChild(document.createTextNode(field))
 					tr.appendChild(th)
 				})
 
 				var tbody = document.createElement('th')
-				
-				
-					
 				table.appendChild(tr)
+
+
+				$.getJSON('/users/userList').done(function(Rdata){
+
+					console.log(JSON.stringify(Rdata, null, 4))
+					Rdata.users.forEach(function(user){
+						var tr = document.createElement('tr')
+							arrayField = [user.name, user.email, user.title, user.active]
+							arrayField.forEach(function(field){
+								var td = document.createElement('td')
+								td.appendChild(document.createTextNode(field))
+								tr.appendChild(td)							
+							})
+
+							
+						table.appendChild(tr)
+				 	
+					})
+				
+
+				
+				})
 			userList.appendChild(table)
 
 			

@@ -8,7 +8,7 @@ var middleware = require('../middleware.js')(db);
 
 router.get('/', function(req, res){
 
-	res.render('users/usersHome')
+	res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
 })
 
 
@@ -42,7 +42,7 @@ router.post('/editUser', function(req, res) {
 	console.log(JSON.stringify(body, null, 4))
 
 	db.user.create(body).then(function(user) {
-		res.redirect('/');
+		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
 	}, function(e) {
 		res.render('error', {
 			error: 'Can not Create Account due to :' + e
@@ -51,6 +51,20 @@ router.post('/editUser', function(req, res) {
 
 	});
 });
+
+router.get('/userList', middleware.requireAuthentication, function(req, res){
+
+	db.user.findAll().then(function(users){
+		res.json({
+			users:users
+		})
+	}, function(e){
+		res.render('error', {
+			error: e.toString()
+		})
+
+	})
+})
 
 
 router.post('/login', function(req, res) {
