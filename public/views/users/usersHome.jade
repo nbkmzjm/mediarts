@@ -92,19 +92,17 @@ append scripts
 			$('#user').addClass('active');
 
 			var table = document.createElement('table')
-			table.id = 'userList'
+			table.id = 'user'
 			table.className = 'table table-striped'
 				var tr = document.createElement('tr')
 				var arrayField = ['Name', 'Email', 'Title', 'Active']
 
 				arrayField.forEach(function(field){
 					
-					var th = document.createElement('th')
-					th.appendChild(document.createTextNode(field))
-					tr.appendChild(th)
+					var td = document.createElement('td')
+					td.appendChild(document.createTextNode(field))
+					tr.appendChild(td)
 				})
-
-				var tbody = document.createElement('th')
 				table.appendChild(tr)
 
 
@@ -114,10 +112,19 @@ append scripts
 					Rdata.users.forEach(function(user){
 						var tr = document.createElement('tr')
 							arrayField = [user.name, user.email, user.title, user.active]
-							arrayField.forEach(function(field){
+							arrayField.forEach(function(field, i){
+
 								var td = document.createElement('td')
 								td.appendChild(document.createTextNode(field))
-								tr.appendChild(td)							
+
+								if(i==0){
+									td.addEventListener('click', function(){
+										alert('click')
+
+									})
+								}
+									
+								tr.appendChild(td)				
 							})
 
 							
