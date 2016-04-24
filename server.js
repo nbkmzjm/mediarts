@@ -138,11 +138,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var dateSC = req.body.postdata.dateSC;
 	var taskSC = req.body.postdata.taskSC;
 	var memo = req.body.postdata.memo;
-	var curUserId = req.user.id
+	var curUser = req.user
 
 	console.log('memo: '+memo)
 
-	if (userId != curUserId){
+	if (userId != curUser.id || curUser == 'admin'){
 		
 		res.json({authorized: false});
 	} else if (taskSC=='SELECT'){

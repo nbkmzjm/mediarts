@@ -142,13 +142,22 @@ append scripts
 								var memo = assigndata.assign.Memo;
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
+								
 									var a = document.createElement('a')
 									a.setAttribute('href','#');
 									a.setAttribute('title', memo);
 									a.setAttribute('data-toggle','popover');
 									a.setAttribute('data-content','popover-content');
-									a.appendChild(document.createTextNode(taskSC))
+									a.appendChild(document.createTextNode(taskSC+"   "))
 									td.appendChild(a)
+
+									if (memo!==''){
+									var span = document.createElement('span')
+									
+									span.style.color = '#E5C201'
+									span.className = "glyphicon glyphicon-comment"
+									td.appendChild(span)
+									}
 								td.addEventListener('click',function(userId,dateSC){
 									return function(){
 										
