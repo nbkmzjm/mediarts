@@ -140,23 +140,23 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var memo = req.body.postdata.memo;
 	var curUserId = req.user.id
 
-	console.log(memo)
+	console.log('memo: '+memo)
 
 	if (userId != curUserId){
 		
 		res.json({authorized: false});
 	} else if (taskSC=='SELECT'){
-		db.assign.findOne({
-			where: {
-				userId: userId,
-				datePos: dateSC
-			}
-		}).then(function(assign){
-			console.log(JSON.stringify(assign,null,4))
-			res.json({
-				Memo:assign.Memo
-			})
-		});
+		// db.assign.findOne({
+		// 	where: {
+		// 		userId: userId,
+		// 		datePos: dateSC
+		// 	}
+		// }).then(function(assign){
+		// 	console.log(JSON.stringify(assign,null,4))
+		// 	res.json({
+		// 		Memo:assign.Memo
+		// 	})
+		// });
 
 	} else if (taskSC=='DELETE'){
 
@@ -228,6 +228,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 		});
 	}
 });
+
 
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
@@ -334,7 +335,7 @@ app.use('/users', user);
 
 
 db.sequelize.sync(
-	{force: true}
+	// {force: true}
 ).then(function() {
 	
 	http.listen(PORT, function() {

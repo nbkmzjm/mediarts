@@ -27,11 +27,13 @@ append scripts
 	script.
 		
 		$(function (){
-			
+			$('[data-toggle="popover"]').popover(); 
 						
 			calendarPick();
 	
 			$.post('/ajaxUser').done(mainSC);
+
+
 
 		});
 
@@ -134,43 +136,41 @@ append scripts
 
 							//- display taskSC if found otherwise display blank
 							if(!!assigndata.assign){
+
 								var userId = assigndata.assign.userId;
 								var taskSC = assigndata.assign.Note;
-
+								var memo = assigndata.assign.Memo;
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
-								td.appendChild(document.createTextNode(taskSC));
-								//- td.addEventListener('doubleclick'), function(){
-								//- 	console.log('sdfsdfs')
-								//- }
+									var a = document.createElement('a')
+									a.setAttribute('href','#');
+									a.setAttribute('title', memo);
+									a.setAttribute('data-toggle','popover');
+									a.setAttribute('data-content','popover-content');
+									a.appendChild(document.createTextNode(taskSC))
+									td.appendChild(a)
 								td.addEventListener('click',function(userId,dateSC){
 									return function(){
-
+										
 										var selDate = new Date(dateSC)
 											
 										if (selDate<lockoutDate){
 											alert('lock')
 										}else{
 											var taskSC = $('input[name=PTO]:checked').attr('value');
-
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+											var memo = $('#memo').val()
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
 
 												if (pData.authorized == false) {
 													alert('You are not authorized for this action')
+												}else if(!!pData.deleted){
+													td.innerHTML='';
+													td.style.backgroundColor = 'red'
 												}else if(!!pData.Note){
 												
 												td.innerHTML=pData.Note;
 												td.style.backgroundColor = 'yellow'
-
-												}else if(!!pData.Memo){
-												td.innerHTML=pData.Memo;
-												
-												td.style.backgroundColor = 'yellow'
-												} else{
-
-												td.innerHTML='';
-												td.style.backgroundColor = 'red'
-												}
+												} 
 											});
 										}
 									}
@@ -249,6 +249,7 @@ append scripts
 							if (i < arr.length ){
 								loopArrayDateSC(arr);
 							}
+							
 						}
 					);
 				}
@@ -279,7 +280,7 @@ append scripts
 				$('#SCNoteDiv').html(SCNote)
 			});
 
-
+			
 
 			var ul = document.createElement('ul');
 			ul.setAttribute('id','PTORadio')
