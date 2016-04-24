@@ -118,10 +118,57 @@ append scripts
 								td.appendChild(document.createTextNode(field))
 
 								if(i==0){
-									td.addEventListener('click', function(){
-										alert('click')
+									td.addEventListener('mouseenter', function(){
 
+										if (td.childNodes.length >2){
+											td.removeChild(td.childNodes[0])
+											td.removeChild(td.childNodes[1])
+
+										}
+
+										var span = document.createElement('span')
+										
+										span.style.color = 'red'
+										span.className = "glyphicon glyphicon-remove-circle"
+										span.id = 'delGly';
+										//- click the 'x' to remove from list
+										span.addEventListener('click', function(){
+											
+											$.post('/users/delUser',{taskOption:user.id}).done(function(pData){
+												table.removeChild(tr)
+											});
+											
+										});
+
+										td.insertBefore(span, td.firstChild)
+
+										var span1 = document.createElement('span')
+										
+										span1.style.color = 'violet'
+										span1.className = "glyphicon glyphicon-edit"
+										span1.id = 'editGly';
+										//- click the 'x' to remove from list
+										span1.addEventListener('click', function(){
+											console.log('delete click')
+											//- $.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
+												//- tr.removeChild(td)
+											//- });
+											
+										});
+										
+										td.appendChild(span1)
 									})
+									td.addEventListener('mouseleave',function(){
+										//- alert($('#delGly').length)
+										if ($('#delGly').length>0){
+											td.removeChild(document.getElementById('delGly'))
+										}
+										if ($('#editGly').length>0){
+											td.removeChild(document.getElementById('editGly'))
+										}
+					})
+
+
 								}
 									
 								tr.appendChild(td)				

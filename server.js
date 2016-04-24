@@ -137,12 +137,26 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
 	var taskSC = req.body.postdata.taskSC;
+	var memo = req.body.postdata.memo;
 	var curUserId = req.user.id
 
+	console.log(memo)
+
 	if (userId != curUserId){
-		console.log('aaauu')
+		
 		res.json({authorized: false});
 	} else if (taskSC=='SELECT'){
+		db.assign.findOne({
+			where: {
+				userId: userId,
+				datePos: dateSC
+			}
+		}).then(function(assign){
+			console.log(JSON.stringify(assign,null,4))
+			res.json({
+				Memo:assign.Memo
+			})
+		});
 
 	} else if (taskSC=='DELETE'){
 
@@ -184,6 +198,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				user
 			];
 		}).spread(function(assign, user) {
+			console.log(assign[0]+'--'+assign[1])
 			user.addAssign(assign[0]).then(function() {
 
 			});
@@ -193,7 +208,8 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				});
 
 			return db.assign.update({
-				Note: taskSC
+				Note: taskSC,
+				Memo: memo
 			}, {
 				where: {
 					userId: user.id,

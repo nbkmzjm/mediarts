@@ -67,6 +67,21 @@ router.get('/userList', middleware.requireAuthentication, function(req, res){
 })
 
 
+router.post('/delUser', middleware.requireAuthentication, function(req, res){
+
+	db.user.destroy({
+		where: {
+			id: req.body.taskOption
+		}
+	}).then(function(deleted){
+		res.json({
+			deleted:deleted
+		});
+	});
+
+})
+
+
 router.post('/login', function(req, res) {
 
 	req.check('username', 'Username is required').isByteLength(5);

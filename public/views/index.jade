@@ -15,6 +15,7 @@ block content
 		//- input(type='text' id='calendar')
 
 		#calenderPick
+		br
 		#mainSC
 		#SCNoteDiv
 		#taskOptionDiv
@@ -139,6 +140,9 @@ append scripts
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(taskSC));
+								//- td.addEventListener('doubleclick'), function(){
+								//- 	console.log('sdfsdfs')
+								//- }
 								td.addEventListener('click',function(userId,dateSC){
 									return function(){
 
@@ -156,6 +160,11 @@ append scripts
 												}else if(!!pData.Note){
 												
 												td.innerHTML=pData.Note;
+												td.style.backgroundColor = 'yellow'
+
+												}else if(!!pData.Memo){
+												td.innerHTML=pData.Memo;
+												
 												td.style.backgroundColor = 'yellow'
 												} else{
 
@@ -186,9 +195,11 @@ append scripts
 										}else{
 										//- retrieved taskOption value from radio botton
 										var taskSC = $('input[name=PTO]:checked').attr('value');
+										var memo = $('#memo').val()
+										console.log(memo)
 
 										//- save or update taskOption value into DB if not existed
-										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC}}).done(function(pData){
+										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
 											
 											//- Only allow signed in user to edit their request
 											if (pData.authorized == false) {
@@ -309,13 +320,33 @@ append scripts
 						radio.setAttribute('type','radio');
 						radio.setAttribute('name','PTO');
 						radio.setAttribute('value',taskOption.description);
+						radio.addEventListener('click', function(){
+							//- alert('radio click')
+							if ($('#memo').length>0){
+								ul.removeChild(document.getElementById('memo'))
+								}
+							var input = document.createElement('input');
+							input.style.width = '250px';
+							input.setAttribute('placeholder','Add Memo');
+							input.setAttribute('type','text');
+							input.setAttribute('id','memo');
+							ul.insertBefore(input, li)
+						})
+						//- radio.addEventListener('mouseout', function(){
+						//- 	if ($('#memo').length>0){
+						//- 	li.removeChild(document.getElementById('memo'))
+						//- 	}
+						//- })
+
 					//- radio.setAttribute('checked','checked');
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode(taskOption.description));
 
 					//- click on list item to bring up the 'x'
-					li.addEventListener('click',function(){
-
+					li.addEventListener('mouseenter',function(){
+						if (li.childNodes.length >2){
+								li.removeChild(li.childNodes[2])
+							}
 						var span = document.createElement('span')
 						span.innerHTML = '';
 						span.style.color = 'red'
@@ -333,7 +364,7 @@ append scripts
 					});
 					//- the 'x' disapear on mouseleave
 					li.addEventListener('mouseleave',function(){
-						if ($('#delGly').length){
+						if ($('#delGly').length>0){
 							li.removeChild(document.getElementById('delGly'))
 						}
 					})
@@ -343,6 +374,8 @@ append scripts
 				
 				//- execute taskOption function with rData
 				$.each(Rdata.taskOption, taskOptionFct);
+
+
 
 				//- create text box to add new taskOption
 				var li = document.createElement('li');
