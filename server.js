@@ -110,6 +110,7 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
+	var curUserTitle = req.user.title;
 
 	db.assign.findOne({
 		where: {
@@ -120,11 +121,13 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 
 		if (!!assign) {
 			res.json({
-				assign: assign
+				assign: assign,
+				curUserTitle: curUserTitle
 			});
 		} else {
 			res.json({
-				userId: userId
+				userId: userId,
+				curUserTitle: curUserTitle
 			});
 		};
 
@@ -142,7 +145,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 	console.log('memo: '+memo)
 
-	if (userId != curUser.id || curUser == 'admin'){
+	if (userId != curUser.id && (curUser.title != 'admin' && curUser.title != 'manager')){
 		
 		res.json({authorized: false});
 	} else if (taskSC=='SELECT'){
@@ -232,10 +235,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
-
+	var curUserTitle = req.user.title;
 	db.taskOption.findAll().then(function(taskOption){
 		res.json({
-			taskOption:taskOption
+			taskOption:taskOption,
+			curUserTitle:curUserTitle
 		})
 	}, function(e){
 		res.render('error', {
@@ -284,22 +288,17 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
-	db.user.findAll().then(function(users) {
-		if (req.body.clickedData){
-			res.json({
-				pData: {
-					users: users,
-					clickedData: true
-				}
-			});
-		}else{
-			res.json({
-				pData: {
-					users: users,
-					clickedData: false
-				}
-			});
-		}
+	db.user.findAll({
+		order:[
+		['title']
+		]
+	}).then(function(users) {
+		res.json({
+			pData: {
+				users: users
+				
+			}
+		});
 	}, function(e) {
 		res.render('error', {
 			error: e.toString()

@@ -65,6 +65,7 @@ append scripts
 			var curSunday = getSunday(new Date(curDate));
 			
 			var dateSC = new Date(curSunday);
+			var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 			
 			var table = document.createElement('table');
@@ -73,11 +74,14 @@ append scripts
 			var tr = document.createElement('tr');
 				var td = document.createElement('td');
 					td.appendChild(document.createTextNode('User'));
+					
 				tr.appendChild(td);
 				for (var i=0; i<7; i++){
-					
+					 
 					var td = document.createElement('td');
-					td.appendChild(document.createTextNode(dateSC.toDateString()));
+					td.appendChild(document.createTextNode(days[dateSC.getDay()]));
+					td.appendChild(document.createElement('br'))
+					td.appendChild(document.createTextNode(dateSC.toFullDate()))
 					tr.appendChild(td);
 
 					dateSC.setDate(dateSC.getDate()+1);
@@ -119,7 +123,7 @@ append scripts
 				var lockoutDate = new Date(rData.lockoutDate||'4/24/16')
 				var date21LK = new Date(rData.lockoutDate||'4/24/16')
 				date21LK.setDate(lockoutDate.getDate()-21)
-					//- alert(today+'---'+date21LK)
+				
 
 
 				var i = 0;
@@ -139,6 +143,7 @@ append scripts
 
 								var userId = assigndata.assign.userId;
 								var taskSC = assigndata.assign.Note;
+								var curUserTitle = assigndata.curUserTitle;
 								var memo = assigndata.assign.Memo;
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
@@ -147,8 +152,7 @@ append scripts
 									a.setAttribute('href','#');
 									a.setAttribute('title', memo);
 									a.setAttribute('data-toggle','popover');
-									a.setAttribute('data-content','popover-content');
-									a.appendChild(document.createTextNode(taskSC+"   "))
+									a.appendChild(document.createTextNode(taskSC))
 									td.appendChild(a)
 
 									if (memo!==''){
@@ -163,8 +167,8 @@ append scripts
 										
 										var selDate = new Date(dateSC)
 											
-										if (selDate<lockoutDate){
-											alert('lock')
+										if (selDate<lockoutDate && (curUserTitle!='admin' && curUserTitle!='manager')){
+											alert($('#SCNote').text())
 										}else{
 											var taskSC = $('input[name=PTO]:checked').attr('value');
 											var memo = $('#memo').val()
@@ -187,6 +191,8 @@ append scripts
 								}(userId, dateSC.toFullDate()));
 							} else {
 								var userId = assigndata.userId;
+								var curUserTitle = assigndata.curUserTitle;
+								
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(""));
@@ -199,13 +205,13 @@ append scripts
 										var selDate = new Date(dateSC)
 										
 										//- Prevent user to request after lockoutDate
-										if (selDate<lockoutDate){
+										if (selDate<lockoutDate && (curUserTitle!='admin' && curUserTitle!='manager')){
 											alert($('#SCNote').text())
 										}else{
 										//- retrieved taskOption value from radio botton
 										var taskSC = $('input[name=PTO]:checked').attr('value');
-										var memo = $('#memo').val()
-										console.log(memo)
+										//- var memo = $('#memo').val()
+										//- console.log(memo)
 
 										//- save or update taskOption value into DB if not existed
 										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
@@ -291,95 +297,138 @@ append scripts
 
 			
 
-			var ul = document.createElement('ul');
-			ul.setAttribute('id','PTORadio')
-				var li = document.createElement('li');
-				li.style.color = 'blue'
-				li.style.width = '100px'
-					var radio = document.createElement('input');
-					radio.setAttribute('type','radio');
-					radio.setAttribute('name','PTO');
-					radio.setAttribute('value','SELECT');
-					radio.setAttribute('checked','checked');
-				li.appendChild(radio);
-				li.appendChild(document.createTextNode('SELECT'));
 
-				var li1 = document.createElement('li');
-				li1.style.color = 'blue'
-				li1.style.width = '100px'
-					var radio = document.createElement('input');
-					radio.setAttribute('type','radio');
-					radio.setAttribute('name','PTO');
-					radio.setAttribute('value','DELETE');
-					
-				li1.appendChild(radio);
-				li1.appendChild(document.createTextNode('DELETE'));
-
-
-			ul.appendChild(li);
-			ul.appendChild(li1);
 
 			$.getJSON('/taskOption').done(function(Rdata){
+				var curUserTitle = Rdata.curUserTitle;
+				var ul = document.createElement('ul');
+				ul.setAttribute('id','PTORadio')
 
+
+					var arrayOption = ['SELECT', 'DELETE', 'PTOR']
+
+					arrayOption.forEach(function(taskOption, i){
+						var li = document.createElement('li');
+						li.style.color = 'blue'
+						li.style.width = '100px'
+							var radio = document.createElement('input');
+							radio.setAttribute('type','radio');
+							radio.setAttribute('name','PTO');
+							radio.setAttribute('value',taskOption);
+							if (taskOption=='SELECT'){
+								radio.setAttribute('checked','checked');
+								}
+
+							if (taskOption=='PTOR'){
+								radio.addEventListener('click', function(){
+								//- alert('radio click')
+								if ($('#memo').length>0){
+									ul.removeChild(document.getElementById('memo'))
+									}
+								var input = document.createElement('input');
+								input.style.width = '250px';
+								input.setAttribute('placeholder','Add Memo');
+								input.setAttribute('type','text');
+								input.setAttribute('id','memo');
+								ul.insertBefore(input, li)
+								})
+
+							}
+							
+							
+						li.appendChild(radio);
+						li.appendChild(document.createTextNode(taskOption));
+						ul.appendChild(li);
+
+					})
+					
+
+				//- 	var li1 = document.createElement('li');
+				//- 	li1.style.color = 'blue'
+				//- 	li1.style.width = '100px'
+				//- 		var radio = document.createElement('input');
+				//- 		radio.setAttribute('type','radio');
+				//- 		radio.setAttribute('name','PTO');
+				//- 		radio.setAttribute('value','DELETE');
+						
+				//- 	li1.appendChild(radio);
+				//- 	li1.appendChild(document.createTextNode('DELETE'));
+
+				//- 	var li = document.createElement('li');
+				//- 	li1.style.color = 'blue'
+				//- 	li1.style.width = '100px'
+				//- 		var radio = document.createElement('input');
+				//- 		radio.setAttribute('type','radio');
+				//- 		radio.setAttribute('name','PTO');
+				//- 		radio.setAttribute('value','DELETE');
+						
+				//- 	li1.appendChild(radio);
+				//- 	li1.appendChild(document.createTextNode('DELETE'));
+
+
+				
+				//- ul.appendChild(li1);
 				//- function to list taskOption from return data
 				function taskOptionFct(i, taskOption){
-					var li = document.createElement('li');
-					li.style.color = 'blue'
-					li.style.width = '100px'
-						var radio = document.createElement('input');
-						radio.setAttribute('type','radio');
-						radio.setAttribute('name','PTO');
-						radio.setAttribute('value',taskOption.description);
-						radio.addEventListener('click', function(){
-							//- alert('radio click')
-							if ($('#memo').length>0){
-								ul.removeChild(document.getElementById('memo'))
+					if(curUserTitle=='admin'|| curUserTitle=='manager'){
+						var li = document.createElement('li');
+						li.style.color = 'blue'
+						li.style.width = '100px'
+							var radio = document.createElement('input');
+							radio.setAttribute('type','radio');
+							radio.setAttribute('name','PTO');
+							radio.setAttribute('value',taskOption.description);
+							radio.addEventListener('click', function(){
+								//- alert('radio click')
+								if ($('#memo').length>0){
+									ul.removeChild(document.getElementById('memo'))
+									}
+								var input = document.createElement('input');
+								input.style.width = '250px';
+								input.setAttribute('placeholder','Add Memo');
+								input.setAttribute('type','text');
+								input.setAttribute('id','memo');
+								ul.insertBefore(input, li)
+							})
+							//- radio.addEventListener('mouseout', function(){
+							//- 	if ($('#memo').length>0){
+							//- 	li.removeChild(document.getElementById('memo'))
+							//- 	}
+							//- })
+
+						//- radio.setAttribute('checked','checked');
+						li.appendChild(radio);
+						li.appendChild(document.createTextNode(taskOption.description));
+
+						//- click on list item to bring up the 'x'
+						li.addEventListener('mouseenter',function(){
+							if (li.childNodes.length >2){
+									li.removeChild(li.childNodes[2])
 								}
-							var input = document.createElement('input');
-							input.style.width = '250px';
-							input.setAttribute('placeholder','Add Memo');
-							input.setAttribute('type','text');
-							input.setAttribute('id','memo');
-							ul.insertBefore(input, li)
-						})
-						//- radio.addEventListener('mouseout', function(){
-						//- 	if ($('#memo').length>0){
-						//- 	li.removeChild(document.getElementById('memo'))
-						//- 	}
-						//- })
+							var span = document.createElement('span')
+							span.innerHTML = '';
+							span.style.color = 'red'
+							span.className = "glyphicon glyphicon-remove-circle"
+							span.id = 'delGly';
+							//- click the 'x' to remove from list
+							span.addEventListener('click', function(){
 
-					//- radio.setAttribute('checked','checked');
-					li.appendChild(radio);
-					li.appendChild(document.createTextNode(taskOption.description));
-
-					//- click on list item to bring up the 'x'
-					li.addEventListener('mouseenter',function(){
-						if (li.childNodes.length >2){
-								li.removeChild(li.childNodes[2])
-							}
-						var span = document.createElement('span')
-						span.innerHTML = '';
-						span.style.color = 'red'
-						span.className = "glyphicon glyphicon-remove-circle"
-						span.id = 'delGly';
-						//- click the 'x' to remove from list
-						span.addEventListener('click', function(){
-
-							$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
-								ul.removeChild(li)
+								$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
+									ul.removeChild(li)
+								});
+								
 							});
-							
+							li.appendChild(span)
 						});
-						li.appendChild(span)
-					});
-					//- the 'x' disapear on mouseleave
-					li.addEventListener('mouseleave',function(){
-						if ($('#delGly').length>0){
-							li.removeChild(document.getElementById('delGly'))
-						}
-					})
+						//- the 'x' disapear on mouseleave
+						li.addEventListener('mouseleave',function(){
+							if ($('#delGly').length>0){
+								li.removeChild(document.getElementById('delGly'))
+							}
+						})
 
-					ul.appendChild(li);
+						ul.appendChild(li);
+					}
 				}
 				
 				//- execute taskOption function with rData
@@ -388,33 +437,36 @@ append scripts
 
 
 				//- create text box to add new taskOption
-				var li = document.createElement('li');
-				li.style.color = 'blue'
-				li.style.width = '100px'
-					var input = document.createElement('input');
-					input.style.width = '100px'
-					input.setAttribute('placeholder','Add Option');
-					input.setAttribute('type','text');
-					input.setAttribute('id','taskOption');
+				if (curUserTitle=='admin'||curUserTitle=='manager'){
+					var li = document.createElement('li');
+					li.style.color = 'blue'
+					li.style.width = '100px'
+						var input = document.createElement('input');
+						input.style.width = '100px'
+						input.setAttribute('placeholder','Add Option');
+						input.setAttribute('type','text');
+						input.setAttribute('id','taskOption');
 
-					//- add new option to DB when leaving the text box
-					input.addEventListener('blur', function(){
-						
-						var taskOptionData = $("#taskOption").val().toUpperCase();
+						//- add new option to DB when leaving the text box
+						input.addEventListener('blur', function(){
+							
+							var taskOptionData = $("#taskOption").val().toUpperCase();
 
-						$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-						
-							if (pData.created){
-								taskOptionFct(i, pData.taskOption);
-								$('#taskOption').val('')
-								ul.appendChild(li)
-							}else{
-								$('#taskOption').val('')
-							}
+							$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+							
+								if (pData.created){
+									taskOptionFct(i, pData.taskOption);
+									$('#taskOption').val('')
+									ul.appendChild(li)
+								}else{
+									$('#taskOption').val('')
+								}
+							});
 						});
-					});
-					li.appendChild(input)
-				ul.appendChild(li)
+						li.appendChild(input)
+					ul.appendChild(li)
+					
+				}
 				$('#taskOptionDiv').html(ul);
 			});
 		}
