@@ -30,7 +30,7 @@ router.get('/newAccountForm', function(req, res) {
 })
 
 
-router.post('/editUser', function(req, res) {
+router.post('/addUser', function(req, res) {
 
 	req.check('name', 'Full Name must be within 5-30 characters').len(5,30);
 	req.check('email', 'Email is not valid').isEmail();
@@ -58,6 +58,20 @@ router.post('/editUser', function(req, res) {
 
 	});
 });
+
+
+router.post('/editUser', function(req, res) {
+	db.user.findOne({
+		where: {
+			id:req.body.userId
+		} 
+	}).then(function(user){
+		console.log(JSON.stringify(user, null, 4))
+		res.json({
+			user:user
+		})
+	})
+})
 
 router.get('/userList', middleware.requireAuthentication, function(req, res){
 

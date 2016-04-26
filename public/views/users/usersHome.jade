@@ -21,15 +21,20 @@ block content
 
 		div(class="tab-content")
 			div(id="userList" class="tab-pane fade in active")
-				
+				- if (user)
+					p=user.name
+					p sfsfsadf
 			div(id="userForm" class="tab-pane")
+				p sfsdfsdf
 				
+					
+
 				br
-				form(class="form-horizontal" action="/users/editUser" method="POST")
+				form(class="form-horizontal" action="/users/addUser" method="POST")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="name") Full Name
 						div(class="col-sm-4")
-							input(type="text" class="form-control" id="name" name="name" placeholder="Enter Full Name")
+							input(type="text" class="form-control" id="name" name="name" value='' placeholder="Enter Full Name")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="email") Email
 						div(class="col-sm-4")
@@ -150,10 +155,18 @@ append scripts
 										span1.id = 'editGly';
 										//- click the 'x' to remove from list
 										span1.addEventListener('click', function(){
-											console.log('delete click')
-											//- $.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
-												//- tr.removeChild(td)
-											//- });
+											
+											$.post('/users/editUser',{userId:user.id}).done(function(pData){
+												document.getElementById('name').value= user.name
+												document.getElementById('email').value= user.email
+												document.getElementById('username').value= user.username
+												document.getElementById('title').value= user.title
+												$('#userListTab').attr('class', '')
+												$('#userFormTab').attr('class', 'active')
+												$('#userList').attr('class', 'tab-pane')
+												$('#userForm').attr('class', 'tab-pane fade in active')
+											});
+
 											
 										});
 										
