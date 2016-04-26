@@ -6,9 +6,16 @@ var _ = require('underscore');
 var middleware = require('../middleware.js')(db);
 
 
-router.get('/', function(req, res){
+router.get('/',middleware.requireAuthentication , function(req, res){
+	var curUserTitle = req.user.title;
 
-	res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
+	var arrayTitle_UserTab = ['admin', 'manager']
+	if (arrayTitle_UserTab.indexOf(curUserTitle)!== -1) {
+		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
+	} else{
+		res.render('index')
+	}
+	
 })
 
 
