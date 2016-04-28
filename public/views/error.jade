@@ -1,1 +1,15 @@
-p=error
+extends ../views/layout/layout.jade
+
+	
+block title 
+	title Error Log
+
+block header
+	include ../views/layout/header.jade
+
+block horMenu
+	include ../views/layout/horMenu.jade
+
+block content
+	#container
+		p=error

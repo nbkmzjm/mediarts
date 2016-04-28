@@ -17,7 +17,7 @@ block content
 			li(class="active" id='userListTab')
 				a(data-toggle="tab" href="#userList") Users
 			li(id='userFormTab')
-				a(data-toggle="tab" href="#userForm") Add User
+				a(data-toggle="tab"  href="#userForm") Add User
 
 		div(class="tab-content")
 			div(id="userList" class="tab-pane fade in active")
@@ -30,10 +30,14 @@ block content
 					
 
 				br
+				form(class="form-horizontal" id='form' action="/users/addUser" method="POST")
+
 				form(class="form-horizontal" action="/users/addUser" method="POST")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="name") Full Name
 						div(class="col-sm-4")
+							input(type="hidden" class="form-control" id="id" name="id" value=0)
+							input(type="text" class="form-control" id="name" name="name" placeholder="Enter Full Name")
 							input(type="text" class="form-control" id="name" name="name" value='' placeholder="Enter Full Name")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="email") Email
@@ -59,13 +63,17 @@ block content
 								option(value="tech2") Technician 2
 								option(value="tech3") Technician 3
 					div(class="form-group")
-						label(class="control-label col-sm-2" for="title") Active
-						div(class="col-sm-4")
-							input(type="checkbox" class="form-control" name="active" value='true')
+						label(class="control-label col-sm-2" for="active") Active
+						div(class="col-sm-1")
+							input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
+						label(class="control-label col-sm-2" for="active") Reset Password
+						div(class="col-sm-1")
+							input(type="checkbox" id= 'active' class="form-control" name="passreset" value='true')
+
 
 					div(class="form-group")
 						div(class="col-sm-offset-2 col-sm-3")
-							button(type="submit" class="btn btn-primary") Submit
+							button(type="button" id='submit' class="btn btn-primary") Submit
 
 					- if (errors)
 						p.error Please check following items:
@@ -84,8 +92,40 @@ append scripts
 
 		$(function(){
 			
+			
+			$("#submit").on('click', function(e){
+				
+				$('#form').submit(function(){
+				return true
+				})
+				//- var username = $('#username').val()
+				//- //- e.preventDefault();
+				//- $.post('/users/userFormValid',{username:username}).done(function(Rdata){
+				//- 	if(Rdata.userexist==true){
+				//- 	alert('truesf')
+				//- 	;
+				//- 	}
+
+				//- })
+				
+				//- alert(JSON.stringify(this, null, 4))
+				
+			});
+
+			
 			var JSONdata = !{JSONdata};
-						
+
+			//- $('#userFormTab').click(function(){
+			//- 	$('#name').val('')
+			//- 	$('#id').val('')
+			//- 	$('#email').val('')
+			//- 	$('#username').val('')
+			//- 	$('#title').val('')
+			//- 	$('#password').attr('type','password')
+			//- 	$('#password').val('')
+			//- 	document.getElementById('active').checked = 1
+			//- })		
+
 			if (JSONdata.tabx=='userForm'){
 
 				$('#userListTab').attr('class', '')
@@ -155,7 +195,20 @@ append scripts
 										span1.id = 'editGly';
 										//- click the 'x' to remove from list
 										span1.addEventListener('click', function(){
-											
+											$.post('/users/editUserForm',{userId:user.id}).done(function(){
+												//- alert(JSON.stringify(user,null,4))
+												$('#userListTab').attr('class', '')
+												//- $('#userFormTab').attr('class', 'active')
+												$('#userList').attr('class', 'tab-pane')
+												$('#userForm').attr('class', 'tab-pane fade in active')
+												
+												$('#name').val(user.name)
+												$('#id').val(user.id)
+												$('#email').val(user.email)
+												$('#username').val(user.username)
+												$('#title').val(user.title)
+												document.getElementById('active').checked = user.active
+											});
 											$.post('/users/editUser',{userId:user.id}).done(function(pData){
 												document.getElementById('name').value= user.name
 												document.getElementById('email').value= user.email
@@ -167,7 +220,6 @@ append scripts
 												$('#userForm').attr('class', 'tab-pane fade in active')
 											});
 
-											
 										});
 										
 										td.appendChild(span1)

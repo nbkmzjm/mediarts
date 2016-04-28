@@ -35,30 +35,53 @@ router.post('/addUser', function(req, res) {
 	req.check('name', 'Full Name must be within 5-30 characters').len(5,30);
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5,20)
-	req.check('password', 'Password must be within 5-20 characters').len(5,20)
 	req.check('title', 'Title must be assigned').len(3)
-
+	req.check('password', 'Password must be within 5-20 characters').len(5,20)
+	var id = req.body.id 
+	var pass = req.body.password
 	var errors = req.validationErrors()
+	var resetpass = req.body.resetpass
+
+	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
 
 	if (errors){
 		res.render('users/usersHome',{errors:errors, JSONdata:JSON.stringify({tabx:'userForm'})})
 	}
-
-	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
 	
 	console.log(JSON.stringify(body, null, 4))
 
 	db.user.create(body).then(function(user) {
 		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
 	}, function(e) {
-		res.render('error', {
-			error: 'Can not Create Account due to :' + e
-
-		});
-
+		console.log(JSON.stringify(e, null, 4))
+		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userForm'})})
 	});
 });
 
+router.post('/editUserForm', function(req, res) {
+
+	db.user.findOne({
+		where: {
+			id: req.body.userId
+		}
+	}).then(function(user){
+		res.json({user:user})
+	})
+})
+
+router.post('/userFormValid', function(req, res) {
+	db.user.findOne({
+		where: {
+			username: req.body.username
+		}
+	}).then(function(user){
+		if (user){
+			res.json({userexist:true})
+		}else{
+			res.json({userexist:false})
+		}
+	})
+})
 
 router.post('/editUser', function(req, res) {
 	db.user.findOne({
