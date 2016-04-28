@@ -25,19 +25,12 @@ block content
 					p=user.name
 					p sfsfsadf
 			div(id="userForm" class="tab-pane")
-				p testgitxxxx
-				
-					
-
 				br
 				form(class="form-horizontal" id='form' action="/users/addUser" method="POST")
-
-				form(class="form-horizontal" action="/users/addUser" method="POST")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="name") Full Name
 						div(class="col-sm-4")
 							input(type="hidden" class="form-control" id="id" name="id" value=0)
-							input(type="text" class="form-control" id="name" name="name" placeholder="Enter Full Name")
 							input(type="text" class="form-control" id="name" name="name" value='' placeholder="Enter Full Name")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="email") Email
@@ -68,18 +61,18 @@ block content
 							input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
 						label(class="control-label col-sm-2" for="active") Reset Password
 						div(class="col-sm-1")
-							input(type="checkbox" id= 'active' class="form-control" name="passreset" value='true')
+							input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value='true')
 
 
 					div(class="form-group")
 						div(class="col-sm-offset-2 col-sm-3")
-							button(type="button" id='submit' class="btn btn-primary") Submit
+							button(type="submit" id='submit' class="btn btn-primary") Submit
 
 					- if (errors)
 						p.error Please check following items:
 						- each error in errors
 							li.error= error.msg
-    
+				div#errors
 
 
 		
@@ -93,23 +86,45 @@ append scripts
 		$(function(){
 			
 			
-			$("#submit").on('click', function(e){
 				
-				$('#form').submit(function(){
-				return true
-				})
-				//- var username = $('#username').val()
-				//- //- e.preventDefault();
-				//- $.post('/users/userFormValid',{username:username}).done(function(Rdata){
-				//- 	if(Rdata.userexist==true){
-				//- 	alert('truesf')
-				//- 	;
-				//- 	}
+			
+			$("#form").on('submit', function(e){
+				var active = false
+				var passreset = false
+				if ($('#active').is(':checked')){
+					active = true
+				}
+				if ($('#passreset').is(':checked')){
+					formdata.passreset = true
+				}
+				
+				
+				
+				$.post('/users/addUser',{
+					name:$('#name').val(),
+					id:$('#id').val(),
+					email:$('#email').val(),
+					username:$('#username').val(),
+					password:$('#password').val(),
+					title:$('#title').val(),
+					active:active,
+					passreset:passreset
 
-				//- })
-				
-				//- alert(JSON.stringify(this, null, 4))
-				
+				}).done(function(Rdata){
+					$('#errors').html('')
+					Rdata.errors.forEach(function(item){
+					
+					
+					$('#errors').append('<br>'+'* '+ item.msg)
+					$('#errors').addClass('error')
+					$('#errors').addClass('col-sm-offset-2 col-sm-10')
+						
+
+					})
+
+				})
+				e.preventDefault();
+				return false;
 			});
 
 			
@@ -249,9 +264,4 @@ append scripts
 				
 				})
 			userList.appendChild(table)
-
-			
-			
-			
-
 		})

@@ -31,7 +31,7 @@ router.get('/newAccountForm', function(req, res) {
 
 
 router.post('/addUser', function(req, res) {
-
+	
 	req.check('name', 'Full Name must be within 5-30 characters').len(5,30);
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5,20)
@@ -42,20 +42,21 @@ router.post('/addUser', function(req, res) {
 	var errors = req.validationErrors()
 	var resetpass = req.body.resetpass
 
-	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
+	db.user.findOne()
+	// var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
 
 	if (errors){
-		res.render('users/usersHome',{errors:errors, JSONdata:JSON.stringify({tabx:'userForm'})})
+		res.json({errors:errors})
 	}
 	
-	console.log(JSON.stringify(body, null, 4))
+	
 
-	db.user.create(body).then(function(user) {
-		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
-	}, function(e) {
-		console.log(JSON.stringify(e, null, 4))
-		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userForm'})})
-	});
+	// db.user.create(body).then(function(user) {
+	// 	res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
+	// }, function(e) {
+	// 	console.log(JSON.stringify(e, null, 4))
+	// 	res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userForm'})})
+	// });
 });
 
 router.post('/editUserForm', function(req, res) {
