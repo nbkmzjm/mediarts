@@ -289,9 +289,13 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll({
+		where:{
+			active:1
+		}, 
 		order:[
-		['title']
-		]
+				['title']
+				]
+		,
 	}).then(function(users) {
 		res.json({
 			pData: {

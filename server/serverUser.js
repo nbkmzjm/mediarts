@@ -12,12 +12,16 @@ router.get('/',middleware.requireAuthentication , function(req, res){
 	var arrayTitle_UserTab = ['admin', 'manager']
 	if (arrayTitle_UserTab.indexOf(curUserTitle)!== -1) {
 		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
-	} else{
+			} else{
 		res.render('index')
 	}
 	
 })
 
+router.get('/aboutuser', function(req, res){
+	// res.send('abuot user')
+	res.redirect('/users')
+})
 
 router.get('/newUser', middleware.requireAuthentication, function(req, res){
 
@@ -36,27 +40,58 @@ router.post('/addUser', function(req, res) {
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5,20)
 	req.check('title', 'Title must be assigned').len(3)
-	req.check('password', 'Password must be within 5-20 characters').len(5,20)
+	
 	var id = req.body.id 
 	var pass = req.body.password
 	var errors = req.validationErrors()
-	var resetpass = req.body.resetpass
-
-	db.user.findOne()
-	// var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
-
+	var passreset = req.body.passreset
+	// res.redirect("/aboutuserx");
+	
+	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
+	console.log(JSON.stringify(id, null, 4))
 	if (errors){
 		res.json({errors:errors})
+	}else if (id=='0'){
+
+		req.check('password', 'Password must be within 5-20 characters').len(5,20)
+		var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
+
+		db.user.create(body).then(function(user) {
+			console.log(JSON.stringify(id, null, 4))
+			res.json({redi:'/users'})
+			// {JSONdata:JSON.stringify({tabx:'userList'})}
+		}, function(e) {
+			console.log(JSON.stringify(e, null, 4))
+			res.json({errors:"User cannot be created due to " + e})
+		});
+
+	}else if (id!='0'||id!=''){
+		req.body.password = 'banner1234'
+		console.log(passreset+ '--'+ req.body.password)
+		if (passreset){
+			
+			var body = _.pick(req.body, 'name', 'email', 'password', 'username', 'title', 'active')
+			console.log(JSON.stringify(body, null, 4))
+		}else{
+			var body = _.pick(req.body, 'name', 'email', 'username', 'title', 'active')
+		}
+		
+
+		db.user.update(body, {
+			where:{id:id}
+		}).then(function(user) {
+			res.json({redi:'/users'})
+			// {JSONdata:JSON.stringify({tabx:'userList'})}
+		}, function(e) {
+			console.log(JSON.stringify(e, null, 4))
+			res.json({errors:e.errors[0].message})
+		});
+
 	}
 	
 	
 
-	// db.user.create(body).then(function(user) {
-	// 	res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
-	// }, function(e) {
-	// 	console.log(JSON.stringify(e, null, 4))
-	// 	res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userForm'})})
-	// });
+	
 });
 
 router.post('/editUserForm', function(req, res) {
@@ -99,7 +134,11 @@ router.post('/editUser', function(req, res) {
 
 router.get('/userList', middleware.requireAuthentication, function(req, res){
 
-	db.user.findAll().then(function(users){
+	db.user.findAll({
+		order:[
+			['title']
+		]
+	}).then(function(users){
 		res.json({
 			users:users
 		})

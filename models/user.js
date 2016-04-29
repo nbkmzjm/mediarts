@@ -9,6 +9,9 @@ module.exports = function(sequelize, DataTypes) {
 		name: {
 			type: DataTypes.STRING,
 			allowNull: false,
+			validate: {
+				len: [5, 30]	
+			},
 			set: function(value){
 				this.setDataValue('name', value.toUpperCase())
 			}
@@ -24,7 +27,10 @@ module.exports = function(sequelize, DataTypes) {
 		username: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			unique: true
+			unique: true,
+			validate: {
+				len: [5, 100]	
+			}
 		},
 		title: {
 			type: DataTypes.STRING,
@@ -45,7 +51,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.VIRTUAL,
 			allowNull: false,
 			validate: {
-				len: [6, 100]	
+				len: [5, 100]	
 			},
 			set: function(value) {
 				var salt = bcrypt.genSaltSync(10);
