@@ -106,6 +106,18 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 	});
 })
 
+app.get('/getTaskSC', middleware.requireAuthentication, function(req, res){
+	var curUserTitle = req.user.title;
+
+	db.assign.findAll({
+		attributes:['datePos', 'Memo', 'userId', 'Note']
+	}).then(function(assign){
+		res.json({
+			assign:assign,
+			 curUserTitle
+		})
+	})
+})
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
