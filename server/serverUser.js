@@ -6,26 +6,29 @@ var _ = require('underscore');
 var middleware = require('../middleware.js')(db);
 
 
-router.get('/',middleware.requireAuthentication , function(req, res){
+router.get('/', middleware.requireAuthentication, function(req, res) {
 	var curUserTitle = req.user.title;
+	res.render('users/usersHome', {
+			JSONdata: JSON.stringify({
+				tabx: 'userList', curUserTitle:curUserTitle
+			})
+		})
+	// var arrayTitle_UserTab = ['admin', 'manager']
+	// if (arrayTitle_UserTab.indexOf(curUserTitle) !== -1) {
+		
+	// } else {
+	// 	res.render('index')
+	// }
 
-	var arrayTitle_UserTab = ['admin', 'manager']
-	if (arrayTitle_UserTab.indexOf(curUserTitle)!== -1) {
-		res.render('users/usersHome',{JSONdata:JSON.stringify({tabx:'userList'})})
-			} else{
-		res.render('index')
-	}
-	
 })
 
-router.get('/aboutuser', function(req, res){
+router.get('/aboutuser', function(req, res) {
 	// res.send('abuot user')
 	res.redirect('/users')
 })
 
-router.get('/newUser', middleware.requireAuthentication, function(req, res){
-
-	res.send('Form for new users')
+router.get('/curUser', middleware.requireAuthentication, function(req, res) {
+	res.json({curUserName:req.user.name})
 })
 
 
@@ -36,62 +39,73 @@ router.get('/newAccountForm', function(req, res) {
 
 router.post('/addUser', function(req, res) {
 	
-	req.check('name', 'Full Name must be within 5-30 characters').len(5,30);
+	req.check('name', 'Full Name must be within 5-30 characters').len(5, 30);
 	req.check('email', 'Email is not valid').isEmail();
-	req.check('username', 'Username must be within 5-20 characters').len(5,20)
+	req.check('username', 'Username must be within 5-20 characters').len(5, 20)
 	req.check('title', 'Title must be assigned').len(3)
-	
-	var id = req.body.id 
-	var pass = req.body.password
+	// req.check('password', 'Password must be within 5-20 characters').len(5, 20)
 	var errors = req.validationErrors()
-	var passreset = req.body.passreset
-	// res.redirect("/aboutuserx");
+	var id = req.body.id
+	var pass = req.body.password
 	
+	var passreset = req.body.passreset
+		// res.redirect("/aboutuserx");
+
 	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
 	console.log(JSON.stringify(id, null, 4))
-	if (errors){
-		res.json({errors:errors})
-	}else if (id=='0'){
+	if (errors) {
+		res.json({
+			errors: errors
+		})
+	} else if (id == '0') {
 
-		req.check('password', 'Password must be within 5-20 characters').len(5,20)
-		var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
 
 		db.user.create(body).then(function(user) {
 			console.log(JSON.stringify(id, null, 4))
-			res.json({redi:'/users'})
-			// {JSONdata:JSON.stringify({tabx:'userList'})}
+			res.json({
+					redi: '/users'
+				})
+				// {JSONdata:JSON.stringify({tabx:'userList'})}
 		}, function(e) {
 			console.log(JSON.stringify(e, null, 4))
-			res.json({errors:"User cannot be created due to " + e})
+			res.json({
+				errors: "User cannot be created due to " + e
+			})
 		});
 
-	}else if (id!='0'||id!=''){
-		req.body.password = 'banner1234'
-		console.log(passreset+ '--'+ req.body.password)
-		if (passreset){
-			
+	} else if (id != '0' || id != '') {
+		console.log(typeof (req.body.password))
+		console.log(passreset + '--' + req.body.password)
+		if (passreset==true) {
+			req.body.password = 'banner1234'
 			var body = _.pick(req.body, 'name', 'email', 'password', 'username', 'title', 'active')
-			console.log(JSON.stringify(body, null, 4))
-		}else{
+		}else if (req.body.password !== ''){
+			var body = _.pick(req.body, 'name', 'email', 'password', 'username', 'title', 'active')
+		}else {
+			console.log('ese')
 			var body = _.pick(req.body, 'name', 'email', 'username', 'title', 'active')
 		}
-		
 
 		db.user.update(body, {
-			where:{id:id}
+			where: {
+				id: id
+			}
 		}).then(function(user) {
-			res.json({redi:'/users'})
-			// {JSONdata:JSON.stringify({tabx:'userList'})}
+			res.json({
+					redi: '/users'
+				})
+				// {JSONdata:JSON.stringify({tabx:'userList'})}
 		}, function(e) {
 			console.log(JSON.stringify(e, null, 4))
-			res.json({errors:e.errors[0].message})
+			res.json({
+				errors: e.errors[0].message
+			})
 		});
 
 	}
-	
-	
 
-	
+
+
 });
 
 router.post('/editUserForm', function(req, res) {
@@ -100,49 +114,67 @@ router.post('/editUserForm', function(req, res) {
 		where: {
 			id: req.body.userId
 		}
-	}).then(function(user){
-		res.json({user:user})
-	})
-})
-
-router.post('/userFormValid', function(req, res) {
-	db.user.findOne({
-		where: {
-			username: req.body.username
-		}
-	}).then(function(user){
-		if (user){
-			res.json({userexist:true})
-		}else{
-			res.json({userexist:false})
-		}
-	})
-})
-
-router.post('/editUser', function(req, res) {
-	db.user.findOne({
-		where: {
-			id:req.body.userId
-		} 
-	}).then(function(user){
-		console.log(JSON.stringify(user, null, 4))
+	}).then(function(user) {
 		res.json({
-			user:user
+			user: user
 		})
 	})
 })
 
-router.get('/userList', middleware.requireAuthentication, function(req, res){
+// router.post('/userFormValid', function(req, res) {
+// 	db.user.findOne({
+// 		where: {
+// 			username: req.body.username
+// 		}
+// 	}).then(function(user) {
+// 		if (user) {
+// 			res.json({
+// 				userexist: true
+// 			})
+// 		} else {
+// 			res.json({
+// 				userexist: false
+// 			})
+// 		}
+// 	})
+// })
+
+// router.post('/editUser', function(req, res) {
+// 	db.user.findOne({
+// 		where: {
+// 			id: req.body.userId
+// 		}
+// 	}).then(function(user) {
+// 		console.log(JSON.stringify(user, null, 4))
+// 		res.json({
+// 			user: user
+// 		})
+// 	})
+// })
+
+router.get('/userList', middleware.requireAuthentication, function(req, res) {
+	var curUser = req.user
+	console.log(curUser.id)
+
+	var idpara = {}
+	var arrayTitle_UserTab = ['admin', 'manager']
+	if (arrayTitle_UserTab.indexOf(curUser.title) !== -1) {
+		idpara.id = {$gt:0}
+	}else{
+		
+		idpara.id = curUser.id
+	}
 
 	db.user.findAll({
-		order:[
+		order: [
 			['title']
-		]
-	}).then(function(users){
+		],
+		where:idpara
+	}).then(function(users) {
 		res.json({
-			users:users
+			users: users
 		})
-	}, function(e){
+	}, function(e) {
 		res.render('error', {
 			error: e.toString()
 		})
@@ -151,15 +183,15 @@ router.get('/userList', middleware.requireAuthentication, function(req, res){
 })
 
 
-router.post('/delUser', middleware.requireAuthentication, function(req, res){
+router.post('/delUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.destroy({
 		where: {
 			id: req.body.taskOption
 		}
-	}).then(function(deleted){
+	}).then(function(deleted) {
 		res.json({
-			deleted:deleted
+			deleted: deleted
 		});
 	});
 
@@ -211,7 +243,6 @@ router.post('/login', function(req, res) {
 	});
 
 });
-
 
 
 

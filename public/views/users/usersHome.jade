@@ -41,7 +41,7 @@ block content
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="password") Password
 						div(class="col-sm-4")
-							input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" autocomplete="false" disabled=false)
+							input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" autocomplete="false")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="title") Title
 						div(class="col-sm-4")
@@ -61,7 +61,7 @@ block content
 							input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
 						label(class="control-label col-sm-2" for="passreset") Reset Password
 						div(class="col-sm-1")
-							input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value='true' disabled=true)
+							input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value=true disabled=true)
 
 
 					div(class="form-group")
@@ -115,7 +115,7 @@ append scripts
 					//- alert(JSON.stringify(Rdata.errors, null, 4))
 						$('#errors').html('')
 						if (typeof Rdata.errors == 'string'){
-							$('#errors').append(Rdata.errors)
+							$('#errors').append('<br>'+'* '+ Rdata.errors)
 							$('#errors').addClass('error')
 								$('#errors').addClass('col-sm-offset-2 col-sm-10')
 						} else{
@@ -140,6 +140,14 @@ append scripts
 
 			
 			var JSONdata = !{JSONdata};
+			var curUserTitle = JSONdata.curUserTitle
+
+			var arrayTitle_UserTab = ['admin', 'manager']
+			if (arrayTitle_UserTab.indexOf(curUserTitle) == -1) {
+				$('#userFormTab').html('')
+				$('#title').attr('disabled', true)
+				$('#passreset').attr('disabled', true)
+			}
 
 			$('#userFormTab').click(function(){
 				$('#name').val('')
@@ -149,7 +157,8 @@ append scripts
 				$('#title').val('')
 				$('#password').attr('type','password')
 				$('#password').val('')
-				$('#password').attr('disabled', false)
+				$('#passreset').attr('disabled', false)
+				
 				document.getElementById('active').checked = 1
 			})	
 
@@ -234,20 +243,10 @@ append scripts
 												$('#email').val(user.email)
 												$('#username').val(user.username)
 												$('#title').val(user.title)
-												$('#password').attr('disabled', true)
 												$('#passreset').attr('disabled', false)
 												document.getElementById('active').checked = user.active
 											});
-											//- $.post('/users/editUser',{userId:user.id}).done(function(pData){
-											//- 	document.getElementById('name').value= user.name
-											//- 	document.getElementById('email').value= user.email
-											//- 	document.getElementById('username').value= user.username
-											//- 	document.getElementById('title').value= user.title
-											//- 	$('#userListTab').attr('class', '')
-											//- 	$('#userFormTab').attr('class', 'active')
-											//- 	$('#userList').attr('class', 'tab-pane')
-											//- 	$('#userForm').attr('class', 'tab-pane fade in active')
-											//- });
+											
 
 										});
 										

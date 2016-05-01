@@ -126,6 +126,7 @@ append scripts
 				
 
 
+
 				var i = 0;
 				var userDelta = 0;
 				//- Using array to assign userID and dateSc to cell of shcedule table 
@@ -249,7 +250,7 @@ append scripts
 								var td = document.createElement('td');
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(arr[i].dateSC));
-
+								//- alert(arr[i].dateSC)
 								window['tr' + userId] = document.createElement('tr');
 								window['tr' + userId].appendChild(td);
 								table.appendChild(window['tr' + userId]);

@@ -12,5 +12,18 @@
 					a(href="#") Admin
 			ul(class="nav navbar-nav navbar-right")
 				li
+					a(href="#" id='curUserName') 
+					
+				li  
+					
 					a(href="/users/logout" class="btn btn-info btn-md")
+
 						span(class="glyphicon glyphicon-log-out")  Sign-Out
+
+script.
+	$(function (){
+		$.getJSON('/users/curUser').done(function(Rdata){
+			
+			$('#curUserName').append(Rdata.curUserName)
+		})
+	})
