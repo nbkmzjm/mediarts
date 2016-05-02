@@ -10,7 +10,9 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 	var curUserTitle = req.user.title;
 	res.render('users/usersHome', {
 			JSONdata: JSON.stringify({
-				tabx: 'userList', curUserTitle:curUserTitle
+				tabx: 'userList', 
+				curUserTitle:curUserTitle,
+				firstUser: false
 			})
 		})
 	// var arrayTitle_UserTab = ['admin', 'manager']

@@ -5,7 +5,7 @@ module.exports = function(db) {
 
 		requireAuthentication: function(req, res, next) {
 			var token = req.cookies.token;
-			// console.log('token is: ' + token);
+			console.log('token is: ' + token);
 
 			db.token.findOne({
 				where: {
@@ -22,8 +22,31 @@ module.exports = function(db) {
 				next();
 			}, function (e) {
 				console.log(e);
-				res.redirect('users/loginform');
-				res.status(401).json({error:e.toString()});
+				db.user.findOne({
+					where:{
+						id:{
+							gt:0
+						}
+					}
+				}).then(function(user){
+					console.log(typeof user)
+					if (!!user){
+						res.redirect('users/loginform');
+						res.status(401).json({error:e.toString()});
+						
+					}else{
+						res.render('users/usersHome', {
+							JSONdata: JSON.stringify({
+								tabx: 'userForm',
+								firstUser: true
+							})
+						})
+						
+					}
+					
+				})
+
+				
 			});
 
 		},
