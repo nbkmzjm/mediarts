@@ -302,7 +302,7 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll({
 		where:{
-			active:1
+			active:true
 		}, 
 		order:[
 				['title']
@@ -350,7 +350,7 @@ app.use('/users', user);
 
 
 db.sequelize.sync(
-	{force: true}
+	// {force: true}
 ).then(function() {
 	
 	http.listen(PORT, function() {
