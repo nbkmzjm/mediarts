@@ -103,25 +103,28 @@ module.exports = function(sequelize, DataTypes) {
 		classMethods: {
 			authenticate: function(body) {
 				return new Promise(function(resolve, reject) {
-
-					if (typeof body.username !== 'string' || typeof body.password !== 'string') {
-						return reject();
-					}
-
 					user.findOne({
 						where: {
-							username: body.username
+							username: body.username,
+							active:true
 						}
 					}).then(function(user) {
-						if (!user || !bcrypt.compareSync(body.password, user.get('password_hash'))) {
-							return reject();
+						if (!user){
+							reject('User-Active')
+
+						}else if(!bcrypt.compareSync(body.password, user.get('password_hash'))){
+							reject('User-Pass');
 						}
 
 						resolve(user);
 
 					}, function(e) {
+						// console.log(e)
 						reject(e);
+
+
 					});
+					
 				});
 			},
 			findByToken: function (token){

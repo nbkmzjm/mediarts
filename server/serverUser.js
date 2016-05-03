@@ -209,40 +209,43 @@ router.post('/login', function(req, res) {
 
 	if (errors) {
 		res.render('users/loginForm', {
-			message: '',
 			errors: errors
+		});
+	}else{
+		var body = _.pick(req.body, 'username', 'password');
+		var userInstance;
+		console.log(body.username)
+		db.user.authenticate(body).then(function(user) {
+			var token = user.generateToken('authentication')
+			userInstance = user;
+			return db.token.create({
+				token: token
+			});
+
+		}).then(function(tokenInstance) {
+			// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
+			res.cookie('token', tokenInstance.get('token'), {
+				maxAge: 9000000
+			});
+			res.redirect('/');
+		}).catch(function(e) {
+			console.log(e);
+			if (e=='User-Active'){
+				arrErr = [{
+				msg: 'Username and Password do not match OR INACTIVE!!'
+				}];
+			}else if (e=='User-Pass')
+				arrErr = [{
+					msg: 'Username and Password do not match!!!'
+				}];
+			res.render('users/loginForm', {
+				errors: arrErr
+			});
+			
 		});
 	}
 
-	var body = _.pick(req.body, 'username', 'password');
-	var userInstance;
-
-	db.user.authenticate(body).then(function(user) {
-		var token = user.generateToken('authentication')
-		userInstance = user;
-		return db.token.create({
-			token: token
-		});
-
-	}).then(function(tokenInstance) {
-		// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
-		res.cookie('token', tokenInstance.get('token'), {
-			maxAge: 9000000
-		});
-		res.redirect('/');
-	}).catch(function(e) {
-		console.log(e);
-		arrErr = [{
-			param: "account",
-			msg: 'Username and Password do not match!!!'
-		}];
-		res.render('users/loginForm', {
-			errors: arrErr
-		});
-		res.status(401).json({
-			error: e.toString()
-		});
-	});
+	
 
 });
 
