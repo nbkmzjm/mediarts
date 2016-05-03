@@ -6,12 +6,12 @@ td{
 	width: 150px;
 	border: 1px solid black;
 	padding: 10px;
-	color: blue;
+	color: #0ABDDD;
 	text-align: center;
 
 }
 td:nth-child(1){
-	color: green;
+	color: #E7801C;
 	font-weight: bold;
 }
 
@@ -22,9 +22,10 @@ td:nth-child(1){
 	border: 2px solid black;
 	padding: 15px;
 	text-align: center;
-	
-
+	color: #0ABDDD;
 }
+
+
 
 
 

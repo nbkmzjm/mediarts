@@ -154,6 +154,15 @@ append scripts
 									a.setAttribute('href','#');
 									a.setAttribute('title', memo);
 									a.setAttribute('data-toggle','popover');
+									
+									if (assign[x].Note=='PTO'){
+										a.style.color = 'green'
+									}else if(assign[x].Note=='PTOR'){
+										a.style.color = '#E007EE'
+									}else{
+										a.style.color = 'blue'
+									}
+									a.style.fontWeight = 'bold'
 									a.appendChild(document.createTextNode(assign[x].Note))
 									td.appendChild(a)
 
