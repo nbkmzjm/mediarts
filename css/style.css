@@ -6,29 +6,38 @@ td{
 	width: 150px;
 	border: 1px solid black;
 	padding: 10px;
-	color: #0ABDDD;
+	color: #18CDED;
 	text-align: center;
 
 }
-td:nth-child(1){
-	color: #E7801C;
-	font-weight: bold;
-}
 
- tr:nth-child(1){
+
+
+
+#user tr:nth-child(1), #main tr:nth-child(1){
+ 	background-color: #84969D;
+	color: #E51717;
 	width: 150px;
 	height: 50px;
 	font-weight: bold;
 	border: 2px solid black;
 	padding: 15px;
 	text-align: center;
-	color: #0ABDDD;
+	
+}
+
+#main td:nth-child(2), #main td:nth-child(8){
+	background-color: #A7FFE7;
+	font-weight: bold;
+}
+
+#user td:nth-child(1), #main td:nth-child(1){
+	color: #E51717;
+	font-weight: bold;
 }
 
 
 
-
-
-tr:nth-child(even){
+#user tr:nth-child, #main tr:nth-child(even){
 	background-color: #CEDBE5
 }

@@ -163,6 +163,7 @@ append scripts
 										a.style.color = 'blue'
 									}
 									a.style.fontWeight = 'bold'
+									//- alert(assign[x].Note)
 									a.appendChild(document.createTextNode(assign[x].Note))
 									td.appendChild(a)
 
@@ -176,6 +177,7 @@ append scripts
 								//- alert(userId+'--'+dateSC.toFullDate())
 								td.addEventListener('click',function(userId,dateSC){
 									return function(){
+
 										
 										var selDate = new Date(dateSC)
 											
@@ -183,6 +185,8 @@ append scripts
 											alert($('#SCNote').text())
 										}else{
 											var taskSC = $('input[name=PTO]:checked').attr('value');
+											//- alert($('a[data-toggle=popover]').text())
+
 											var memo = $('#memo').val()
 											
 											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
@@ -423,16 +427,11 @@ append scripts
 						
 						//- output lock out Note
 						$('#SCNote').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
-						//- var SCNote = document.createElement('p')
-						//- SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
-						//- mainSC.append(SCNote)
-						//- loopArrayDateSC(arrListDateSC);
-						//- mainSC.append(table);
 					});
 
 				}
-					//- output lock out Note 
-				
+
+				//- output lock out Note 
 				mainSC.append(table);	
 
 				var SCNote = document.createElement('p')
@@ -445,26 +444,86 @@ append scripts
 
 
 
-			$.getJSON('/taskOption').done(function(Rdata){
-				var curUserTitle = Rdata.curUserTitle;
-				var ul = document.createElement('ul');
-				ul.setAttribute('id','PTORadio')
-				ul.className = 'nav navbar-nav'
+		$.getJSON('/taskOption').done(function(Rdata){
+			var curUserTitle = Rdata.curUserTitle;
+			var ul = document.createElement('ul');
+			ul.setAttribute('id','PTORadio')
+			ul.className = 'nav navbar-nav'
 
-					//- create text box to add new taskOption
-					if (curUserTitle=='Admin'||curUserTitle=='Manager'){
-						var li = document.createElement('li');
-						li.style.color = 'blue'
-						li.style.width = '100px'
+				//- create text box to add new taskOption
+				//- if (curUserTitle=='Admin'||curUserTitle=='Manager'){
+				//- 	var li = document.createElement('li');
+				//- 	li.style.color = 'blue'
+				//- 	li.style.width = '100px'
+				//- 		var input = document.createElement('input');
+				//- 		input.style.width = '100px'
+				//- 		input.setAttribute('placeholder','Add Option');
+				//- 		input.setAttribute('type','text');
+				//- 		input.setAttribute('id','taskOption');
+
+				//- 		//- add new option to DB when leaving the text box
+				//- 		input.addEventListener('blur', function(){
+							
+				//- 			var taskOptionData = $("#taskOption").val().toUpperCase();
+
+				//- 			$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+							
+				//- 				if (pData.created){
+				//- 					taskOptionFct(i, pData.taskOption);
+				//- 					$('#taskOption').val('')
+				//- 					ul.appendChild(li)
+				//- 				}else{
+				//- 					$('#taskOption').val('')
+				//- 				}
+				//- 			});
+				//- 		});
+				//- 		li.appendChild(input)
+				//- 	ul.appendChild(li)
+				//- }
+
+
+				var arrayOption = ['NEW OPTION','SELECT', 'DELETE', 'PTOR']
+
+				arrayOption.forEach(function(taskOption, i){
+					var li = document.createElement('li');
+					li.style.color = 'blue'
+					li.style.width = '120px'
+					
+						var radio = document.createElement('input');
+						radio.setAttribute('type','radio');
+						radio.setAttribute('name','PTO');
+						radio.setAttribute('value',taskOption);
+						if (taskOption=='SELECT'){
+							radio.setAttribute('checked','checked');
+							}
+
+						if (taskOption=='PTOR'){
+							radio.addEventListener('click', function(){
+							//- alert('radio click')
+							if ($('#memo').length>0){
+								ul.removeChild(document.getElementById('memo'))
+								}
 							var input = document.createElement('input');
-							input.style.width = '100px'
+							input.style.width = '240px';
+							input.setAttribute('placeholder','Add Memo');
+							input.setAttribute('type','text');
+							input.setAttribute('id','memo');
+							ul.insertBefore(input, li)
+							})
+
+						} else if(taskOption=='NEW OPTION'){
+							radio.addEventListener('click', function(){
+							//- alert('radio click')
+							if ($('#taskOption').length>0){
+								ul.removeChild(document.getElementById('taskOption'))
+								}
+							var input = document.createElement('input');
+							input.style.width = '120px';
 							input.setAttribute('placeholder','Add Option');
 							input.setAttribute('type','text');
 							input.setAttribute('id','taskOption');
-
-							//- add new option to DB when leaving the text box
 							input.addEventListener('blur', function(){
-								
+							
 								var taskOptionData = $("#taskOption").val().toUpperCase();
 
 								$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
@@ -478,146 +537,80 @@ append scripts
 									}
 								});
 							});
-							li.appendChild(input)
-						ul.appendChild(li)
-					}
-
-
-					var arrayOption = ['SELECT', 'DELETE', 'PTOR']
-
-					arrayOption.forEach(function(taskOption, i){
-						var li = document.createElement('li');
-						li.style.color = 'blue'
-						li.style.width = '100px'
-						if (taskOption=="SELECT"){li.id = "SELECTx"}
-						
-							var radio = document.createElement('input');
-							radio.setAttribute('type','radio');
-							radio.setAttribute('name','PTO');
-							radio.setAttribute('value',taskOption);
-							if (taskOption=='SELECT'){
-								radio.setAttribute('checked','checked');
-								}
-
-							if (taskOption=='PTOR'){
-								radio.addEventListener('click', function(){
-								//- alert('radio click')
-								if ($('#memo').length>0){
-									ul.removeChild(document.getElementById('memo'))
-									}
-								var input = document.createElement('input');
-								input.style.width = '250px';
-								input.setAttribute('placeholder','Add Memo');
-								input.setAttribute('type','text');
-								input.setAttribute('id','memo');
-								ul.insertBefore(input, li)
-								})
-
-							}
-							
-							
-						li.appendChild(radio);
-						li.appendChild(document.createTextNode(taskOption));
-						ul.appendChild(li);
-
-					})
-					
-
-				//- 	var li1 = document.createElement('li');
-				//- 	li1.style.color = 'blue'
-				//- 	li1.style.width = '100px'
-				//- 		var radio = document.createElement('input');
-				//- 		radio.setAttribute('type','radio');
-				//- 		radio.setAttribute('name','PTO');
-				//- 		radio.setAttribute('value','DELETE');
-						
-				//- 	li1.appendChild(radio);
-				//- 	li1.appendChild(document.createTextNode('DELETE'));
-
-				//- 	var li = document.createElement('li');
-				//- 	li1.style.color = 'blue'
-				//- 	li1.style.width = '100px'
-				//- 		var radio = document.createElement('input');
-				//- 		radio.setAttribute('type','radio');
-				//- 		radio.setAttribute('name','PTO');
-				//- 		radio.setAttribute('value','DELETE');
-						
-				//- 	li1.appendChild(radio);
-				//- 	li1.appendChild(document.createTextNode('DELETE'));
-
-
-				
-				//- ul.appendChild(li1);
-				//- function to list taskOption from return data
-				function taskOptionFct(i, taskOption){
-					if(curUserTitle=='Admin'|| curUserTitle=='Manager'){
-						var li = document.createElement('li');
-						li.style.color = 'blue'
-						li.style.width = '100px'
-							var radio = document.createElement('input');
-							radio.setAttribute('type','radio');
-							radio.setAttribute('name','PTO');
-							radio.setAttribute('value',taskOption.description);
-							radio.addEventListener('click', function(){
-								//- alert('radio click')
-								if ($('#memo').length>0){
-									ul.removeChild(document.getElementById('memo'))
-									}
-								var input = document.createElement('input');
-								input.style.width = '250px';
-								input.setAttribute('placeholder','Add Memo');
-								input.setAttribute('type','text');
-								input.setAttribute('id','memo');
-								ul.insertBefore(input, li)
+							ul.insertBefore(input, li)
 							})
-							//- radio.addEventListener('mouseout', function(){
-							//- 	if ($('#memo').length>0){
-							//- 	li.removeChild(document.getElementById('memo'))
-							//- 	}
-							//- })
 
-						//- radio.setAttribute('checked','checked');
-						li.appendChild(radio);
-						li.appendChild(document.createTextNode(taskOption.description));
 
-						//- click on list item to bring up the 'x'
-						li.addEventListener('mouseenter',function(){
-							if (li.childNodes.length >2){
-									li.removeChild(li.childNodes[2])
+						}
+						
+						
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode(taskOption));
+					ul.appendChild(li);
+
+				})
+			
+			//- function to list taskOption from return data
+			function taskOptionFct(i, taskOption){
+				if(curUserTitle=='Admin'|| curUserTitle=='Manager'){
+					var li = document.createElement('li');
+					li.style.color = 'blue'
+					li.style.width = '120px'
+						var radio = document.createElement('input');
+						radio.setAttribute('type','radio');
+						radio.setAttribute('name','PTO');
+						radio.setAttribute('value',taskOption.description);
+						radio.addEventListener('click', function(){
+							//- alert('radio click')
+							if ($('#memo').length>0){
+								ul.removeChild(document.getElementById('memo'))
 								}
-							var span = document.createElement('span')
-							span.innerHTML = '';
-							span.style.color = 'red'
-							span.className = "glyphicon glyphicon-remove-circle"
-							span.id = 'delGly';
-							//- click the 'x' to remove from list
-							span.addEventListener('click', function(){
-
-								$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
-									ul.removeChild(li)
-								});
-								
-							});
-							li.appendChild(span)
-						});
-						//- the 'x' disapear on mouseleave
-						li.addEventListener('mouseleave',function(){
-							if ($('#delGly').length>0){
-								li.removeChild(document.getElementById('delGly'))
-							}
+							var input = document.createElement('input');
+							input.style.width = '240px';
+							input.setAttribute('placeholder','Add Memo');
+							input.setAttribute('type','text');
+							input.setAttribute('id','memo');
+							ul.insertBefore(input, li)
 						})
 
-						ul.appendChild(li);
-					}
+					//- radio.setAttribute('checked','checked');
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode(taskOption.description));
+
+					//- click on list item to bring up the 'x'
+					li.addEventListener('mouseenter',function(){
+						if (li.childNodes.length >2){
+								li.removeChild(li.childNodes[2])
+							}
+						var span = document.createElement('span')
+						span.innerHTML = '';
+						span.style.color = 'red'
+						span.className = "glyphicon glyphicon-remove-circle"
+						span.id = 'delGly';
+						//- click the 'x' to remove from list
+						span.addEventListener('click', function(){
+
+							$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
+								ul.removeChild(li)
+							});
+							
+						});
+						li.appendChild(span)
+					});
+					//- the 'x' disapear on mouseleave
+					li.addEventListener('mouseleave',function(){
+						if ($('#delGly').length>0){
+							li.removeChild(document.getElementById('delGly'))
+						}
+					})
+					ul.appendChild(li);
 				}
-				
-				//- execute taskOption function with rData
-				$.each(Rdata.taskOption, taskOptionFct);
-
-
-
-				
-				$('#taskOptionDiv').html(ul);
-			});
-		
+			}
+			
+			//- execute taskOption function with rData
+			$.each(Rdata.taskOption, taskOptionFct);
+			
+			$('#taskOptionDiv').html(ul);
+		});
+	
 
