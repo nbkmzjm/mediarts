@@ -157,7 +157,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 	console.log('memo: '+memo)
 
-	if (userId != curUser.id && (curUser.title != 'admin' && curUser.title != 'manager')){
+	if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')){
 		
 		res.json({authorized: false});
 	} else if (taskSC=='SELECT'){
@@ -248,7 +248,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 	var curUserTitle = req.user.title;
-	db.taskOption.findAll().then(function(taskOption){
+	db.taskOption.findAll({
+		order: [
+			['description']
+		]
+	}).then(function(taskOption){
 		res.json({
 			taskOption:taskOption,
 			curUserTitle:curUserTitle

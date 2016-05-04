@@ -18,7 +18,7 @@ block content
 		br
 		#mainSC
 		#SCNoteDiv
-		#taskOptionDiv
+		nav(class="navbar navbar-default" id="taskOptionDiv")
 	
 
 
@@ -179,7 +179,7 @@ append scripts
 										
 										var selDate = new Date(dateSC)
 											
-										if (selDate<lockoutDate && (curUserTitle!='admin' && curUserTitle!='manager')){
+										if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')){
 											alert($('#SCNote').text())
 										}else{
 											var taskSC = $('input[name=PTO]:checked').attr('value');
@@ -214,7 +214,7 @@ append scripts
 									var selDate = new Date(dateSC)
 									
 									//- Prevent user to request after lockoutDate
-									if (selDate<lockoutDate && (curUserTitle!='admin' && curUserTitle!='manager')){
+									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')){
 										alert($('#SCNote').text())
 									}else{
 									//- retrieved taskOption value from radio botton
@@ -313,7 +313,7 @@ append scripts
 										
 										var selDate = new Date(dateSC)
 											
-										if (selDate<lockoutDate && (curUserTitle!='admin' && curUserTitle!='manager')){
+										if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')){
 											alert($('#SCNote').text())
 										}else{
 											var taskSC = $('input[name=PTO]:checked').attr('value');
@@ -351,7 +351,7 @@ append scripts
 										var selDate = new Date(dateSC)
 										
 										//- Prevent user to request after lockoutDate
-										if (selDate<lockoutDate && (curUserTitle!='admin' && curUserTitle!='manager')){
+										if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')){
 											alert($('#SCNote').text())
 										}else{
 										//- retrieved taskOption value from radio botton
@@ -449,6 +449,7 @@ append scripts
 				var curUserTitle = Rdata.curUserTitle;
 				var ul = document.createElement('ul');
 				ul.setAttribute('id','PTORadio')
+				ul.className = 'nav navbar-nav'
 
 
 					var arrayOption = ['SELECT', 'DELETE', 'PTOR']
@@ -463,6 +464,7 @@ append scripts
 							radio.setAttribute('value',taskOption);
 							if (taskOption=='SELECT'){
 								radio.setAttribute('checked','checked');
+								radio.id = 'SELECTx'
 								}
 
 							if (taskOption=='PTOR'){
@@ -516,7 +518,7 @@ append scripts
 				//- ul.appendChild(li1);
 				//- function to list taskOption from return data
 				function taskOptionFct(i, taskOption){
-					if(curUserTitle=='admin'|| curUserTitle=='manager'){
+					if(curUserTitle=='Admin'|| curUserTitle=='Manager'){
 						var li = document.createElement('li');
 						li.style.color = 'blue'
 						li.style.width = '100px'
@@ -583,12 +585,12 @@ append scripts
 
 
 				//- create text box to add new taskOption
-				if (curUserTitle=='admin'||curUserTitle=='manager'){
+				if (curUserTitle=='Admin'||curUserTitle=='Manager'){
 					var li = document.createElement('li');
 					li.style.color = 'blue'
 					li.style.width = '100px'
 						var input = document.createElement('input');
-						input.style.width = '100px'
+						input.style.width = '150px'
 						input.setAttribute('placeholder','Add Option');
 						input.setAttribute('type','text');
 						input.setAttribute('id','taskOption');
@@ -610,8 +612,9 @@ append scripts
 							});
 						});
 						li.appendChild(input)
+					//- ul.insertBefore(li, $('#SELECT'))
 					ul.appendChild(li)
-					
+					$('#SELECTx').text('ssssssss')
 				}
 				$('#taskOptionDiv').html(ul);
 			});

@@ -159,7 +159,7 @@ router.get('/userList', middleware.requireAuthentication, function(req, res) {
 	console.log(curUser.id)
 
 	var idpara = {}
-	var arrayTitle_UserTab = ['admin', 'manager']
+	var arrayTitle_UserTab = ['Admin', 'Manager']
 	if (arrayTitle_UserTab.indexOf(curUser.title) !== -1) {
 		idpara.id = {$gt:0}
 	}else{
