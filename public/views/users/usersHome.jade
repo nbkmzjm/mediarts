@@ -24,7 +24,7 @@ block content
 
 			div(id="userForm" class="tab-pane")
 				br
-				form(class="form-horizontal" id='form' action="/users/addUser" method="POST")
+				form(class="form-horizontal" autocomplete="off" id='form' action="/users/addUser" method="POST")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="name") Full Name
 						div(class="col-sm-4")
@@ -37,11 +37,11 @@ block content
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="username") Username
 						div(class="col-sm-4")
-							input(type="text" class="form-control" id="username" name="usern" placeholder="Enter Username" autocomplete="off")
+							input(type="text" class="form-control" id="username" name="usern" placeholder="Enter Username")
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="password") Password
 						div(class="col-sm-4")
-							input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" autocomplete="off")
+							input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" )
 					div(class="form-group")
 						label(class="control-label col-sm-2" for="title") Title
 						div(class="col-sm-4")
@@ -248,6 +248,7 @@ append scripts
 												$('#id').val(user.id)
 												$('#email').val(user.email)
 												$('#username').val(user.username)
+												$('#password').val('')
 												$('#title').val(user.title)
 												$('#passreset').attr('disabled', false)
 												document.getElementById('active').checked = user.active

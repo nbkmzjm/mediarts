@@ -441,7 +441,7 @@ append scripts
 				$('#SCNoteDiv').html(SCNote)
 			});
 
-			
+		}	
 
 
 
@@ -451,6 +451,37 @@ append scripts
 				ul.setAttribute('id','PTORadio')
 				ul.className = 'nav navbar-nav'
 
+					//- create text box to add new taskOption
+					if (curUserTitle=='Admin'||curUserTitle=='Manager'){
+						var li = document.createElement('li');
+						li.style.color = 'blue'
+						li.style.width = '100px'
+							var input = document.createElement('input');
+							input.style.width = '100px'
+							input.setAttribute('placeholder','Add Option');
+							input.setAttribute('type','text');
+							input.setAttribute('id','taskOption');
+
+							//- add new option to DB when leaving the text box
+							input.addEventListener('blur', function(){
+								
+								var taskOptionData = $("#taskOption").val().toUpperCase();
+
+								$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
+								
+									if (pData.created){
+										taskOptionFct(i, pData.taskOption);
+										$('#taskOption').val('')
+										ul.appendChild(li)
+									}else{
+										$('#taskOption').val('')
+									}
+								});
+							});
+							li.appendChild(input)
+						ul.appendChild(li)
+					}
+
 
 					var arrayOption = ['SELECT', 'DELETE', 'PTOR']
 
@@ -458,13 +489,14 @@ append scripts
 						var li = document.createElement('li');
 						li.style.color = 'blue'
 						li.style.width = '100px'
+						if (taskOption=="SELECT"){li.id = "SELECTx"}
+						
 							var radio = document.createElement('input');
 							radio.setAttribute('type','radio');
 							radio.setAttribute('name','PTO');
 							radio.setAttribute('value',taskOption);
 							if (taskOption=='SELECT'){
 								radio.setAttribute('checked','checked');
-								radio.id = 'SELECTx'
 								}
 
 							if (taskOption=='PTOR'){
@@ -584,39 +616,8 @@ append scripts
 
 
 
-				//- create text box to add new taskOption
-				if (curUserTitle=='Admin'||curUserTitle=='Manager'){
-					var li = document.createElement('li');
-					li.style.color = 'blue'
-					li.style.width = '100px'
-						var input = document.createElement('input');
-						input.style.width = '150px'
-						input.setAttribute('placeholder','Add Option');
-						input.setAttribute('type','text');
-						input.setAttribute('id','taskOption');
-
-						//- add new option to DB when leaving the text box
-						input.addEventListener('blur', function(){
-							
-							var taskOptionData = $("#taskOption").val().toUpperCase();
-
-							$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-							
-								if (pData.created){
-									taskOptionFct(i, pData.taskOption);
-									$('#taskOption').val('')
-									ul.appendChild(li)
-								}else{
-									$('#taskOption').val('')
-								}
-							});
-						});
-						li.appendChild(input)
-					//- ul.insertBefore(li, $('#SELECT'))
-					ul.appendChild(li)
-					$('#SELECTx').text('ssssssss')
-				}
+				
 				$('#taskOptionDiv').html(ul);
 			});
-		}
+		
 
