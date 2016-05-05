@@ -114,7 +114,7 @@ append scripts
 				var dateSC = new Date(curSunday);
 			}
 
-
+			
 			$.post('/sysObjRead', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
 				
 				
@@ -125,8 +125,12 @@ append scripts
 				var date21LK = new Date(rData.lockoutDate||'4/24/16')
 				date21LK.setDate(lockoutDate.getDate()-21)
 
+				//- var eDate = dateSC;
+				//- eDate.setDate(dateSC.getDate()+7)
 								
-				$.getJSON('/getTaskSC').done(function(rData){
+				$.post('/taskSC',{
+					sDate:dateSC
+					}).done(function(rData){
 
 					//- alert(alert(JSON.stringify(rData, null, 4)))
 					var assign = rData.assign

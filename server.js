@@ -106,11 +106,23 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 	});
 })
 
-app.get('/getTaskSC', middleware.requireAuthentication, function(req, res){
+app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var curUserTitle = req.user.title;
+	var sDate = moment(new Date(req.body.sDate))
+	var arrDate = [];
+
+	for (var i = 0; i < 7; i++) {
+		arrDate.push(sDate.format('MM/DD/YYYY'))
+		sDate.add(1,'days')
+	};
+
+	console.log(JSON.stringify(arrDate, null, 4))
 
 	db.assign.findAll({
-		attributes:['datePos', 'Memo', 'userId', 'Note']
+		attributes:['datePos', 'Memo', 'userId', 'Note'],
+		where:{
+			datePos:arrDate
+		}
 	}).then(function(assign){
 		res.json({
 			assign:assign,
@@ -119,34 +131,34 @@ app.get('/getTaskSC', middleware.requireAuthentication, function(req, res){
 	})
 })
 
-app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
-	var userId = req.body.postdata.userId;
-	var dateSC = req.body.postdata.dateSC;
-	var curUserTitle = req.user.title;
+// app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
+// 	var userId = req.body.postdata.userId;
+// 	var dateSC = req.body.postdata.dateSC;
+// 	var curUserTitle = req.user.title;
 
-	db.assign.findOne({
-		where: {
-			userId: userId,
-			datePos: dateSC
-		}
-	}).then(function(assign) {
+// 	db.assign.findOne({
+// 		where: {
+// 			userId: userId,
+// 			datePos: dateSC
+// 		}
+// 	}).then(function(assign) {
 
-		if (!!assign) {
-			res.json({
-				assign: assign,
-				curUserTitle: curUserTitle
-			});
-		} else {
-			res.json({
-				userId: userId,
-				curUserTitle: curUserTitle
-			});
-		};
+// 		if (!!assign) {
+// 			res.json({
+// 				assign: assign,
+// 				curUserTitle: curUserTitle
+// 			});
+// 		} else {
+// 			res.json({
+// 				userId: userId,
+// 				curUserTitle: curUserTitle
+// 			});
+// 		};
 
-	}).catch(function(e) {
+// 	}).catch(function(e) {
 
-	});
-});
+// 	});
+// });
 
 app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
@@ -155,7 +167,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var memo = req.body.postdata.memo;
 	var curUser = req.user
 
-	console.log('memo: '+memo)
+	console.log('dateSC: '+dateSC)
 
 	if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')){
 		
