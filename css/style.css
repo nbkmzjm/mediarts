@@ -4,7 +4,7 @@
 
 td{
 	width: 150px;
-	border: 1px solid black;
+	border: 2px solid #FFFFFF;
 	padding: 10px;
 	color: #18CDED;
 	text-align: center;
@@ -38,6 +38,6 @@ td{
 
 
 
-#user tr:nth-child, #main tr:nth-child(even){
+#user tr:nth-child(even), #main tr:nth-child(even){
 	background-color: #CEDBE5
 }
