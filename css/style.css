@@ -6,17 +6,19 @@ td{
 	width: 150px;
 	border: 2px solid #FFFFFF;
 	padding: 10px;
-	color: #18CDED;
+	/*color: #00A478;*/
 	text-align: center;
 
 }
 
 
-
+#user tr:nth-child(odd), #main tr:nth-child(odd){
+	background-color: #E6F4FF
+}
 
 #user tr:nth-child(1), #main tr:nth-child(1){
- 	background-color: #84969D;
-	color: #E51717;
+ 	background-color: #93B4C0;
+	color: #68E1FF;
 	width: 150px;
 	height: 50px;
 	font-weight: bold;
@@ -32,7 +34,7 @@ td{
 }*/
 
 #user td:nth-child(1), #main td:nth-child(1){
-	color: #E51717;
+	color: #FF2832;
 	font-weight: bold;
 }
 
@@ -41,3 +43,4 @@ td{
 #user tr:nth-child(even), #main tr:nth-child(even){
 	background-color: #CEDBE5
 }
+
