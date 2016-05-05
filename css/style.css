@@ -26,10 +26,10 @@ td{
 	
 }
 
-#main td:nth-child(2), #main td:nth-child(8){
+/*#main td:nth-child(2), #main td:nth-child(8){
 	background-color: #A7FFE7;
 	font-weight: bold;
-}
+}*/
 
 #user td:nth-child(1), #main td:nth-child(1){
 	color: #E51717;
