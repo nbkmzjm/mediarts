@@ -146,11 +146,11 @@ append scripts
 			var arrayTitle_UserTab = ['Admin', 'Manager']
 			if (arrayTitle_UserTab.indexOf(curUserTitle) == -1) {
 				$('#userFormTab').html('')
-				//- if (firstUser){
-				//- 	$('#title').attr('disabled', false)
-				//- }else{
-				//- 	$('#title').attr('disabled', true)
-				//- }
+				if (firstUser){
+					$('#title').attr('disabled', false)
+				}else{
+					$('#title').attr('disabled', true)
+				}
 				
 				$('#passreset').attr('disabled', true)
 			}
