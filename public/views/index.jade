@@ -13,9 +13,7 @@ block horMenu
 block content
 	#container
 		//- input(type='text' id='calendar')
-
 		#calenderPick
-		br
 		#mainSC
 		#SCNoteDiv
 		nav(class="navbar navbar-default" id="taskOptionDiv")
@@ -515,7 +513,7 @@ append scripts
 							ul.insertBefore(input, li)
 							})
 
-						} else if(taskOption=='NEW OPTION'){
+						} else if(taskOption=='NEW OPTION'&&(curUserTitle=='Admin'|| curUserTitle=='Manager')){
 							radio.addEventListener('click', function(){
 							//- alert('radio click')
 							if ($('#taskOption').length>0){
