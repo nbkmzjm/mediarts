@@ -39,7 +39,7 @@ function calendarPick(){
 
 					dateCalender.style.textAlign = 'center'
 					dateCalender.style.fontWeight = 'bold'
-					dateCalender.style.width = '100px'
+					dateCalender.style.width = 'auto'
 					dateCalender.style.fontSize = '120%'
 					dateCalender.style.border = '2px solid #3C96DC'
 					
