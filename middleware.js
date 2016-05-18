@@ -31,8 +31,8 @@ module.exports = function(db) {
 				}).then(function(user){
 					console.log(typeof user)
 					if (!!user){
-						res.redirect('users/loginform');
-						res.status(401).json({error:e.toString()});
+						res.redirect('/users/loginform');
+						
 						
 					}else{
 						res.render('users/usersHome', {

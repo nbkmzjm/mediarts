@@ -13,6 +13,10 @@ var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
+var Umzug = require('umzug')
+
+
+
 
 
 
@@ -38,6 +42,27 @@ console.log(__dirname)
 app.use(express.static(__dirname));
 app.use('/users', express.static(__dirname));
 app.use(expValidator());
+
+
+
+var umzug = new Umzug({
+	storage: 'sequelize',
+
+	storageOptions: {
+		sequelize: db.sequelize,
+		tableName: '_migrations'
+	},
+	upName: 'up',
+	downName: 'down',
+
+	migrations: {
+		// The params that gets passed to the migrations.
+		// Might be an array or a synchronous function which returns an array.
+		params: [db.sequelize.getQueryInterface(), db.sequelize.constructor],
+		path: './migrations',
+		pattern: /^\d+[\w-]+\.js$/
+	}
+});
 
 
 app.get('/test', function(req, res){
@@ -108,22 +133,30 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var curUserTitle = req.user.title;
-	var sDate = moment(new Date(req.body.sDate))
-	var arrDate = [];
+	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM/DD/YYYY')
+	var sDate = moment(new Date(req.body.sDate)).format('MM/DD/YYYY')
 
-	for (var i = 0; i < 7; i++) {
-		arrDate.push(sDate.format('MM/DD/YYYY'))
-		sDate.add(1,'days')
-	};
-
-	console.log(JSON.stringify(arrDate, null, 4))
-
+	console.log(sDate)
 	db.assign.findAll({
-		attributes:['datePos', 'Memo', 'userId', 'Note'],
+		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
+		include:[{
+			model:db.assignTracer,
+			include:[{
+				model:db.user
+			}]
+			
+		}],
 		where:{
-			datePos:arrDate
-		}
+			datePos:{
+				$between:[sDate,eDate]
+			}
+		},
+		order:[
+				[db.assignTracer,'createdAt', 'DESC']
+			]
 	}).then(function(assign){
+		console.log('taskSC below: ')
+		console.log(JSON.stringify(assign, null, 4))
 		res.json({
 			assign:assign,
 			 curUserTitle
@@ -131,34 +164,50 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	})
 })
 
-// app.post('/taskSC', middleware.requireAuthentication, function(req, res) {
-// 	var userId = req.body.postdata.userId;
-// 	var dateSC = req.body.postdata.dateSC;
-// 	var curUserTitle = req.user.title;
 
-// 	db.assign.findOne({
-// 		where: {
-// 			userId: userId,
-// 			datePos: dateSC
-// 		}
-// 	}).then(function(assign) {
+app.post('/assignTracerReadUpd', middleware.requireAuthentication, function(req, res) {
+	var assignTracerId = req.body.assignTracerId;
+	db.assignTracer.update({
+		read:true
+	}, {
+		where:{id:assignTracerId}
+	}).then(function(updated){
+		res.json({
+			updated:updated
+		})
+	})
+})
 
-// 		if (!!assign) {
-// 			res.json({
-// 				assign: assign,
-// 				curUserTitle: curUserTitle
-// 			});
-// 		} else {
-// 			res.json({
-// 				userId: userId,
-// 				curUserTitle: curUserTitle
-// 			});
-// 		};
+app.post('/assignTracerRead', middleware.requireAuthentication, function(req, res) {
+	var assignId = req.body.assignId;
+	var curUserTitle = req.user.title;
+	console.log(assignId)
 
-// 	}).catch(function(e) {
+	db.assign.findOne({
+		include: [{
+			model:db.assignTracer,
+			include:[{
+				model:db.user
+			}]
+		}],
+		where: {
+				id: assignId
+		},
+		order:[
+				[db.assignTracer,'createdAt', 'DESC']
+			]
+	}).then(function(assign) {
+		console.log(JSON.stringify(assign, null, 4))
+			res.json({
+				assign: assign
+			});
 
-// 	});
-// });
+	}).catch(function(e) {
+		console.log(e)
+	});
+});
+
+
 
 app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var userId = req.body.postdata.userId;
@@ -172,44 +221,9 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')){
 		
 		res.json({authorized: false});
-	} else if (taskSC=='SELECT'){
-		// db.assign.findOne({
-		// 	where: {
-		// 		userId: userId,
-		// 		datePos: dateSC
-		// 	}
-		// }).then(function(assign){
-		// 	console.log(JSON.stringify(assign,null,4))
-		// 	res.json({
-		// 		Memo:assign.Memo
-		// 	})
-		// });
-
-	} else if (taskSC=='DELETE'){
-
-		db.user.findOne({
-			where: {
-				id: userId
-			}
-		}).then(function(user) {
-			return db.assign.destroy({
-						where: {
-							userId: user.id,
-							datePos: dateSC
-						}
-					});
-		}).then(function(deleted){
-			res.json({
-					deleted: deleted
-				});
-
-		}).catch(function(e) {
-			res.render('error', {
-				error: e.toString()
-			});
-		});
+	} else if (taskSC=='SELECT' || taskSC=='PTOR_TRACER'||taskSC=='NEW OPTION'){
+	
 	} else {
-		
 		db.user.findOne({
 			where: {
 				id: userId
@@ -230,22 +244,54 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 			});
 
+			
+
+
+			if (taskSC=='DELETE'){
+				var updatePara = {
+					Note: '',
+					Memo: ''
+				}
+			} else {
+				var updatePara = {
+					Note: taskSC,
+					Memo: memo
+				}
+			}
+			return [
+				db.assign.update(
+					updatePara
+				, {
+					where: {
+						userId: user.id,
+						datePos: dateSC
+					}
+				}),
+				db.user.findOne({
+					where:{
+						id:curUser.id
+					}
+				})
+				, assign
+			];
+		}).spread(function(assignUpdated, curUser, assign) {
+			console.log('updateeee new taskSC: ' + JSON.stringify(curUser,null,4));
+			var body = {
+				Note:taskSC,
+				Memo:memo||''
+			}
+
 			res.json({
 					Note: taskSC
 				});
+			return db.assignTracer.create(body).then(function(assignTracer){
+				curUser.addAssignTracer(assignTracer).then(function(){})
+				assign[0].addAssignTracer(assignTracer).then(function(){})
 
-			return db.assign.update({
-				Note: taskSC,
-				Memo: memo
-			}, {
-				where: {
-					userId: user.id,
-					datePos: dateSC
-				}
-			});
+			})
 
-		}).then(function(assign) {
-			console.log('updateeee new taskSC: ' + assign);
+
+			
 		}).catch(function(e) {
 			console.log("eeroorr" + e);
 
@@ -362,15 +408,28 @@ var user = require('./server/serverUser.js');
 app.use('/users', user);
 
 
+// umzug.up().then(function (migrations) {
+// 	console.log(migrations)
+//   // "migrations" will be an Array with the names of
+//   // pending migrations.
+//   	db.sequelize.sync(
+// 	{force: false}
+// 	).then(function() {
+		
+// 		http.listen(PORT, function() {
+// 			console.log('Helllo Express server started on PORT ' + PORT);
+// 		});
 
+// 	});
+// });
 
 
 db.sequelize.sync(
 	{force: true}
-).then(function() {
-	
-	http.listen(PORT, function() {
-		console.log('Helllo Express server started on PORT ' + PORT);
-	});
+	).then(function() {
+		
+		http.listen(PORT, function() {
+			console.log('Helllo Express server started on PORT ' + PORT);
+		});
 
-});
+	});

@@ -18,3 +18,15 @@ Date.prototype.toFullDate = function(){
 		d.year
 		return (d.month +'/'+d.date+'/'+d.year)
 	}
+Date.prototype.toTracerDate = function(){
+		var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
+		var d = {
+			month:month[this.getMonth()-1], 
+			date:this.getDate(),
+			year:this.getFullYear(),
+			hour:this.getHours(),
+			min:this.getMinutes(),
+			sec:this.getSeconds()
+		}
+		return (d.month +' '+d.date+' @ '+ d.hour + ':'+d.min+':'+d.sec)
+	}

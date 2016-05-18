@@ -12,11 +12,11 @@ td{
 }
 
 
-#user tr:nth-child(odd), #main tr:nth-child(odd){
+#user tr:nth-child(odd), #main tr:nth-child(odd), #eventAction tr:nth-child(odd){
 	background-color: #E6F4FF
 }
 
-#user tr:nth-child(1), #main tr:nth-child(1){
+#user tr:nth-child(1), #main tr:nth-child(1), #eventAction tr:nth-child(1){
  	background-color: #93B4C0;
 	color: #68E1FF;
 	width: 150px;
@@ -40,7 +40,16 @@ td{
 
 
 
-#user tr:nth-child(even), #main tr:nth-child(even){
+#user tr:nth-child(even), #main tr:nth-child(even), #eventAction tr:nth-child(even){
 	background-color: #CEDBE5
+}
+
+
+
+#eventAction td, tr{
+	width: 500px;
+	border: 2px solid black;
+	text-align: center;
+
 }
 

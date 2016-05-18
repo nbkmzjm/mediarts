@@ -1,0 +1,22 @@
+{
+  "development": {
+    "autoMigrateOldSchema": true,
+    "username": "nbkmzjm",
+    "password": "fish1ing",
+    "database": "database_development",
+    "host": "localhost",
+    "dialect": "sqlite",
+    "port": 3000,
+    "storage":"data/dev-todo-api.sqlite"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+  "use_env_variable": "DATABASE_URL"
+  }
+}

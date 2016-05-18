@@ -127,17 +127,10 @@ append scripts
 							})
 						}
 					}
-
-					
-					
-					
-					
-
 				})
 				e.preventDefault();
 				return false;
 			});
-
 			
 			var JSONdata = !{JSONdata};
 			var curUserTitle = JSONdata.curUserTitle
@@ -222,7 +215,7 @@ append scripts
 										//- click the 'x' to remove from list
 										span.addEventListener('click', function(){
 											
-											$.post('/users/delUser',{taskOption:user.id}).done(function(pData){
+											$.post('/users/delUser',{userId:user.id}).done(function(pData){
 												table.removeChild(tr)
 											});
 											

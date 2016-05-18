@@ -189,7 +189,7 @@ router.post('/delUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.destroy({
 		where: {
-			id: req.body.taskOption
+			id: req.body.userId
 		}
 	}).then(function(deleted) {
 		res.json({
