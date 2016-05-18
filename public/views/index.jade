@@ -169,7 +169,7 @@ append scripts
 									var unreadCount = 0;
 									assignTracers.forEach(function(assignTracer, i){
 										var createdAt = new Date(assignTracer.createdAt)
-										if(assignTracer.read == false){
+										if(assignTracer.Read == false){
 											if (i == 0){
 												firstTracer = assignTracers[i].user.name+': '+createdAt.toTracerDate() +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
 											}else{
@@ -239,7 +239,7 @@ append scripts
 													input.type = 'checkbox'
 													input.id = 'read'
 													input.name = 'read'
-													if (assignTracer.read == true){
+													if (assignTracer.Read == true){
 														input.checked = true
 														input.disabled = true
 													} else{
