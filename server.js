@@ -38,7 +38,6 @@ app.set("view options", {
 });
 
 app.locals.pretty = true;
-console.log(__dirname)
 app.use(express.static(__dirname));
 app.use('/users', express.static(__dirname));
 app.use(expValidator());
@@ -121,7 +120,7 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 			name: name,
 			value: value
 	}).then(function(created){
-		console.log(created)
+		// console.log(created)
 		if (created === undefined){
 			console.log(value)
 			res.json({lockoutDate:value})
@@ -136,7 +135,7 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM/DD/YYYY')
 	var sDate = moment(new Date(req.body.sDate)).format('MM/DD/YYYY')
 
-	console.log(sDate)
+	// console.log(sDate)
 	db.assign.findAll({
 		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
 		include:[{
@@ -155,8 +154,8 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 				[db.assignTracer,'createdAt', 'DESC']
 			]
 	}).then(function(assign){
-		console.log('taskSC below: ')
-		console.log(JSON.stringify(assign, null, 4))
+		
+		// console.log(JSON.stringify(assign, null, 4))
 		res.json({
 			assign:assign,
 			 curUserTitle
@@ -181,7 +180,7 @@ app.post('/assignTracerReadUpd', middleware.requireAuthentication, function(req,
 app.post('/assignTracerRead', middleware.requireAuthentication, function(req, res) {
 	var assignId = req.body.assignId;
 	var curUserTitle = req.user.title;
-	console.log(assignId)
+	// console.log(assignId)
 
 	db.assign.findOne({
 		include: [{
@@ -197,7 +196,7 @@ app.post('/assignTracerRead', middleware.requireAuthentication, function(req, re
 				[db.assignTracer,'createdAt', 'DESC']
 			]
 	}).then(function(assign) {
-		console.log(JSON.stringify(assign, null, 4))
+		// console.log(JSON.stringify(assign, null, 4))
 			res.json({
 				assign: assign
 			});
@@ -216,13 +215,12 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var memo = req.body.postdata.memo;
 	var curUser = req.user
 
-	console.log('dateSC: '+dateSC)
+	// console.log('dateSC: '+dateSC)
+	if (taskSC=='SELECT' ||taskSC=='NEW OPTION'){
 
-	if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')){
+	}else if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')&& taskSC!="SWITCH-R"){
 		
 		res.json({authorized: false});
-	} else if (taskSC=='SELECT' || taskSC=='PTOR_TRACER'||taskSC=='NEW OPTION'){
-	
 	} else {
 		db.user.findOne({
 			where: {
@@ -239,17 +237,17 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				user
 			];
 		}).spread(function(assign, user) {
-			console.log(assign[0]+'--'+assign[1])
+			// console.log(assign[0]+'--'+assign[1])
 			user.addAssign(assign[0]).then(function() {
 
 			});
 
-			
+		// console.log(taskSC)	
 
 
 			if (taskSC=='DELETE'){
 				var updatePara = {
-					Note: '',
+					Note: 'x',
 					Memo: ''
 				}
 			} else {
@@ -275,7 +273,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				, assign
 			];
 		}).spread(function(assignUpdated, curUser, assign) {
-			console.log('updateeee new taskSC: ' + JSON.stringify(curUser,null,4));
+			// console.log('updateeee new taskSC: ' + JSON.stringify(curUser,null,4));
 			var body = {
 				Note:taskSC,
 				Memo:memo||''

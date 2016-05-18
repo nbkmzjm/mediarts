@@ -14,11 +14,9 @@ block content
 	#container
 		//- input(type='text' id='calendar')
 		#calenderPick
-		<br>
 		#mainSC
 		#SCNoteDiv
 		#eventAction.container
-		<br>
 		nav(class="navbar navbar-default")
 			div(class="container-fluid" id="taskOptionDiv")
 	
@@ -139,6 +137,11 @@ append scripts
 					
 					var curUserTitle = rData.curUserTitle
 					var userDelta = 0
+					var SCNote = document.createElement('p')
+					SCNote.id = 'SCNote'
+					SCNote.style.color = '#00A117'
+					SCNote.style.fontWeight = 'bold'
+					
 					arrListDateSC.forEach(function(item,i){
 					
 						var userId = item.userId
@@ -179,7 +182,10 @@ append scripts
 											unreadCount++
 										}
 									})
-									span.innerHTML = unreadCount
+									if (unreadCount!=0){
+										span.innerHTML = unreadCount
+									}
+									
 
 									a.appendChild(span)
 								a.setAttribute('href','#');
@@ -204,13 +210,21 @@ append scripts
 								})
 								td.addEventListener('click', function(assign){
 									return function(){
+										//- document.addEventListener('mousemove', function(){
+										//- var taskSC = $('input[name=PTO]:checked').attr('value');
+										//- 	if (taskSC=="SELECT"){
+										//- 		console.log('select')
+										//- 	}else{
+										//- 	console.log('not select')
+										//- 	}
+										//- })
 										$('#eventAction').html('')
 										//- event.preventDefault()
 										
 										var table = document.createElement('table');
 										table.setAttribute('id', 'eventAction');
 										var tr = document.createElement('tr')
-											var arrayField = ['Event Changes for '+ assign.datePos, 'Read']
+											var arrayField = ['Event Changes for '+ assign.datePos, 'Noticed']
 
 											arrayField.forEach(function(field){
 												
@@ -276,8 +290,11 @@ append scripts
 									
 									var selDate = new Date(dateSC)
 										
-									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')){
-										alert($('#SCNote').text())
+									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
+										
+										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
+										$('#SCNoteDiv').html('')
+										$('#SCNoteDiv').html(SCNote)
 									}else{
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 										//- alert($('a[data-toggle=popover]').text())
@@ -287,7 +304,9 @@ append scripts
 										$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
 
 											if (pData.authorized == false) {
-												alert('You are not authorized for this action')
+												SCNote.innerHTML= 'You are not authorized for this action'
+												$('#SCNoteDiv').html('')
+												$('#SCNoteDiv').html(SCNote)
 											}else if(!!pData.deleted){
 												td.innerHTML='';
 												td.style.backgroundColor = 'red'
@@ -311,13 +330,17 @@ append scripts
 								
 								return function(){
 									var selDate = new Date(dateSC)
-									
+									var taskSC = $('input[name=PTO]:checked').attr('value');
 									//- Prevent user to request after lockoutDate
-									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')){
-										alert($('#SCNote').text())
+									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager') && taskSC!="SWITCH-R"){
+										//- alert($('#SCNote').text())
+										
+										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
+										$('#SCNoteDiv').html('')
+										$('#SCNoteDiv').html(SCNote)
 									}else{
 									//- retrieved taskOption value from radio botton
-									var taskSC = $('input[name=PTO]:checked').attr('value');
+									
 									var memo = $('#memo').val()
 									//- console.log(memo)
 
@@ -326,7 +349,9 @@ append scripts
 										
 										//- Only allow signed in user to edit their request
 										if (pData.authorized == false) {
-											alert('You are not authorized for this action')
+											SCNote.innerHTML= 'You are not authorized for this action'
+											$('#SCNoteDiv').html('')
+											$('#SCNoteDiv').html(SCNote)
 										}else if(!!pData.Note){
 										
 										td.innerHTML=pData.Note;
@@ -386,10 +411,7 @@ append scripts
 				//- output lock out Note 
 				mainSC.append(table);	
 
-				var SCNote = document.createElement('p')
-				SCNote.id = 'SCNote'
-				SCNote.innerHTML = 'NOTE: PTO input will not be available after '+ rData.lockoutDate
-				$('#SCNoteDiv').html(SCNote)
+				
 			});
 
 		}	
