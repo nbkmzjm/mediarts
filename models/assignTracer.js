@@ -28,11 +28,11 @@ module.exports = function(sequelize, DataTypes) {
 			
 			
 		}
-		// ,
-		// read:{
-		// 	type: DataTypes.BOOLEAN,
-		// 	defaultValue: false
-		// }
+		,
+		read:{
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+		}
 		
 
 

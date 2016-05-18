@@ -151,7 +151,7 @@ append scripts
 							return false
 						}(assign, item)
 						if (foundSC){
-							alert(JSON.stringify(assign[x], null, 4))
+							//- alert(JSON.stringify(assign[x], null, 4))
 							var memo = assign[x].Memo
 							var tracer = '';
 							var firstTracer = '';
@@ -160,7 +160,6 @@ append scripts
 							td.setAttribute('class','cell')
 								var a = document.createElement('a')
 								noteColor(assign[x].Note, a)
-								alert(assign[x].Note)
 								a.innerHTML= assign[x].Note
 									var span = document.createElement('span')
 									span.style.color = '#FF8C5A'
