@@ -131,7 +131,7 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 })
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res){
-	var curUserTitle = req.user.title;
+	var curUser= req.user;
 	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM/DD/YYYY')
 	var sDate = moment(new Date(req.body.sDate)).format('MM/DD/YYYY')
 
@@ -157,8 +157,8 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 		
 		// console.log(JSON.stringify(assign, null, 4))
 		res.json({
-			assign:assign,
-			 curUserTitle
+			assign,
+			 curUser
 		})
 	})
 })
