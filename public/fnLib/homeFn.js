@@ -95,10 +95,8 @@ function calendarPick(){
 
 						
 					
-					var dateP7 = new Date(dateCalender.value);
-					dateP7.setDate(dateP7.getDate()+7);
-					dateCalender.value = new Date().toLocaleDateString();
-					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+					// dateCalender.value = new Date().toLocaleDateString();
+					location.reload();
 
 					})
 				ul.appendChild(today)
