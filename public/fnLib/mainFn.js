@@ -32,8 +32,10 @@ Date.prototype.toTracerDate = function(){
 	}
 
 Date.prototype.toShortDate = function(){
+		var day = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 		var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
 		var d = {
+			day:day[this.getDay()],
 			month:month[this.getMonth()], 
 			date:this.getDate(),
 			year:this.getFullYear(),
@@ -41,5 +43,5 @@ Date.prototype.toShortDate = function(){
 			min:this.getMinutes(),
 			sec:this.getSeconds()
 		}
-		return (d.month +','+d.date)
+		return (d.day+'<br>'+d.month +'&nbsp'+d.date+', '+d.year)
 	};

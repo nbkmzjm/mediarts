@@ -13,10 +13,11 @@ block horMenu
 block content
 	#container
 		//- input(type='text' id='calendar')
+		#eventAction.container
 		#calenderPick
 		#mainSC
 		#SCNoteDiv
-		#eventAction.container
+		
 		nav(class="navbar navbar-default")
 			div(class="container-fluid" id="taskOptionDiv")
 	
@@ -80,9 +81,9 @@ append scripts
 				for (var i=0; i<7; i++){
 					 
 					var td = document.createElement('td');
-					td.appendChild(document.createTextNode(days[dateSC.getDay()]));
-					td.appendChild(document.createElement('br'))
-					td.appendChild(document.createTextNode(dateSC.toShortDate()))
+					//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
+					//- td.appendChild(document.createElement('br'))
+					td.innerHTML = dateSC.toShortDate()
 					tr.appendChild(td);
 
 					dateSC.setDate(dateSC.getDate()+1);

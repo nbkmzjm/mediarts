@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db.js');
+var moment = require('moment');
 var _ = require('underscore');
 
 var middleware = require('../middleware.js')(db);
@@ -252,7 +253,17 @@ router.post('/login', function(req, res) {
 
 
 router.get('/logout', middleware.requireAuthentication, function(req, res) {
+	
+	var prior7Date = moment(new Date()).subtract(7,'days').format()
 	req.token.destroy().then(function() {
+		console.log('prior7Date:'+prior7Date) 
+		db.token.destroy({
+			where:{
+				createdAt:{
+					$lt:prior7Date
+				}
+			}
+		})
 		res.redirect('loginForm');
 	}).catch(function(e) {
 		res.status(500).send();
