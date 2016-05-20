@@ -2,6 +2,10 @@
 	color: red;
 }
 
+#mainSC{
+	width: 100%;
+}
+
 td{
 	width: 150px;
 	border: 2px solid #FFFFFF;
@@ -47,7 +51,7 @@ td{
 
 
 #eventAction td, tr{
-	width: 500px;
+	width: 200px;
 	border: 2px solid black;
 	text-align: center;
 
