@@ -54,6 +54,25 @@ function calendarPick(){
 					li.appendChild(dateCalender)
 				ul.appendChild(li)
 
+				var today = document.createElement('li');
+						var a = document.createElement('a')
+						a.href = "#"
+						a.appendChild(document.createTextNode('Today'))
+						today.appendChild(a)
+					// dateBackward.id = 'dateBackward';
+					// dateBackward.className = 'glyphicon glyphicon-step-backward'
+					today.addEventListener('click', function(){
+
+						
+					
+					var dateP7 = new Date(dateCalender.value);
+					dateP7.setDate(dateP7.getDate()+7);
+					dateCalender.value = new Date().toLocaleDateString();
+					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+
+					})
+				ul.appendChild(today)
+
 
 				var dateForward = document.createElement('li');
 						var a = document.createElement('a')

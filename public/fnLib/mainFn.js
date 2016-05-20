@@ -30,3 +30,16 @@ Date.prototype.toTracerDate = function(){
 		}
 		return (d.month +' '+d.date+' @ '+ d.hour + ':'+d.min+':'+d.sec)
 	}
+
+Date.prototype.toShortDate = function(){
+		var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ]
+		var d = {
+			month:month[this.getMonth()], 
+			date:this.getDate(),
+			year:this.getFullYear(),
+			hour:this.getHours(),
+			min:this.getMinutes(),
+			sec:this.getSeconds()
+		}
+		return (d.month +' '+d.date)
+	}

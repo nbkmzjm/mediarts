@@ -66,7 +66,7 @@ append scripts
 			var curSunday = getSunday(new Date(curDate));
 			
 			var dateSC = new Date(curSunday);
-			var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+			var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 			
 			var table = document.createElement('table');
@@ -82,7 +82,7 @@ append scripts
 					var td = document.createElement('td');
 					td.appendChild(document.createTextNode(days[dateSC.getDay()]));
 					td.appendChild(document.createElement('br'))
-					td.appendChild(document.createTextNode(dateSC.toFullDate()))
+					td.appendChild(document.createTextNode(dateSC.toShortDate()))
 					tr.appendChild(td);
 
 					dateSC.setDate(dateSC.getDate()+1);
