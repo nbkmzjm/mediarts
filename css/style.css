@@ -6,8 +6,12 @@
 	width: 100%;
 }
 
+#main table{
+	width: 100%
+}
+
 td{
-	width: 150px;
+	width: auto;
 	border: 2px solid #FFFFFF;
 	padding: 10px;
 	/*color: #00A478;*/
@@ -51,9 +55,15 @@ td{
 
 
 #eventAction td, tr{
-	width: 100%;
+	width: 80%;
 	border: 2px solid black;
 	text-align: center;
+
+}
+
+#eventAction table{
+	width: 80%;
+	margin: 0 auto;
 
 }
 
