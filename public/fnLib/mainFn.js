@@ -41,5 +41,5 @@ Date.prototype.toShortDate = function(){
 			min:this.getMinutes(),
 			sec:this.getSeconds()
 		}
-		return (d.month +' '+d.date)
-	}
+		return (d.month +','+d.date)
+	};
