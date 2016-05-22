@@ -12,7 +12,7 @@ block horMenu
 
 block content
 	#container
-		//- input(type='text' id='calendar')
+		//- #test
 		#eventAction.container
 		#calenderPick
 		#mainSC
@@ -28,8 +28,29 @@ append scripts
 	script.
 		
 		$(function (){
+			//- var p = document.createElement('p')
+			//- p.innerHTML = 'hello'
+			//- p.style.backgroundColor = 'red'
+			//- p.style.width = "25px"
+			//- var span = document.createElement('span')
+			//- span.appendChild(document.createTextNode('ola'))
+			//- span.style.backgroundColor = 'blue'
+			//- span.style.width = "25px"
 			
-						
+			//- var test = document.getElementById('test')
+			//- test.style.width = "100px"
+			//- test.id = 'test'
+			//- test.style.backgroundColor = 'yellow'
+			//- test.appendChild(p)
+			//- test.appendChild(span)
+			//- test.addEventListener('mouseover', function(){
+			//- 	console.log(event.target.childNodes[0].offsetTop)
+			//- })
+
+			//- test.ondragover = function(event){
+			//- 	event.preventDefault()
+			//- }
+			
 			calendarPick();
 	
 			$.post('/ajaxUser').done(mainSC);
@@ -218,21 +239,18 @@ append scripts
 								td.addEventListener('click', function(assign){
 									return function(){
 
+										var taskSC = $('input[name=PTO]:checked').attr('value');
+											
 										var arrayTitle_UserTab = ['Admin', 'Manager']
-										if (curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1){
-											//- document.addEventListener('mousemove', function(){
-											//- var taskSC = $('input[name=PTO]:checked').attr('value');
-											//- 	if (taskSC=="SELECT"){
-											//- 		console.log('select')
-											//- 	}else{
-											//- 	console.log('not select')
-											//- 	}
-											//- })
+										if (taskSC=='SELECT'&&(curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1)){
+											
 											$('#eventAction').html('')
 											//- event.preventDefault()
 											
 											var table = document.createElement('table');
-											table.setAttribute('id', 'eventAction');
+											table.setAttribute('id', 'eventActionTable');
+											table.draggable = true
+
 											var tr = document.createElement('tr')
 												var arrayField = ['Event Changes for '+ assign.datePos, 'Acknowledged']
 
@@ -286,26 +304,40 @@ append scripts
 											})
 											
 											$('#eventAction').append(table)
+											
+											document.ondragover = function(event){
+												event.preventDefault()
+											}
+											document.ondrop = function(){
+												event.preventDefault();
+												document.ondragover = function(){};
+												$('#eventActionTable').length>0 ? 
+												$('#eventActionTable').remove():'';
+												
+											}
 										}
 									}
 									
+
 
 
 								}(assign[x]))
 								td.appendChild(a)
 
 							
-							td.addEventListener('click',function(userId,dateSC){
+							td.addEventListener('click',function(userId,assign){
 								return function(){
-
-									
+									var Note = assign.Note
+									var dateSC = assign.datePos
+									var taskSC = $('input[name=PTO]:checked').attr('value');
 									var selDate = new Date(dateSC)
-										
 									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
 										
 										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
+										$('#SCNote').show(1000)
+										$('#SCNote').hide(1000)
 									}else{
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 										//- alert($('a[data-toggle=popover]').text())
@@ -318,6 +350,7 @@ append scripts
 												SCNote.innerHTML= 'You are not authorized for this action'
 												$('#SCNoteDiv').html('')
 												$('#SCNoteDiv').html(SCNote)
+
 											}else if(!!pData.deleted){
 												td.innerHTML='';
 												td.style.backgroundColor = 'red'
@@ -330,9 +363,8 @@ append scripts
 									}
 								}
 
-							}(userId, dateSC.toFullDate()));
+							}(userId, assign[x]));
 						}else{
-							console.log('No note')
 							var td = document.createElement('td');
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(""));
@@ -340,6 +372,7 @@ append scripts
 							td.addEventListener('click',function(userId,dateSC){
 								
 								return function(){
+									//- $('#SCNote').fadeIn()
 									var selDate = new Date(dateSC)
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 									//- Prevent user to request after lockoutDate
@@ -347,8 +380,15 @@ append scripts
 										//- alert($('#SCNote').text())
 										
 										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
+
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
+										$('#SCNote').show(1000, function(){
+											$('#SCNote').hide()
+										})
+										
+										
+
 									}else{
 									//- retrieved taskOption value from radio botton
 									
@@ -363,6 +403,10 @@ append scripts
 											SCNote.innerHTML= 'You are not authorized for this action'
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
+											$('#SCNote').show(1000)
+											$('#SCNote').hide(1000)
+											
+											//- $('#SCNote').fadeOut()
 										}else if(!!pData.Note){
 										
 										td.innerHTML=pData.Note;
@@ -435,7 +479,7 @@ append scripts
 			ul.setAttribute('id','PTORadio')
 			ul.className = 'nav navbar-nav'
 
-			var arrayOption = ['NEW OPTION','SELECT', 'DELETE', 'PTO-R', 'SWITCH-R']
+			var arrayOption = ['SELECT','NEW OPTION', 'DELETE', 'PTO-R', 'SWITCH-R']
 
 			arrayOption.forEach(function(taskOption, i){
 
@@ -451,43 +495,37 @@ append scripts
 							radio.setAttribute('checked','checked');
 							}
 
-						if (taskOption=='PTO-R'){
+						if (taskOption=='PTO-R'||taskOption=='SWITCH-R'){
 							li.addEventListener('click', function(){
-							//- alert('radio click')
-							if ($('#memo').length>0){
-								ul.removeChild(document.getElementById('memo'))
+								if ($('#memo').length>0){
+									ul.removeChild(document.getElementById('memo'))
+								}else{
+								var input = document.createElement('input');
+								input.style.width = '240px';
+								input.setAttribute('placeholder','Add Memo');
+								input.setAttribute('type','text');
+								input.setAttribute('id','memo');
+								ul.insertBefore(input, li)
 								}
-							var input = document.createElement('input');
-							input.style.width = '240px';
-							input.setAttribute('placeholder','Add Memo');
-							input.setAttribute('type','text');
-							input.setAttribute('id','memo');
-							ul.insertBefore(input, li)
-							input.focus
-							})
+							})	
 							
 							li.appendChild(radio);
 							li.appendChild(document.createTextNode(taskOption));
 							ul.appendChild(li);
- 
-							radio.addEventListener('blur', function(){
-								ul.removeChild(document.getElementById('memo'))
-							})
-
+	 
+								
+							
 						} else if(taskOption=='NEW OPTION'&&(curUserTitle=='Admin'|| curUserTitle=='Manager')){
 							li.addEventListener('click', function(){
 							//- alert('radio click')
 								if ($('#taskOption').length>0){
 									ul.removeChild(document.getElementById('taskOption'))
-									}
+								}else{
 								var input = document.createElement('input');
 								input.style.width = '120px';
 								input.setAttribute('placeholder','Add Option');
 								input.setAttribute('type','text');
 								input.setAttribute('id','taskOption');
-								input.addEventListener('focus',function(){
-									alert('herll')
-								})
 								input.addEventListener('blur', function(){
 								
 									var taskOptionData = $("#taskOption").val().toUpperCase();
@@ -505,28 +543,24 @@ append scripts
 								});
 
 								ul.insertBefore(input, li)
-
+								}
 							})
 							li.appendChild(radio);
 							li.appendChild(document.createTextNode(taskOption));
 							ul.appendChild(li);
 
-							li.addEventListener('blur', function(){
-								alert('sfs')
-								ul.removeChild(document.getElementById('taskOption'))
-							})
-							
 						} else if(taskOption=='NEW OPTION'&&(curUserTitle!='Admin'|| curUserTitle!='Manager')){
 
 						} else{
+							li.addEventListener('click', function(){
+								$('#memo').length>0?ul.removeChild(document.getElementById('memo')):''
+								$('#taskOption').length>0 ? ul.removeChild(document.getElementById('taskOption')):''
+							})
 							li.appendChild(radio);
 							li.appendChild(document.createTextNode(taskOption));
 							ul.appendChild(li);
 						}
 						
-						
-					//- li.appendChild(radio);
-					
 					li.addEventListener('click',function(){
 						radio.checked = 'checked'
 					})
@@ -549,14 +583,16 @@ append scripts
 						//- alert('radio click')
 						if ($('#memo').length>0){
 							ul.removeChild(document.getElementById('memo'))
-							}
+						}else{
 						var input = document.createElement('input');
 						input.style.width = '240px';
 						input.setAttribute('placeholder','Add Memo');
 						input.setAttribute('type','text');
 						input.setAttribute('id','memo');
 						ul.insertBefore(input, li)
+						}
 					})
+
 
 					//- radio.setAttribute('checked','checked');
 					li.appendChild(radio);
