@@ -250,6 +250,9 @@ append scripts
 											var table = document.createElement('table');
 											table.setAttribute('id', 'eventActionTable');
 											table.draggable = true
+											table.addEventListener('dblclick', function(){
+												alert('doub')
+											})
 
 											var tr = document.createElement('tr')
 												var arrayField = ['Event Changes for '+ assign.datePos, 'Acknowledged']
