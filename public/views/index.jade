@@ -250,10 +250,27 @@ append scripts
 											var table = document.createElement('table');
 											table.setAttribute('id', 'eventActionTable');
 											table.draggable = true
-											table.addEventListener('dblclick', function(){
-												alert('doub')
+											table.addEventListener('mouseenter', function(){
+												//- if (li.childNodes.length >2){
+												//- 		li.removeChild(li.childNodes[2])
+												//- 	}
+												var span = document.createElement('span')
+												span.innerHTML = '';
+												span.style.color = 'red'
+												span.className = "glyphicon glyphicon-remove-circle"
+												span.id = 'delGly';
+												//- click the 'x' to remove from list
+												span.addEventListener('click', function(){
+													$('#eventActionTable').length>0 ? 
+													$('#eventActionTable').remove():'';
+													
+													
+												});
+												$('#eventAction').prepend(span)
+											});
+											$('#eventAction').on('mouseleave', function(){
+												$('#delGly').remove()
 											})
-
 											var tr = document.createElement('tr')
 												var arrayField = ['Event Changes for '+ assign.datePos, 'Acknowledged']
 
