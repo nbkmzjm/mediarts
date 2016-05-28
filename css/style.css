@@ -25,8 +25,8 @@ td{
 }
 
 #user tr:nth-child(1), #main tr:nth-child(1), #eventAction tr:nth-child(1){
- 	background-color: #93B4C0;
-	color: #68E1FF;
+ 	background-color: #759DAB;
+	color: #96E9FE;
 	width: auto;
 	height: 35px;
 	font-weight: bold;
@@ -37,12 +37,12 @@ td{
 }
 
 #main td:nth-child(2), #main td:nth-child(8){
-	background-color: #C9F4FD;
+	background-color: #2AA9C5;
 	font-weight: bold;
 }
 
 #user td:nth-child(1), #main td:nth-child(1){
-	color: #E25C5C;
+	color: #000000;
 	font-weight: bold;
 }
 
