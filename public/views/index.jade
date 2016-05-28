@@ -119,17 +119,18 @@ append scripts
 				
 			for (var i=0; i< users.length; i++){
 			
-				    for (var x=0; x<8; x++){
+				    for (var x=0; x<7; x++){
 						var taskSCData = {};
 						
-						if (x==0){
+						//- if (x==0){
 							taskSCData.userId = users[i].id;
 							taskSCData.dateSC = users[i].name;
-						}else{
-							taskSCData.userId = users[i].id;
-							taskSCData.dateSC = dateSC.toFullDate();
-							dateSC.setDate(dateSC.getDate()+1);
-						}
+							taskSCData.title = users[i].title
+						//- }else{
+						//- 	taskSCData.userId = users[i].id;
+						//- 	taskSCData.dateSC = dateSC.toFullDate();
+						//- 	dateSC.setDate(dateSC.getDate()+1);
+						//- }
 						arrListDateSC.push(taskSCData);
 					}
 					
@@ -161,6 +162,7 @@ append scripts
 					var curUserTitle = curUser.title
 					var curUserId = curUser.id
 					var userDelta = 0
+					var titleDelta = ''
 					var SCNote = document.createElement('p')
 					SCNote.id = 'SCNote'
 					SCNote.style.color = '#00A117'
@@ -169,6 +171,7 @@ append scripts
 					arrListDateSC.forEach(function(item,i){
 					
 						var userId = item.userId
+						var userTitle = item.title
 						var foundSC = function(assign, item){
 							for (x = 0; x< assign.length; x++ ){
 								if (assign[x].datePos==item.dateSC && assign[x].userId==userId){
@@ -356,8 +359,9 @@ append scripts
 										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
-										$('#SCNote').show(1000)
-										$('#SCNote').hide(1000)
+										$('#SCNote').show(1000, function(){
+											$('#SCNote').hide()
+										})
 									}else{
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 										//- alert($('a[data-toggle=popover]').text())
@@ -423,8 +427,9 @@ append scripts
 											SCNote.innerHTML= 'You are not authorized for this action'
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
-											$('#SCNote').show(1000)
-											$('#SCNote').hide(1000)
+											$('#SCNote').show(1000, function(){
+											$('#SCNote').hide()
+										})
 											
 											//- $('#SCNote').fadeOut()
 										}else if(!!pData.Note){
@@ -443,29 +448,34 @@ append scripts
 						}
 						//- alert(i+'i')
 						//- Reset schedule date position for new user
-						if (item.dateSC.lastIndexOf("/") !== 5 && i!=0){
+						console.log(item.userId+'-'+item.title+'-'+item.dateSC)
+						if (item.title != titleDelta && i!=0){
 							dateSC.setDate(dateSC.getDate()-7);
-						}else if (item.dateSC.indexOf("/") !== 5 && i==0) {
+						}else if (item.title != titleDelta && i==0) {
 
 						} else{
 							dateSC.setDate(dateSC.getDate()+1);
 						}
 
-
 						//- add new row for next user if user ID changed detected
-						if (userDelta != userId){
-							var td = document.createElement('td');
-							td.setAttribute('class','cell')
-							td.appendChild(document.createTextNode(item.dateSC));
-							//- alert(arr[i].dateSC)
-							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].appendChild(td);
-							table.appendChild(window['tr' + userId]);
-						}else{
-							window['tr' + userId].appendChild(td);
-							table.appendChild(window['tr' + userId]);
-						}	
-						userDelta = userId;
+						//- if (titleDelta != item.title){
+						//- 	var tdUser = document.createElement('td');
+						//- 	tdUser.setAttribute('class','cell')
+						//- 	tdUser.appendChild(document.createTextNode(item.dateSC));
+						//- 	//- alert(arr[i].dateSC)
+						//- 	window['tr' + userId] = document.createElement('tr');
+						//- 	window['tr' + userId].appendChild(tdUser);
+						//- 	window['tr' + userId].appendChild(td);
+						//- 	//- table.appendChild(window['tr' + userId]);
+						//- //- }else if(userTitle != curUserTitle){
+							
+							
+						//- }else{
+						//- 	window['tr' + userId].appendChild(td);
+						//- 	table.appendChild(window['tr' + userId]);
+
+						//- }	
+						//- titleDelta = item.title;
 					})
 				})	
 
