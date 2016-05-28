@@ -36,13 +36,13 @@ td{
 	
 }
 
-/*#main td:nth-child(2), #main td:nth-child(8){
-	background-color: #A7FFE7;
+#main td:nth-child(2), #main td:nth-child(8){
+	background-color: #C9F4FD;
 	font-weight: bold;
-}*/
+}
 
 #user td:nth-child(1), #main td:nth-child(1){
-	color: #FF2832;
+	color: #E25C5C;
 	font-weight: bold;
 }
 

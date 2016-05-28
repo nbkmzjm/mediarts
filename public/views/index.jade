@@ -123,13 +123,15 @@ append scripts
 						var taskSCData = {};
 						
 						//- if (x==0){
-							taskSCData.userId = users[i].id;
-							taskSCData.dateSC = users[i].name;
-							taskSCData.title = users[i].title
+							//- taskSCData.userId = users[i].id;
+							//- taskSCData.dateSC = users[i].name;
+							//- taskSCData.title = users[i].title
 						//- }else{
-						//- 	taskSCData.userId = users[i].id;
-						//- 	taskSCData.dateSC = dateSC.toFullDate();
-						//- 	dateSC.setDate(dateSC.getDate()+1);
+							taskSCData.userId = users[i].id;
+							taskSCData.dateSC = dateSC.toFullDate();
+							taskSCData.name = users[i].name;
+							taskSCData.title = users[i].title
+							dateSC.setDate(dateSC.getDate()+1);
 						//- }
 						arrListDateSC.push(taskSCData);
 					}
@@ -155,12 +157,13 @@ append scripts
 					sDate:dateSC
 					}).done(function(rData){
 
-					//- alert(JSON.stringify(rData, null, 4))
+					//- alert(JSON.stringify(arrListDateSC, null, 4))
 					var assign = rData.assign
 					
 					var curUser = rData.curUser
 					var curUserTitle = curUser.title
 					var curUserId = curUser.id
+
 					var userDelta = 0
 					var titleDelta = ''
 					var SCNote = document.createElement('p')
@@ -172,6 +175,8 @@ append scripts
 					
 						var userId = item.userId
 						var userTitle = item.title
+						var dateSC = item.dateSC
+
 						var foundSC = function(assign, item){
 							for (x = 0; x< assign.length; x++ ){
 								if (assign[x].datePos==item.dateSC && assign[x].userId==userId){
@@ -351,7 +356,7 @@ append scripts
 							td.addEventListener('click',function(userId,assign){
 								return function(){
 									var Note = assign.Note
-									var dateSC = assign.datePos
+									//- var dateSC = assign.datePos
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 									var selDate = new Date(dateSC)
 									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
@@ -444,38 +449,39 @@ append scripts
 									});
 									}
 								}
-							}(userId, dateSC.toFullDate()));
+							}(userId, dateSC));
 						}
-						//- alert(i+'i')
 						//- Reset schedule date position for new user
-						console.log(item.userId+'-'+item.title+'-'+item.dateSC)
-						if (item.title != titleDelta && i!=0){
-							dateSC.setDate(dateSC.getDate()-7);
-						}else if (item.title != titleDelta && i==0) {
-
-						} else{
-							dateSC.setDate(dateSC.getDate()+1);
-						}
+						console.log(userId+'-'+userTitle+'-'+dateSC)
+						
 
 						//- add new row for next user if user ID changed detected
-						//- if (titleDelta != item.title){
-						//- 	var tdUser = document.createElement('td');
-						//- 	tdUser.setAttribute('class','cell')
-						//- 	tdUser.appendChild(document.createTextNode(item.dateSC));
-						//- 	//- alert(arr[i].dateSC)
-						//- 	window['tr' + userId] = document.createElement('tr');
-						//- 	window['tr' + userId].appendChild(tdUser);
-						//- 	window['tr' + userId].appendChild(td);
-						//- 	//- table.appendChild(window['tr' + userId]);
-						//- //- }else if(userTitle != curUserTitle){
+						if (userId != userDelta && userTitle != titleDelta ){
+							var tdUser = document.createElement('td');
+							tdUser.setAttribute('class','cell')
+							tdUser.appendChild(document.createTextNode(item.name));
+							//- alert(arr[i].dateSC)
+							window['tr' + userId] = document.createElement('tr');
+							window['tr' + userId].appendChild(tdUser);
+							window['tr' + userId].appendChild(td);
+							//- table.appendChild(window['tr' + userId]);
+						}else if(userId != userDelta && userTitle == titleDelta){
+							var tdUser = document.createElement('td');
+							tdUser.setAttribute('class','cell')
+							tdUser.appendChild(document.createTextNode(item.name));
+							//- alert(arr[i].dateSC)
+							window['tr' + userId] = document.createElement('tr');
+							window['tr' + userId].style.borderBottom = 'thick solid #1FD6FD'
+							window['tr' + userId].appendChild(tdUser);
+							window['tr' + userId].appendChild(td);
 							
-							
-						//- }else{
-						//- 	window['tr' + userId].appendChild(td);
-						//- 	table.appendChild(window['tr' + userId]);
+						}else{
+							window['tr' + userId].appendChild(td);
+							table.appendChild(window['tr' + userId]);
 
-						//- }	
-						//- titleDelta = item.title;
+						}	
+						userDelta = userId;
+						titleDelta = userTitle;
 					})
 				})	
 
