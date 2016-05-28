@@ -46,7 +46,7 @@ function calendarPick(){
 					dateBackward.addEventListener('click', function(){
 
 					var dateM7 = new Date(dateCalender.value);
-					dateM7.setDate(dateM7.getDate()-14);
+					dateM7.setDate(dateM7.getDate()-7);
 					dateCalender.value = dateM7.toLocaleDateString();
 					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 
@@ -112,7 +112,7 @@ function calendarPick(){
 						a.appendChild(span)
 					dateForward.addEventListener('click', function(){
 					var dateP7 = new Date(dateCalender.value);
-					dateP7.setDate(dateP7.getDate()+14);
+					dateP7.setDate(dateP7.getDate()+7);
 					dateCalender.value = dateP7.toLocaleDateString();
 					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 

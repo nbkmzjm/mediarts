@@ -462,6 +462,7 @@ append scripts
 							tdUser.appendChild(document.createTextNode(item.name));
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
+							window['tr' + userId].style.borderTop = 'medium double #1FD6FD'
 							window['tr' + userId].appendChild(tdUser);
 							window['tr' + userId].appendChild(td);
 							//- table.appendChild(window['tr' + userId]);
@@ -471,7 +472,7 @@ append scripts
 							tdUser.appendChild(document.createTextNode(item.name));
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].style.borderBottom = 'thick solid #1FD6FD'
+							
 							window['tr' + userId].appendChild(tdUser);
 							window['tr' + userId].appendChild(td);
 							
