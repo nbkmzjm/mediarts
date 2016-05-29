@@ -52,7 +52,7 @@ append scripts
 			//- }
 			
 			calendarPick();
-	
+			
 			$.post('/ajaxUser').done(mainSC);
 
 
@@ -140,18 +140,31 @@ append scripts
 			}
 
 			
-			$.post('/sysObjRead', {pData:['lockoutDate', 'date21LK']}).done(function(rData){
+			$.post('/sysObjRead', {pData:['lockoutDate']}).done(function(rData){
 				
 				
 				//- alert(JSON.stringify(arrListDateSC, null, 4))
 				
 				var today = new Date()
 				var lockoutDate = new Date(rData.lockoutDate||'4/24/16')
-				var date21LK = new Date(rData.lockoutDate||'4/24/16')
-				date21LK.setDate(lockoutDate.getDate()-21)
-
+				//- var date21LK = new Date(rData.lockoutDate||'4/24/16')
+				//- date21LK.setDate(lockoutDate.getDate()-21)
+				var date21LK = moment(lockoutDate).subtract(21, 'days')
+				var date28LK = moment(lockoutDate).subtract(28, 'days')
 				//- var eDate = dateSC;
 				//- eDate.setDate(dateSC.getDate()+7)
+
+				if (today > date21LK){
+
+					lockoutDate.setDate(lockoutDate.getDate()+28)
+
+					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toFullDate()}}).done(function(rData){
+						
+						//- output lock out Note
+						$('#SCNoteDiv').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
+					});
+
+				}
 								
 				$.post('/taskSC',{
 					sDate:dateSC
@@ -187,6 +200,8 @@ append scripts
 						}(assign, item)
 						if (foundSC){
 							//- alert(JSON.stringify(assign[x], null, 4))
+							
+							var datePos = moment(assign[x].datePos)
 							var memo = assign[x].Memo
 							var tracer = '';
 							var firstTracer = '';
@@ -488,17 +503,7 @@ append scripts
 
 
 				
-				if (today > date21LK){
-
-					lockoutDate.setDate(lockoutDate.getDate()+28)
-
-					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toFullDate()}}).done(function(rData){
-						
-						//- output lock out Note
-						$('#SCNote').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
-					});
-
-				}
+				
 
 				//- output lock out Note 
 				mainSC.append(table);	

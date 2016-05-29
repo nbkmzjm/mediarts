@@ -96,7 +96,7 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
 	var varList = req.body.pData
-	var date21LK = req.body.pData.date21LK
+	console.log(varList)
 	
 	db.sysObj.findAll({
 		where:{
