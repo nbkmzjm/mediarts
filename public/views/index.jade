@@ -14,7 +14,7 @@ block content
 	#container
 		//- #test
 		#eventAction.container
-		#calenderPick
+		#calendarPick
 		#mainSC
 		#SCNoteDiv
 		
@@ -85,11 +85,9 @@ append scripts
 			mainSC.html('');
 
 			var curDate = $('#calendar').val();
-			var curSunday = getSunday(new Date(curDate));
-			
-			var dateSC = new Date(curSunday);
-			var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-
+			var weekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+			var dateHeader = moment(weekStart.format());
+			var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 			
 			var table = document.createElement('table');
 			table.setAttribute('id', 'main');
@@ -104,19 +102,18 @@ append scripts
 					var td = document.createElement('td');
 					//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
 					//- td.appendChild(document.createElement('br'))
-					td.innerHTML = dateSC.toShortDate()
+					td.innerHTML = dateHeader.format('ddd MMM, DD')
 					tr.appendChild(td);
 
-					dateSC.setDate(dateSC.getDate()+1);
-					
+					dateHeader.add(1, 'days');
 					}
 			table.appendChild(tr);
-			dateSC = new Date(curSunday);
+			
 
 			//- Create DateSC array with userID and dateSC
 			var users = data.pData.users;
+			var arrDateSC = moment(weekStart.format());
 			var arrListDateSC = [];
-				
 			for (var i=0; i< users.length; i++){
 			
 				    for (var x=0; x<7; x++){
@@ -128,48 +125,45 @@ append scripts
 							//- taskSCData.title = users[i].title
 						//- }else{
 							taskSCData.userId = users[i].id;
-							taskSCData.dateSC = dateSC.toFullDate();
+							taskSCData.dateSC = arrDateSC.format('MM-DD-YYYY');
 							taskSCData.name = users[i].name;
 							taskSCData.title = users[i].title
-							dateSC.setDate(dateSC.getDate()+1);
+							arrDateSC.add(1, 'days')
 						//- }
 						arrListDateSC.push(taskSCData);
 					}
 					
-				var dateSC = new Date(curSunday);
+				arrDateSC.subtract(7, 'days');
 			}
-
 			
 			$.post('/sysObjRead', {pData:['lockoutDate']}).done(function(rData){
 				
 				
 				//- alert(JSON.stringify(arrListDateSC, null, 4))
 				
-				var today = new Date()
-				var lockoutDate = new Date(rData.lockoutDate||'4/24/16')
-				//- var date21LK = new Date(rData.lockoutDate||'4/24/16')
-				//- date21LK.setDate(lockoutDate.getDate()-21)
+				var today = moment()
+
+				var lockoutDate =moment(rData.lockoutDate||'4-24-16', 'MM-DD-YYYY')
 				var date21LK = moment(lockoutDate).subtract(21, 'days')
 				var date28LK = moment(lockoutDate).subtract(28, 'days')
-				//- var eDate = dateSC;
-				//- eDate.setDate(dateSC.getDate()+7)
-
+				
 				if (today > date21LK){
 
-					lockoutDate.setDate(lockoutDate.getDate()+28)
+					lockoutDate.add(28, 'days')
 
-					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.toFullDate()}}).done(function(rData){
+					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.format('MM-DD-YYYY')}}).done(function(rData){
 						
 						//- output lock out Note
 						$('#SCNoteDiv').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
 					});
 
 				}
-								
+				$('#SCNoteDiv').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
+							
 				$.post('/taskSC',{
-					sDate:dateSC
+					sDate:weekStart.format('MM-DD-YYYY')
 					}).done(function(rData){
-
+					//- alert(JSON.stringify(rData.assign, null, 4))
 					//- alert(JSON.stringify(arrListDateSC, null, 4))
 					var assign = rData.assign
 					
@@ -201,7 +195,7 @@ append scripts
 						if (foundSC){
 							//- alert(JSON.stringify(assign[x], null, 4))
 							
-							var datePos = moment(assign[x].datePos)
+							var datePos = moment(assign[x].datePos,'MM-DD-YYYY')
 							var memo = assign[x].Memo
 							var tracer = '';
 							var firstTracer = '';
@@ -210,31 +204,41 @@ append scripts
 							td.setAttribute('class','cell')
 								var a = document.createElement('a')
 								noteColor(assign[x].Note, a)
+								console.log(datePos.format('MM-DD-YYYY'))
+								console.log(lockoutDate.format('MM-DD-YYYY'))
+								console.log(date28LK.format('MM-DD-YYYY'))
+								
 								a.innerHTML= assign[x].Note
-									var span = document.createElement('span')
-									span.style.color = '#FF8C5A'
-									span.className = "badge"
-									
-									var assignTracers = assign[x].assignTracers
-									var unreadCount = 0;
-									assignTracers.forEach(function(assignTracer, i){
-										var createdAt = new Date(assignTracer.createdAt)
-										if(assignTracer.Read == false){
-											if (i == 0){
-												firstTracer = assignTracers[i].user.name+': '+createdAt.toTracerDate() +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
-											}else{
-												tracer += assignTracers[i].user.name+': '+createdAt.toTracerDate() +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b><br>"
-											}
-										
-											unreadCount++
-										}
-									})
-									if (unreadCount!=0){
-										span.innerHTML = unreadCount
-									}
-									
 
-									a.appendChild(span)
+									if (!datePos.isBetween(date28LK,lockoutDate)){
+										var span = document.createElement('span')
+										span.style.color = '#FF8C5A'
+										span.className = "badge"
+										
+										var assignTracers = assign[x].assignTracers
+
+										var unreadCount = 0;
+										assignTracers.forEach(function(assignTracer, i){
+											
+											var createdAt = moment(assignTracer.createdAt)
+											
+											if(assignTracer.Read == false){
+												if (i == 0){
+													firstTracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
+												}else{
+													tracer += assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b><br>"
+												}
+											
+												unreadCount++
+											}
+										})
+										if (unreadCount!=0){
+											span.innerHTML = unreadCount
+										}
+										a.appendChild(span)
+									}
+
+									
 								a.setAttribute('href','#');
 								a.setAttribute('data-toggle','popover');
 								a.setAttribute('data-trigger','hover');
@@ -310,9 +314,9 @@ append scripts
 											}).done(function(Rdata){
 												assignTracers = Rdata.assign.assignTracers
 												assignTracers.forEach(function(assignTracer, i){
-												var createdAt = new Date(assignTracer.createdAt)
+												var createdAt = moment(assignTracer.createdAt)
 												
-												var tracer = assignTracers[i].user.name+': '+createdAt.toTracerDate() +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
+												var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
 												
 
 												window['tr' + i] = document.createElement('tr')
@@ -373,7 +377,7 @@ append scripts
 									var Note = assign.Note
 									//- var dateSC = assign.datePos
 									var taskSC = $('input[name=PTO]:checked').attr('value');
-									var selDate = new Date(dateSC)
+									var selDate = dateSC
 									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
 										
 										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
@@ -417,7 +421,7 @@ append scripts
 								
 								return function(){
 									//- $('#SCNote').fadeIn()
-									var selDate = new Date(dateSC)
+									var selDate = dateSC
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 									//- Prevent user to request after lockoutDate
 									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager') && taskSC!="SWITCH-R"){
@@ -467,7 +471,7 @@ append scripts
 							}(userId, dateSC));
 						}
 						//- Reset schedule date position for new user
-						console.log(userId+'-'+userTitle+'-'+dateSC)
+						//- console.log(userId+'-'+userTitle+'-'+dateSC)
 						
 
 						//- add new row for next user if user ID changed detected

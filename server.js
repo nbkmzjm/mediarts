@@ -132,10 +132,11 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var curUser= req.user;
-	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM/DD/YYYY')
-	var sDate = moment(new Date(req.body.sDate)).format('MM/DD/YYYY')
+	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
+	var sDate = moment(new Date(req.body.sDate)).format('MM-DD-YYYY')
 
-	// console.log(sDate)
+	console.log(sDate)
+	console.log(eDate)
 	db.assign.findAll({
 		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
 		include:[{

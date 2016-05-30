@@ -6,7 +6,7 @@ function calendarPick(){
 			//   	<li><a href="#">Next</a></li>
 			// </ul>
 
-			var calenderPick = $('#calenderPick');
+			var calenderPick = $('#calendarPick');
 			//- calenderPick.html("");
 
 			
