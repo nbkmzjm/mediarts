@@ -26,9 +26,9 @@ function calendarPick(){
 						a.appendChild(document.createTextNode('Month'))
 					MBackward.addEventListener('click', function(){
 
-						var dateM7 = new Date(dateCalender.value);
-						dateM7.setDate(dateM7.getDate()-30);
-						dateCalender.value = dateM7.toLocaleDateString();
+						var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
+						dateM7.subtract(30, 'days');
+						dateCalender.value = dateM7.format('MM-DD-YYYY')
 						$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 
 					})
