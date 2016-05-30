@@ -45,9 +45,9 @@ function calendarPick(){
 						a.appendChild(document.createTextNode('Week'))
 					dateBackward.addEventListener('click', function(){
 
-					var dateM7 = new Date(dateCalender.value);
-					dateM7.setDate(dateM7.getDate()-7);
-					dateCalender.value = dateM7.toLocaleDateString();
+					var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
+					dateM7.subtract(7, 'days');
+					dateCalender.value = dateM7.format('MM-DD-YYYY')
 					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 
 					})
@@ -66,7 +66,7 @@ function calendarPick(){
 							dateCalender.style.width = '125px'
 							dateCalender.style.fontSize = '120%'
 							dateCalender.style.border = '2px transparent'
-							dateCalender.value = new Date().toLocaleDateString()
+							dateCalender.value = moment().format('MM-DD-YYYY')
 						a.appendChild(dateCalender)
 					li.appendChild(a)
 					var span = document.createElement('span');
@@ -111,9 +111,9 @@ function calendarPick(){
 							span.className = 'glyphicon glyphicon-step-forward'
 						a.appendChild(span)
 					dateForward.addEventListener('click', function(){
-					var dateP7 = new Date(dateCalender.value);
-					dateP7.setDate(dateP7.getDate()+7);
-					dateCalender.value = dateP7.toLocaleDateString();
+					var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
+					dateM7.add(7, 'days');
+					dateCalender.value = dateM7.format('MM-DD-YYYY')
 					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 
 					})
@@ -131,9 +131,9 @@ function calendarPick(){
 						
 					MForward.addEventListener('click', function(){
 
-						var dateM7 = new Date(dateCalender.value);
-						dateM7.setDate(dateM7.getDate()+30);
-						dateCalender.value = dateM7.toLocaleDateString();
+						var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
+						dateM7.add(30, 'days');
+						dateCalender.value = dateM7.format('MM-DD-YYYY')
 						$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 
 					})

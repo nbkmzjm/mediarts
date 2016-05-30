@@ -36,7 +36,7 @@ td{
 	
 }
 
-#main td:nth-child(2), #main td:nth-child(8){
+#main td:nth-child(7), #main td:nth-child(8){
 	background-color: #2AA9C5;
 	font-weight: bold;
 }
