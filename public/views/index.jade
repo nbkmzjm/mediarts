@@ -77,6 +77,14 @@ append scripts
 		   return keys;
 		}
 
+		function clearEvent(sDate, eDate){
+			$.post('clearEvent',{
+				sDate:sDate,
+				eDate:eDate
+			})
+
+		}
+
 
 		function mainSC(data){
 			//- alert(JSON.stringify(data, null, 4))

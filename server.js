@@ -301,6 +301,18 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	}
 });
 
+app.post('/clearEvent', middleware.requireAuthentication, function(req,res){
+	var sDate = req.body.sDate
+	var eDate = req.body.eDate
+	db.assigns.update({
+		Read:true
+	},{
+		where:{
+
+		}
+	})
+})
+
 
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
