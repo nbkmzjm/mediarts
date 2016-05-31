@@ -441,13 +441,13 @@ append scripts
 								
 								return function(){
 									//- $('#SCNote').fadeIn()
-									var selDate = dateSC
+									var selDate = moment(dateSC,'MM-DD-YYYY')
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 									//- Prevent user to request after lockoutDate
-									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager') && taskSC!="SWITCH-R"){
+									if (selDate.isBefore(lockoutDate) && (curUserTitle!='Admin' && curUserTitle!='Manager') && taskSC!="SWITCH-R"){
 										//- alert($('#SCNote').text())
 										
-										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
+										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
 
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
