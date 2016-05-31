@@ -88,70 +88,78 @@ append scripts
 
 		function mainSC(data){
 			//- alert(JSON.stringify(data, null, 4))
-			this.data = data
-			var mainSC = $('#mainSC');
-			mainSC.html('');
-
-			var curDate = $('#calendar').val();
-			var weekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
-			var dateHeader = moment(weekStart.format());
-			var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-			
-			var table = document.createElement('table');
-			table.setAttribute('id', 'main');
-			table.setAttribute('class','table table-striped')
-			var tr = document.createElement('tr');
-				var td = document.createElement('td');
-					td.appendChild(document.createTextNode('User'));
-					
-				tr.appendChild(td);
-				for (var i=0; i<7; i++){
-					 
-					var td = document.createElement('td');
-					//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
-					//- td.appendChild(document.createElement('br'))
-					td.innerHTML = dateHeader.format('ddd, MMM DD')
-					tr.appendChild(td);
-
-					dateHeader.add(1, 'days');
-					}
-			table.appendChild(tr);
-			
-
-			//- Create DateSC array with userID and dateSC
-			var users = data.pData.users;
-			var arrDateSC = moment(weekStart.format());
-			var arrListDateSC = [];
-			for (var i=0; i< users.length; i++){
-			
-				    for (var x=0; x<7; x++){
-						var taskSCData = {};
-						
-						//- if (x==0){
-							//- taskSCData.userId = users[i].id;
-							//- taskSCData.dateSC = users[i].name;
-							//- taskSCData.title = users[i].title
-						//- }else{
-							taskSCData.userId = users[i].id;
-							taskSCData.dateSC = arrDateSC.format('MM-DD-YYYY');
-							taskSCData.name = users[i].name;
-							taskSCData.title = users[i].title
-							arrDateSC.add(1, 'days')
-						//- }
-						arrListDateSC.push(taskSCData);
-					}
-					
-				arrDateSC.subtract(7, 'days');
-			}
-			
 			$.post('/sysObjRead', {pData:['lockoutDate']}).done(function(rData){
+				this.data = data
+				var mainSC = $('#mainSC');
+				mainSC.html('');
+
+				var curDate = $('#calendar').val();
+				var weekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+				var dateHeader = moment(weekStart.format());
+				var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+				var lockoutDate =moment(rData.lockoutDate||'4-24-16', 'MM-DD-YYYY')
+
+				var table = document.createElement('table');
+				table.setAttribute('id', 'main');
+				table.setAttribute('class','table table-striped')
+				var tr = document.createElement('tr');
+					var td = document.createElement('td');
+						td.appendChild(document.createTextNode('User'));
+						
+					tr.appendChild(td);
+					for (var i=0; i<7; i++){
+						 
+						var td = document.createElement('td');
+						//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
+						//- td.appendChild(document.createElement('br'))
+						td.innerHTML = dateHeader.format('ddd , MMM DD')
+						dateHeader.isSame(lockoutDate)?
+						td.style.backgroundColor= 'red':''
+						dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
+						td.style.backgroundColor= 'green':''
+						dateHeader.isSame(moment(lockoutDate).subtract(21, 'days'))?
+						td.style.backgroundColor= 'yellow':''
+						tr.appendChild(td);
+
+						dateHeader.add(1, 'days');
+						}
+				table.appendChild(tr);
+				
+
+				//- Create DateSC array with userID and dateSC
+				var users = data.pData.users;
+				var arrDateSC = moment(weekStart.format());
+				var arrListDateSC = [];
+				for (var i=0; i< users.length; i++){
+				
+					    for (var x=0; x<7; x++){
+							var taskSCData = {};
+							
+							//- if (x==0){
+								//- taskSCData.userId = users[i].id;
+								//- taskSCData.dateSC = users[i].name;
+								//- taskSCData.title = users[i].title
+							//- }else{
+								taskSCData.userId = users[i].id;
+								taskSCData.dateSC = arrDateSC.format('MM-DD-YYYY');
+								taskSCData.name = users[i].name;
+								taskSCData.title = users[i].title
+								arrDateSC.add(1, 'days')
+							//- }
+							arrListDateSC.push(taskSCData);
+						}
+						
+					arrDateSC.subtract(7, 'days');
+				}
+			
+			
 				
 				
 				//- alert(JSON.stringify(arrListDateSC, null, 4))
 				
 				var today = moment()
 
-				var lockoutDate =moment(rData.lockoutDate||'4-24-16', 'MM-DD-YYYY')
+				
 				var date21LK = moment(lockoutDate).subtract(21, 'days')
 				var date28LK = moment(lockoutDate).subtract(28, 'days')
 				
@@ -162,11 +170,11 @@ append scripts
 					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.format('MM-DD-YYYY')}}).done(function(rData){
 						
 						//- output lock out Note
-						$('#SCNoteDiv').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
+						
 					});
 
 				}
-				$('#SCNoteDiv').text('NOTE: PTO input will not be available after '+ rData.lockoutDate) 
+				
 							
 				$.post('/taskSC',{
 					sDate:weekStart.format('MM-DD-YYYY')
@@ -213,9 +221,6 @@ append scripts
 							td.setAttribute('class','cell')
 								var a = document.createElement('a')
 								noteColor(assign[x].Note, a)
-								console.log(datePos.format('MM-DD-YYYY'))
-								console.log(lockoutDate.format('MM-DD-YYYY'))
-								console.log(date28LK.format('MM-DD-YYYY'))
 								
 								a.innerHTML= assign[x].Note
 
