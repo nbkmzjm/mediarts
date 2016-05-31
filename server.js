@@ -248,7 +248,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 			if (taskSC=='DELETE'){
 				var updatePara = {
-					Note: 'x',
+					Note: '',
 					Memo: ''
 				}
 			} else {
