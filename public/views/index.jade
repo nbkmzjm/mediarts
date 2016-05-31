@@ -395,12 +395,12 @@ append scripts
 							td.addEventListener('click',function(userId,assign){
 								return function(){
 									var Note = assign.Note
-									//- var dateSC = assign.datePos
+									var dateSC = assign.datePos
 									var taskSC = $('input[name=PTO]:checked').attr('value');
-									var selDate = dateSC
-									if (selDate<lockoutDate && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
+									var selDate = moment(dateSC,'MM-DD-YYYY')
+									if (selDate.isBefore(lockoutDate) && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
 										
-										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.toFullDate()
+										SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
 										$('#SCNote').show(1000, function(){
@@ -501,7 +501,7 @@ append scripts
 							tdUser.appendChild(document.createTextNode(item.name));
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].style.borderTop = 'medium double #1FD6FD'
+							window['tr' + userId].style.borderTop = 'medium double #0321A1'
 							window['tr' + userId].appendChild(tdUser);
 							window['tr' + userId].appendChild(td);
 							//- table.appendChild(window['tr' + userId]);
