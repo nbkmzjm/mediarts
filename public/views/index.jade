@@ -289,10 +289,13 @@ append scripts
 												//- if (li.childNodes.length >2){
 												//- 		li.removeChild(li.childNodes[2])
 												//- 	}
+												document.getElementById('eventAction').style.position = 'relative'
 												if ($('#eventAction').children()[0].id != 'delGly'){
-													var span = document.createElement('div')
+													var span = document.createElement('span')
 													span.innerHTML = '';
 													span.style.color = 'red'
+													span.style.position = 'absolute'
+													span.style.right = '17px'
 													span.className = "glyphicon glyphicon-remove-circle"
 													span.id = 'delGly';
 													//- click the 'x' to remove from list
