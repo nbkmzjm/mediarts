@@ -194,7 +194,7 @@ append scripts
 
 						var foundSC = function(assign, item){
 							for (x = 0; x< assign.length; x++ ){
-								if (assign[x].datePos==item.dateSC && assign[x].userId==userId){
+								if (moment(assign[x].datePos).isSame(moment(item.dateSC)) && assign[x].userId==userId){
 								return true
 								}
 							}
