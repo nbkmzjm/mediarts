@@ -178,7 +178,7 @@ app.post('/assignTracerReadUpd', middleware.requireAuthentication, function(req,
 	})
 })
 
-app.post('/assignTracerRead', middleware.requireAuthentication, function(req, res) {
+app.post('/assignTracerReadDay', middleware.requireAuthentication, function(req, res) {
 	var assignId = req.body.assignId;
 	var curUserTitle = req.user.title;
 	// console.log(assignId)
@@ -206,6 +206,42 @@ app.post('/assignTracerRead', middleware.requireAuthentication, function(req, re
 		console.log(e)
 	});
 });
+
+app.post('/assignTracerReadWeek', middleware.requireAuthentication, function(req, res){
+	var curUser= req.user;
+	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
+	var sDate = moment(new Date(req.body.sDate)).format('MM-DD-YYYY')
+
+	console.log(sDate)
+	console.log(eDate)
+	db.assign.findAll({
+		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
+		include:[{
+			model:db.assignTracer,
+			include:[{
+				model:db.user
+			}]
+			
+		}],
+		where:{
+			datePos:{
+				$between:[sDate,eDate]
+			},
+			userId:curUser.id
+		},
+		order:[
+				['datePos'],
+				[db.assignTracer,'createdAt', 'DESC']
+
+			]
+	}).then(function(assigns){
+		
+		console.log(JSON.stringify(assigns, null, 4))
+		res.json({
+			assigns
+		})
+	})
+})
 
 
 
