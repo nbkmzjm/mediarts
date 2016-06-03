@@ -372,19 +372,35 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 })
 
 app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
-
+	var description = req.body.taskOption
+	var categogy = req.body.taskCategory
+	console.log(description)
 	db.taskOption.findOrCreate({
 		where:{
-		description: req.body.taskOption
+		description: description
 		}
 	}).spread(function(taskOption, created) {
-			
-			res.json({
-				taskOption:taskOption,
-				created:created
-			})
-		
-	}, function(e) {
+			// if(created==true){
+			// 	res.json({
+			// 		taskOption:taskOption,
+			// 		created:created
+			// 	})
+			// }else{
+			console.log(JSON.stringify(created,null,4))
+
+			// 	})
+			// }
+			db.taskOption.update({
+				categogy:categogy
+			}, {
+				where: {
+					description: description
+				}
+			})	
+	}).spread(function(taskOption){
+		console.log(JSON.stringify(taskOption,null,4))
+
+	}).catch(function(e) {
 		res.render('error', {
 			error: e.toString()
 		})

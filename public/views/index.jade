@@ -64,6 +64,8 @@ append scripts
 				element.style.color = 'green'
 			}else if(assignNote=='PTO-R'){
 				element.style.color = '#FFBD4B'
+			}else if(assignNote=='OFF'){
+				element.style.color = '#FFF36E'
 			}else{
 				element.style.color = 'blue'
 			}
@@ -660,28 +662,41 @@ append scripts
 								if ($('#taskOption').length>0){
 									ul.removeChild(document.getElementById('taskOption'))
 								}else{
-								var input = document.createElement('input');
-								input.style.width = '120px';
-								input.setAttribute('placeholder','Add Option');
-								input.setAttribute('type','text');
-								input.setAttribute('id','taskOption');
-								input.addEventListener('blur', function(){
-								
-									var taskOptionData = $("#taskOption").val().toUpperCase();
+									var input2 = document.createElement('input');
+									input2.style.width = '150px';
+									input2.setAttribute('placeholder','Add Option Category');
+									input2.setAttribute('type','text');
+									input2.setAttribute('id','taskCategory');
+									input2.addEventListener('blur', function(){
 
-									$.post('/taskOption',{taskOption:taskOptionData}).done(function(pData){
-									
-										if (pData.created){
-											taskOptionFct(i, pData.taskOption);
-											$('#taskOption').val('')
-											ul.appendChild(li)
-										}else{
-											$('#taskOption').val('')
-										}
-									});
-								});
+										var input = document.createElement('input');
+										input.style.width = '120px';
+										input.setAttribute('placeholder','Add Option');
+										input.setAttribute('type','text');
+										input.setAttribute('id','taskOption');
+										input.addEventListener('blur', function(){
+										
+											var taskOptionData = $("#taskOption").val().toUpperCase();
+											var taskCategoryData = $("#taskCategory").val().toUpperCase();
 
-								ul.insertBefore(input, li)
+											$.post('/taskOption',{
+												taskOption:taskOptionData,
+												taskCategory:taskCategoryData
+											}).done(function(pData){
+											
+												if (pData.created){
+													taskOptionFct(i, pData.taskOption);
+													$('#taskOption').val('')
+													ul.appendChild(li)
+												}else{
+													$('#taskOption').val('')
+												}
+											});
+										});
+
+										ul.insertBefore(input, li)
+									})
+									ul.insertBefore(input2, li)
 								}
 							})
 							li.appendChild(radio);
