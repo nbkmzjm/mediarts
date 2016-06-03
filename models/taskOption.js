@@ -17,12 +17,12 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		category: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			
 			validate: {
-				len: [3, 20]	
+				len: [0, 20]	
 			}
 			
-		},
+		}
 
 	}, { timestamps: false})
 
