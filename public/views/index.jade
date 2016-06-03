@@ -661,40 +661,53 @@ append scripts
 							//- alert('radio click')
 								if ($('#taskOption').length>0){
 									ul.removeChild(document.getElementById('taskOption'))
+									if($('#taskCategory').length>0){
+										ul.removeChild(document.getElementById('taskCategory'))
+									}
 								}else{
 									var input2 = document.createElement('input');
-									input2.style.width = '150px';
-									input2.setAttribute('placeholder','Add Option Category');
+									input2.style.width = '120px';
+									input2.setAttribute('placeholder','Add Option');
 									input2.setAttribute('type','text');
-									input2.setAttribute('id','taskCategory');
+									input2.setAttribute('id','taskOption');
 									input2.addEventListener('blur', function(){
 
 										var input = document.createElement('input');
-										input.style.width = '120px';
-										input.setAttribute('placeholder','Add Option');
+										input.style.width = '150px';
+										input.setAttribute('placeholder','Add Option Category');
 										input.setAttribute('type','text');
-										input.setAttribute('id','taskOption');
+										input.setAttribute('id','taskCategory');
 										input.addEventListener('blur', function(){
 										
 											var taskOptionData = $("#taskOption").val().toUpperCase();
 											var taskCategoryData = $("#taskCategory").val().toUpperCase();
+											if (taskCategoryData!=''&& taskCategoryData!=null){
+												$.post('/taskOption',{
+													taskOption:taskOptionData,
+													taskCategory:taskCategoryData
+												}).done(function(pData){
+												
+													if (pData.created==1){
+														taskOptionFct(i, pData.taskOption);
 
-											$.post('/taskOption',{
-												taskOption:taskOptionData,
-												taskCategory:taskCategoryData
-											}).done(function(pData){
-											
-												if (pData.created){
-													taskOptionFct(i, pData.taskOption);
-													$('#taskOption').val('')
-													ul.appendChild(li)
-												}else{
-													$('#taskOption').val('')
-												}
-											});
+														$('#taskOption').remove()
+														$('#taskCategory').remove()
+														ul.appendChild(li)
+														ul.appendChild(li)
+													}else{
+														$('#taskOption').$('#taskOption').remove()
+														$('#taskCategory').remove()
+													}
+												});
+											}else{
+											alert('new option is not added')
+											$('#taskOption').val('')
+											$('#taskCategory').val('')
+											}
 										});
 
 										ul.insertBefore(input, li)
+										$('#taskCategory').focus()
 									})
 									ul.insertBefore(input2, li)
 								}
@@ -709,6 +722,7 @@ append scripts
 							li.addEventListener('click', function(){
 								$('#memo').length>0?ul.removeChild(document.getElementById('memo')):''
 								$('#taskOption').length>0 ? ul.removeChild(document.getElementById('taskOption')):''
+								
 							})
 							li.appendChild(radio);
 							li.appendChild(document.createTextNode(taskOption));
@@ -722,6 +736,9 @@ append scripts
 				
 
 			})
+
+			//- execute taskOption function with rData
+			$.each(Rdata.taskOption, taskOptionFct);
 			
 			//- function to list taskOption from return data
 			function taskOptionFct(i, taskOption){
@@ -785,8 +802,7 @@ append scripts
 				}
 			}
 			
-			//- execute taskOption function with rData
-			$.each(Rdata.taskOption, taskOptionFct);
+			
 			
 			$('#taskOptionDiv').append(ul);
 		});
