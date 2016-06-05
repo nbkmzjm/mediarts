@@ -7,15 +7,16 @@
 					span(class="icon-bar")
 					span(class="icon-bar")
 					span(class="icon-bar")
-				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#x")
+
+				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
 					span(class="sr-only") Shopping Cart
 					span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
-				a(class="navbar-brand", href="#") BCP Schedule
-			//- div(class="navbar-collapse collapse" id='x')
-			//- 		a(href="#" class="dropdown-toggle" data-toggle="dropdown" id='optionText') 
-			//- 			span(class="glyphicon glyphicon-tasks" aria-hidden="true") SELECT 
 
-			//- 		ul(class="dropdown-menu" role="menu" id='menuTaskOption')
+				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextS') 
+					span(class="glyphicon glyphicon-tasks" aria-hidden="true") SELECT 
+
+				a(class="navbar-brand", href="#") BCP Schedule
+			
 
 			div(id="navMain" class="navbar-collapse collapse")
 				
@@ -28,15 +29,10 @@
 					li
 						a(href="#") Admin
 				ul(class="nav navbar-nav navbar-right")
-					li(class="dropdown")
-						a(href="#" class="dropdown-toggle" data-toggle="dropdown" id='optionText') 
-							span(class="glyphicon glyphicon-tasks" aria-hidden="true") SELECT 
-
-						ul(class="dropdown-menu" role="menu" id='menuTaskOption')
-							//- li
-							//- 	a(href="#") A
-							//- li
-							//- 	a(href="#") B
+					li
+						a(href='#' class="btn" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextL') 
+							span(class="glyphicon glyphicon-tasks" aria-hidden="false") SELECT 
+							
 					li
 						a(href="#" id='curUserName') 
 					li  

@@ -13,13 +13,21 @@ block horMenu
 block content
 	#container
 		//- #test
+		div(class='collapse row container-fluid' id='taskOptionDiv')
+			//- ul(class="col-sm-2" role="menu" id='menuTaskOption')
+
+			//- ul(class="col-sm-4" role="menu")
+			//- 	li
+			//- 		a(href="#") A
+			//- 	li
+			//- 		a(href="#") B
 		#eventAction.container
 		#calendarPick
 		#mainSC
 		#SCNoteDiv
 		//- #taskOptionDiv
-		nav(class="navbar navbar-default")
-			div(class="container-fluid" id="taskOptionDiv")
+		//- nav(class="navbar navbar-default")
+		//- 	div(class="container-fluid" id="taskOptionDiv")
 	
 
 
@@ -59,15 +67,24 @@ append scripts
 
 		});
 
-		function activeOptionText(optionText){
-
+		function activeOptionText(x){
 			var span = document.createElement('span')
 			span.className = 'glyphicon glyphicon-tasks'
-			span.innerHTML = optionText
+			span.innerHTML = x
 			span.style.backgroundColor = 'yellow'
-			var optionText = document.getElementById('optionText')
+			var optionText = document.getElementById('optionTextS')
 			optionText.replaceChild(span, optionText.childNodes[1])
+			
+
+			var span1 = document.createElement('span')
+			span1.className = 'glyphicon glyphicon-tasks'
+			span1.innerHTML = x
+			span1.style.backgroundColor = 'yellow'
+			var optionText1 = document.getElementById('optionTextL')
+			optionText1.replaceChild(span1, optionText1.childNodes[1])
 		}
+
+		
 		
 		function noteColor(assignNote, element){
 			if (assignNote=='PTO'){
@@ -622,221 +639,158 @@ append scripts
 
 		}	
 
+		
+		function taskOptionGen(name, category, arrayList){
+			var taskOption = {}
+			taskOption.name = name
+			taskOption.category = category
+			arrayList.push(taskOption)
+			return arrayList
+		} 
+		var arrayOption = []
+		taskOptionGen('SELECT','EDIT', arrayOption)
+		taskOptionGen('NEW OPTION','EDIT', arrayOption)
+		taskOptionGen('DELETE','EDIT', arrayOption)
+		taskOptionGen('PTO-R','PTO', arrayOption)
+		taskOptionGen('PTO-A','PTO', arrayOption)
+		taskOptionGen('PTO-X','PTO', arrayOption)
+		taskOptionGen('SWIT-R','PTO', arrayOption)
+		taskOptionGen('SWIT-A','PTO', arrayOption)
+		taskOptionGen('SWIT-X','PTO', arrayOption)
+		
+
+		var i = 0
+		function taskOptionLoop(arr){
+			$.post('/taskOption',{
+			taskOption:arr[i].name,
+			taskCategory:arr[i].category
+			}).done(function(pData){
+				i++
+				i < arr.length?taskOptionLoop(arr):''
+			})
+
+				
+			
+		}
 
 
 		$.getJSON('/taskOption').done(function(Rdata){
-			var curUserTitle = Rdata.curUserTitle;
-			var ul = document.createElement('ul');
-			ul.setAttribute('id','PTORadio')
+			console.log(Rdata)
+			//- var curUserTitle = Rdata.curUserTitle;
+			//- var ul = document.createElement('ul');
+			//- ul.id = Rdata.taskOption.category + 'ListOp'
+			//- ul.setAttribute('role', 'menu')
 			//- ul.className = 'nav navbar-nav'
 
-			var arrayOption = ['SELECT','NEW OPTION', 'DELETE', 'PTO-R', 'SWITCH-R']
 
-			arrayOption.forEach(function(taskOption, i){
-
-					var li = document.createElement('li');
-					li.style.color = 'blue';
-					li.style.width = '200px'
-					li.style.listStyle = 'none'
-					
-						var radio = document.createElement('input');
-						radio.setAttribute('type','radio');
-						radio.setAttribute('name','PTO');
-						radio.setAttribute('value',taskOption);
-						if (taskOption=='SELECT'){
-							radio.setAttribute('checked','checked');
-							li.addEventListener('click', function(){
-								activeOptionText(taskOption)
-							})	
-						}
-
-						if (taskOption=='PTO-R'||taskOption=='SWITCH-R'){
-							li.addEventListener('click', function(){
-								if ($('#memo').length>0){
-									ul.removeChild(document.getElementById('memo'))
-								}
-
-								activeOptionText(taskOption)
-
-								var input = document.createElement('input');
-								input.style.width = '240px';
-								input.setAttribute('placeholder','Add Memo');
-								input.setAttribute('type','text');
-								input.setAttribute('id','memo');
-								ul.insertBefore(input, li)
-								
-							})	
-							
-							li.appendChild(radio);
-							li.appendChild(document.createTextNode(taskOption));
-							ul.appendChild(li);
-	 
-								
-							
-						} else if(taskOption=='NEW OPTION'&&(curUserTitle=='Admin'|| curUserTitle=='Manager')){
-							li.addEventListener('click', function(){
-							//- alert('radio click')
-								activeOptionText(taskOption)
-								if ($('#taskOption').length>0){
-									ul.removeChild(document.getElementById('taskOption'))
-									if($('#taskCategory').length>0){
-										ul.removeChild(document.getElementById('taskCategory'))
-									}
-								}else{
-									var input2 = document.createElement('input');
-									input2.style.width = '120px';
-									input2.setAttribute('placeholder','Add Option');
-									input2.setAttribute('type','text');
-									input2.setAttribute('id','taskOption');
-									input2.addEventListener('blur', function(){
-										
-										var input = document.createElement('input');
-										input.style.width = '150px';
-										input.setAttribute('placeholder','Add Option Category');
-										input.setAttribute('type','text');
-										input.setAttribute('id','taskCategory');
-										input.addEventListener('blur', function(){
-										
-											var taskOptionData = $("#taskOption").val().toUpperCase();
-											var taskCategoryData = $("#taskCategory").val().toUpperCase();
-											if (taskCategoryData!=''&& taskCategoryData!=null){
-												$.post('/taskOption',{
-													taskOption:taskOptionData,
-													taskCategory:taskCategoryData
-												}).done(function(pData){
-												
-													if (pData.created==1){
-														taskOptionFct(i, pData.taskOption);
-
-														$('#taskOption').remove()
-														$('#taskCategory').remove()
-														ul.appendChild(li)
-														ul.appendChild(li)
-													}else{
-														$('#taskOption').$('#taskOption').remove()
-														$('#taskCategory').remove()
-													}
-												});
-											}else{
-											alert('new option is not added')
-											$('#taskOption').val('')
-											$('#taskCategory').val('')
-											}
-										});
-
-										ul.insertBefore(input, li)
-										$('#taskCategory').focus()
-									})
-									ul.insertBefore(input2, li)
-								}
-							})
-							li.appendChild(radio);
-							li.appendChild(document.createTextNode(taskOption));
-							ul.appendChild(li);
-
-						} else if(taskOption=='NEW OPTION'&&(curUserTitle!='Admin'|| curUserTitle!='Manager')){
-
-						} else{
-							li.addEventListener('click', function(){
-								$('#memo').length>0?ul.removeChild(document.getElementById('memo')):''
-								$('#taskOption').length>0 ? ul.removeChild(document.getElementById('taskOption')):''
-								
-								activeOptionText(taskOption)
-
-								//- var input = document.createElement('input');
-								//- input.style.width = '240px';
-								//- input.setAttribute('placeholder','Add Memo');
-								//- input.setAttribute('type','text');
-								//- input.setAttribute('id','memo');
-								//- ul.insertBefore(input, li)
-							})
-							li.appendChild(radio);
-							li.appendChild(document.createTextNode(taskOption));
-							ul.appendChild(li);
-						}
-						
-					li.addEventListener('click',function(){
-						radio.checked = 'checked'
-					})
-					
-				
-
+			
+			$.each(Rdata.taskOption, function(i, taskOption){
+				if (!document.getElementById(taskOption.category + 'ListOp')){
+					var ul = document.createElement('ul')
+					ul.id = taskOption.category + 'ListOp'
+					ul.setAttribute('role', 'menu')
+					ul.className = 'col-sm-2'
+						li = document.createElement('li')
+						li.style.color = 'blue'
+						li.style.textDecoration= 'underline'
+						li.style.width = '200px'
+						li.style.listStyle = 'none'
+						li.style.fontWeight = 'bold'
+						li.appendChild(document.createTextNode(taskOption.category))
+						ul.appendChild(li)
+					$('#taskOptionDiv').append(ul)
+				}
 			})
-
 			//- execute taskOption function with rData
 			$.each(Rdata.taskOption, taskOptionFct);
 			
 			//- function to list taskOption from return data
 			function taskOptionFct(i, taskOption){
-				if(curUserTitle=='Admin'|| curUserTitle=='Manager'){
-					var li = document.createElement('li');
-					li.style.color = 'blue'
-					li.style.width = '200px'
-					li.style.listStyle = 'none'
+				console.log(taskOption)
+				//- var arrayTitle_UserTab = ['Admin', 'Manager']
+				//- arrayTitle_UserTab.indexOf(curUserTitle)
+				var curUserTitle = Rdata.curUserTitle;
+				
+				var ulOpList = document.getElementById(taskOption.category + 'ListOp')
 
-						var radio = document.createElement('input');
-						radio.setAttribute('type','radio');
-						radio.setAttribute('name','PTO');
-						radio.setAttribute('value',taskOption.description);
+				var li = document.createElement('li');
+				li.style.color = 'blue'
+				li.style.width = '200px'
+				li.style.listStyle = 'none'
+				
+
+					var radio = document.createElement('input');
+					radio.setAttribute('type','radio');
+					radio.setAttribute('name','PTO');
+					radio.setAttribute('value',taskOption.description);
+				
+				if(taskOption.description=='SELECT'){
+					activeOptionText(taskOption.description)
+					radio.setAttribute('checked', 'checked')
+				}else{
+
 					li.addEventListener('click', function(){
-						//- alert('radio click')
-						if ($('#memo').length>0){
-							ul.removeChild(document.getElementById('memo'))
-						}
-
 						activeOptionText(taskOption.description)
-
-						var input = document.createElement('input');
-						input.style.width = '240px';
-						input.setAttribute('placeholder','Add Memo');
-						input.setAttribute('type','text');
-						input.setAttribute('id','memo');
-						ul.insertBefore(input, li)
-						
-					})
-
-
-					//- radio.setAttribute('checked','checked');
-					li.appendChild(radio);
-					li.appendChild(document.createTextNode(taskOption.description));
-
-					//- click on list item to bring up the 'x'
-					li.addEventListener('mouseenter',function(){
-						if (li.childNodes.length >2){
-								li.removeChild(li.childNodes[2])
+						if ($('#memo').length>0){
+								ulOpList.removeChild(document.getElementById('memo'))
 							}
-						var span = document.createElement('span')
-						span.innerHTML = '';
-						span.style.color = 'red'
-						span.className = "glyphicon glyphicon-remove-circle"
-						span.id = 'delGly';
-						//- click the 'x' to remove from list
-						span.addEventListener('click', function(){
 
-							$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
-								ul.removeChild(li)
-							});
-							
-						});
-						li.appendChild(span)
-					});
-					//- the 'x' disapear on mouseleave
-					li.addEventListener('mouseleave',function(){
-						if ($('#delGly').length>0){
-							li.removeChild(document.getElementById('delGly'))
-						}
+							var input = document.createElement('input');
+							input.style.width = '240px';
+							input.setAttribute('placeholder','Add Memo');
+							input.setAttribute('type','text');
+							input.setAttribute('id','memo');
+							ulOpList.insertBefore(input, li)
 					})
-					li.addEventListener('click',function(){
-					radio.checked = 'checked'
-				})
-					ul.appendChild(li);
 				}
+
+					
+				
+				
+					
+
+
+				//- radio.setAttribute('checked','checked');
+				li.appendChild(radio);
+				li.appendChild(document.createTextNode(taskOption.description));
+
+				//- click on list item to bring up the 'x'
+				li.addEventListener('mouseenter',function(){
+					if (li.childNodes.length >2){
+							li.removeChild(li.childNodes[2])
+						}
+					var span = document.createElement('span')
+					span.innerHTML = '';
+					span.style.color = 'red'
+					span.className = "glyphicon glyphicon-remove-circle"
+					span.id = 'delGly';
+					//- click the 'x' to remove from list
+					span.addEventListener('click', function(){
+
+						$.post('/delTaskOption',{taskOption:taskOption.description}).done(function(pData){
+							ulOpList.removeChild(li)
+						});
+						
+					});
+					li.appendChild(span)
+				});
+				//- the 'x' disapear on mouseleave
+				li.addEventListener('mouseleave',function(){
+					if ($('#delGly').length>0){
+						li.removeChild(document.getElementById('delGly'))
+					}
+				})
+				li.addEventListener('click',function(){
+				radio.checked = 'checked'
+				})
+
+				ulOpList.appendChild(li);
+				
 			}
 			
 			
 			
-			$('#menuTaskOption').append(ul);
-			$('#menuTaskOption2').append(ul);
+			
 		});
 	
 

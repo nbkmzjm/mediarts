@@ -371,6 +371,7 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 
 })
 
+
 app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 	var description = req.body.taskOption
 	var category = req.body.taskCategory
@@ -379,18 +380,6 @@ app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 			description:description
 		}
 	}).spread(function(taskOption, created) {
-			// if(created==true){
-			// 	res.json({
-			// 		taskOption:taskOption,
-			// 		created:created
-			// 	})
-			// }else{
-
-			// 	})
-			// }
-		console.log(JSON.stringify(created,null,4))
-		console.log(JSON.stringify(taskOption,null,4))
-		console.log('description:'+ description)
 		return [db.taskOption.update({
 			category:category
 		}, {
