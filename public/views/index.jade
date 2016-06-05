@@ -649,7 +649,7 @@ append scripts
 		} 
 		var arrayOption = []
 		taskOptionGen('SELECT','EDIT', arrayOption)
-		taskOptionGen('NEW OPTION','EDIT', arrayOption)
+		taskOptionGen('NEW','EDIT', arrayOption)
 		taskOptionGen('DELETE','EDIT', arrayOption)
 		taskOptionGen('PTO-R','PTO', arrayOption)
 		taskOptionGen('PTO-A','PTO', arrayOption)
@@ -668,10 +668,8 @@ append scripts
 				i++
 				i < arr.length?taskOptionLoop(arr):''
 			})
-
-				
-			
 		}
+		taskOptionLoop(arrayOption)
 
 
 		$.getJSON('/taskOption').done(function(Rdata){
@@ -681,10 +679,49 @@ append scripts
 			//- ul.id = Rdata.taskOption.category + 'ListOp'
 			//- ul.setAttribute('role', 'menu')
 			//- ul.className = 'nav navbar-nav'
+			var div = document.createElement('div')
+			div.id = 'taskOptionInput'
+			div.className = "col-sm-12"
+			//- div.style.width= '1000px'
 
+				var inputMemo = document.createElement('input');
+				inputMemo.className = "col-sm-3"
+
+				inputMemo.setAttribute('placeholder','Add Memo');
+				inputMemo.setAttribute('type','text');
+				inputMemo.setAttribute('id','memo');
+				div.appendChild(inputMemo)
+
+				var inputAddOp = document.createElement('input');
+				inputAddOp.className = "col-sm-3 col-sm-offset-1"
+
+				inputAddOp.setAttribute('placeholder','Add Option');
+				inputAddOp.setAttribute('type','text');
+				inputAddOp.setAttribute('id','taskOption');
+				div.appendChild(inputAddOp)
+
+				var inputAddOpCate = document.createElement('input');
+				inputAddOpCate.className = "col-sm-3 col-sm-offset-1"
+
+				inputAddOpCate.setAttribute('placeholder','Add Category');
+				inputAddOpCate.setAttribute('type','text');
+				inputAddOpCate.setAttribute('id','taskCategory');
+				div.appendChild(inputAddOpCate)
+
+
+			$('#taskOptionDiv').append(div)
+
+			var div1 = document.createElement('div')
+			div1.id = 'taskOptionUL'
+			div1.className = "col-sm-12"
+			//- div.style.width= '500px'
+			$('#taskOptionDiv').prepend(div1)
 
 			
-			$.each(Rdata.taskOption, function(i, taskOption){
+			$.each(Rdata.taskOption, taskOptionUL)
+
+
+			function taskOptionUL(i, taskOption){
 				if (!document.getElementById(taskOption.category + 'ListOp')){
 					var ul = document.createElement('ul')
 					ul.id = taskOption.category + 'ListOp'
@@ -698,17 +735,17 @@ append scripts
 						li.style.fontWeight = 'bold'
 						li.appendChild(document.createTextNode(taskOption.category))
 						ul.appendChild(li)
-					$('#taskOptionDiv').append(ul)
+					$('#taskOptionUL').append(ul)
 				}
-			})
+			}
 			//- execute taskOption function with rData
 			$.each(Rdata.taskOption, taskOptionFct);
 			
 			//- function to list taskOption from return data
 			function taskOptionFct(i, taskOption){
-				console.log(taskOption)
-				//- var arrayTitle_UserTab = ['Admin', 'Manager']
-				//- arrayTitle_UserTab.indexOf(curUserTitle)
+				console.log(taskOption.description)
+				var arrayTitle = ['Admin', 'Manager']
+				arrayTitle.indexOf(curUserTitle)
 				var curUserTitle = Rdata.curUserTitle;
 				
 				var ulOpList = document.getElementById(taskOption.category + 'ListOp')
@@ -725,23 +762,90 @@ append scripts
 					radio.setAttribute('value',taskOption.description);
 				
 				if(taskOption.description=='SELECT'){
+					
+					
+					$('#memo').hide()
+					$('#taskOption').hide()
+					$('#taskCategory').hide()
 					activeOptionText(taskOption.description)
 					radio.setAttribute('checked', 'checked')
-				}else{
+					li.addEventListener('click', function(){
+						$('#memo').hide()
+						activeOptionText(taskOption.description)
+					})
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode(taskOption.description));
+				}else if(taskOption.description=='NEW'){
+					if(arrayTitle.indexOf(curUserTitle)!=-1){
+						li.addEventListener('click', function(){
+							activeOptionText(taskOption.description)
+							$('#memo').hide()
+							$('#taskOption').toggle()
+							$('#taskOption').blur(function(){
+								$('#taskCategory').show()
+								$('#taskCategory').focus()
+								$('#taskCategory').blur(function(){
+									var taskOptionData = $("#taskOption").val().toUpperCase();
+									var taskCategoryData = $("#taskCategory").val().toUpperCase();
+									if (taskOptionData!=''&& taskCategoryData!=''){
+				                        $.post('/taskOption',{
+				                          taskOption:taskOptionData,
+				                          taskCategory:taskCategoryData
+				                        }).done(function(pData){
+				                        
+					                       	if (pData.created==1){
+					                       		taskOptionUL(i, pData.taskOption);
+					                       		taskOptionFct(i, pData.taskOption);
 
+					                            $('#taskOption').hide()
+					                            $('#taskCategory').hide()
+					                          
+					                        }
+				                        });
+			                        }else{
+				                    	alert('New option is not added. Please retry.')
+				                    	$('#taskOption').hide()
+					                    $('#taskCategory').hide()
+			                      }
+
+								})
+							})
+
+						})
+					
+						li.appendChild(radio);
+						li.appendChild(document.createTextNode(taskOption.description));
+					}
+				}else if(taskOption.description=='DELETE'){
 					li.addEventListener('click', function(){
 						activeOptionText(taskOption.description)
-						if ($('#memo').length>0){
-								ulOpList.removeChild(document.getElementById('memo'))
-							}
-
-							var input = document.createElement('input');
-							input.style.width = '240px';
-							input.setAttribute('placeholder','Add Memo');
-							input.setAttribute('type','text');
-							input.setAttribute('id','memo');
-							ulOpList.insertBefore(input, li)
+						$('#taskOption').hide()
+						$('#memo').hide()
 					})
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode(taskOption.description));
+				}else if(['SWIT-R','PTO-R','SWIT-X','SWIT-A'].indexOf(taskOption.description)!=-1){
+					li.addEventListener('click', function(){
+						activeOptionText(taskOption.description)
+						$('#taskOption').hide()
+						$('#memo').show()
+
+					})
+					li.appendChild(radio);
+					li.appendChild(document.createTextNode(taskOption.description));
+				}else{
+					if(arrayTitle.indexOf(curUserTitle)!=-1){
+						li.addEventListener('click', function(){
+							activeOptionText(taskOption.description)
+							$('#taskOption').hide()
+							$('#memo').show()
+							
+
+								
+						})
+						li.appendChild(radio);
+						li.appendChild(document.createTextNode(taskOption.description));
+					}
 				}
 
 					
@@ -751,8 +855,7 @@ append scripts
 
 
 				//- radio.setAttribute('checked','checked');
-				li.appendChild(radio);
-				li.appendChild(document.createTextNode(taskOption.description));
+				
 
 				//- click on list item to bring up the 'x'
 				li.addEventListener('mouseenter',function(){

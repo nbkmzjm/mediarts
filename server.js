@@ -388,6 +388,9 @@ app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 			}
 		}), taskOption]	
 	}).spread(function(created, taskOption){
+		
+		taskOption.category = category
+		console.log(JSON.stringify(taskOption, null, 4))
 		res.json({
 				created,
 				taskOption:taskOption
