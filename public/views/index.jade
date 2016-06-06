@@ -535,49 +535,6 @@ append scripts
 										}
 									}
 								}(assign[x], userId))
-							
-
-							
-							//- td.addEventListener('click',function(userId,assign){
-							//- 	return function(){
-							//- 		var Note = assign.Note
-							//- 		var dateSC = assign.datePos
-							//- 		var taskSC = $('input[name=PTO]:checked').attr('value');
-							//- 		var selDate = moment(dateSC,'MM-DD-YYYY')
-							//- 		if (selDate.isBefore(lockoutDate) && (curUserTitle!='Admin' && curUserTitle!='Manager')&&taskSC!="SWITCH-R"){
-										
-							//- 			SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
-							//- 			$('#SCNoteDiv').html('')
-							//- 			$('#SCNoteDiv').html(SCNote)
-							//- 			$('#SCNote').show(1000, function(){
-							//- 				$('#SCNote').hide()
-							//- 			})
-							//- 		}else{
-							//- 			var taskSC = $('input[name=PTO]:checked').attr('value');
-							//- 			//- alert($('a[data-toggle=popover]').text())
-
-							//- 			var memo = $('#memo').val()
-										
-							//- 			$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
-
-							//- 				if (pData.authorized == false) {
-							//- 					SCNote.innerHTML= 'You are not authorized for this action'
-							//- 					$('#SCNoteDiv').html('')
-							//- 					$('#SCNoteDiv').html(SCNote)
-
-							//- 				}else if(!!pData.deleted){
-							//- 					td.innerHTML='';
-							//- 					td.style.backgroundColor = 'red'
-							//- 				}else if(!!pData.Note){
-											
-							//- 				td.innerHTML=pData.Note;
-							//- 				td.style.backgroundColor = 'yellow'
-							//- 				} 
-							//- 			});
-							//- 		}
-							//- 	}
-
-							//- }(userId, assign[x]));
 						}else{
 							var td = document.createElement('td');
 								td.setAttribute('class','cell')
@@ -623,74 +580,6 @@ append scripts
 										dateSCSubmit(memo, userId, dateSC, taskSC, td)
 									}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-									//- }else if(curUserId!=userId&&
-									//- 	arrayTitle_manager.indexOf(curUserTitle) == -1&&
-									//- 	["SWIT-R","SWIT-A","SWIT-X"].indexOf(taskSC) == -1){
-									//- 		alert('not authorized')
-									//- 		SCNote.innerHTML= 'You are not authorized for this action'
-									//- 		$('#SCNoteDiv').html('')
-									//- 		$('#SCNoteDiv').html(SCNote)
-									//- 		$('#SCNote').show(1000, function(){
-									//- 				$('#SCNote').hide()
-									//- 			})
-									//- }else
-									//- if (selDate.isBefore(lockoutDate) && (curUserTitle!='Admin' && curUserTitle!='Manager') && taskSC!="SWITCH-R"){
-									//- 	//- alert($('#SCNote').text())
-										
-									//- 	SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
-
-									//- 	$('#SCNoteDiv').html('')
-									//- 	$('#SCNoteDiv').html(SCNote)
-									//- 	$('#SCNote').show(1000, function(){
-									//- 		$('#SCNote').hide()
-									//- 	})
-										
-										
-
-									//- }else{
-									//- //- retrieved taskOption value from radio botton
-									
-									//- //- console.log(memo)
-
-									//- //- save or update taskOption value into DB if not existed
-									//- $.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
-										
-									//- 	//- Only allow signed in user to edit their request
-									//- 	if (pData.authorized == false) {
-									//- 		SCNote.innerHTML= 'You are not authorized for this action'
-									//- 		$('#SCNoteDiv').html('')
-									//- 		$('#SCNoteDiv').html(SCNote)
-									//- 		$('#SCNote').show(1000, function(){
-									//- 		$('#SCNote').hide()
-									//- 	})
-											
-									//- 		//- $('#SCNote').fadeOut()
-									//- 	}else if(!!pData.Note){
-										
-									//- 	td.innerHTML=pData.Note;
-									//- 	td.style.backgroundColor = 'yellow'
-									//- 	} else{
-
-									//- 	td.innerHTML='';
-									//- 	//- td.style.backgroundColor = 'red'
-									//- 	}
-									//- });
-									//- }
 								}
 							}(userId, dateSC));
 						}
@@ -729,16 +618,9 @@ append scripts
 					})
 				})	
 
-
-				
-				
-
 				//- output lock out Note 
 				mainSC.append(table);	
-
-				
 			});
-
 		}	
 
 		
@@ -824,6 +706,7 @@ append scripts
 
 
 			function taskOptionUL(i, taskOption){
+			
 				if (!document.getElementById(taskOption.category + 'ListOp')){
 					var ul = document.createElement('ul')
 					ul.id = taskOption.category + 'ListOp'
@@ -838,14 +721,17 @@ append scripts
 						li.appendChild(document.createTextNode(taskOption.category))
 						ul.appendChild(li)
 					$('#taskOptionUL').append(ul)
+
+				}else{
+					console.log(document.getElementById(taskOption.category + 'ListOp').childNodes.length)
 				}
 			}
+
 			//- execute taskOption function with rData
 			$.each(Rdata.taskOption, taskOptionFct);
 			
 			//- function to list taskOption from return data
 			function taskOptionFct(i, taskOption){
-				console.log(taskOption.description)
 				var arrayTitle = ['Admin', 'Manager']
 				arrayTitle.indexOf(curUserTitle)
 				var curUserTitle = Rdata.curUserTitle;
@@ -932,6 +818,7 @@ append scripts
 						activeOptionText(taskOption.description)
 						$('#taskOption').hide()
 						$('#memo').show()
+						$('#memo').val('')
 
 					})
 					li.appendChild(radio);
@@ -942,6 +829,7 @@ append scripts
 							activeOptionText(taskOption.description)
 							$('#taskOption').hide()
 							$('#memo').show()
+							$('#memo').val('')
 							
 
 								
@@ -961,7 +849,7 @@ append scripts
 				
 
 				//- click on list item to bring up the 'x'
-				li.addEventListener('mouseenter',function(){
+				li.addEventListener('click',function(){
 					if (li.childNodes.length >2){
 							li.removeChild(li.childNodes[2])
 						}

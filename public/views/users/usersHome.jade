@@ -199,12 +199,11 @@ append scripts
 								td.appendChild(document.createTextNode(field))
 
 								if(i==0){
-									td.addEventListener('mouseenter', function(){
+									td.addEventListener('click', function(){
 
 										if (td.childNodes.length >2){
 											td.removeChild(td.childNodes[0])
 											td.removeChild(td.childNodes[1])
-
 										}
 
 										var span = document.createElement('span')
@@ -214,15 +213,13 @@ append scripts
 										span.id = 'delGly';
 										//- click the 'x' to remove from list
 										span.addEventListener('click', function(){
-											
 											$.post('/users/delUser',{userId:user.id}).done(function(pData){
 												table.removeChild(tr)
 											});
 											
 										});
-
+										
 										//- td.insertBefore(span, td.firstChild)
-
 										var span1 = document.createElement('span')
 										
 										span1.style.color = 'violet'
@@ -246,10 +243,7 @@ append scripts
 												$('#passreset').attr('disabled', false)
 												document.getElementById('active').checked = user.active
 											});
-											
-
 										});
-										
 										td.appendChild(span1)
 									})
 									td.addEventListener('mouseleave',function(){
@@ -260,21 +254,12 @@ append scripts
 										if ($('#editGly').length>0){
 											td.removeChild(document.getElementById('editGly'))
 										}
-					})
-
-
+									})
 								}
-									
 								tr.appendChild(td)				
 							})
-
-							
 						table.appendChild(tr)
-				 	
 					})
-				
-
-				
 				})
 			userList.appendChild(table)
 		})
