@@ -363,7 +363,6 @@ append scripts
 													tr.appendChild(td)
 												})
 												table.appendChild(tr)
-												console.log(weekStart.format('MM-DD-YYYY'))
 												$.post('/assignTracerReadWeek',{
 													sDate:weekStart.format('MM-DD-YYYY')
 												}).done(function(Rdata){
@@ -388,7 +387,11 @@ append scripts
 																td.innerHTML = tracer
 																window['tr' + i].appendChild(td)
 																var td2 = document.createElement('td')
-																td2.innerHTML = datePos
+																i==0?
+																td2.innerHTML = datePos:
+																td2.innerHTML = ''
+																td2.style.fontWeight = 'bold'
+																
 																window['tr' + i].appendChild(td2)
 																var td1 = document.createElement('td')
 																	var input = document.createElement('input')
@@ -794,11 +797,11 @@ append scripts
 				                        }).done(function(pData){
 				                        
 					                       	if (pData.created==1){
-					                       		taskOptionUL(i, pData.taskOption);
-					                       		taskOptionFct(i, pData.taskOption);
+					                       		//- taskOptionUL(i, pData.taskOption);
+					                       		//- taskOptionFct(i, pData.taskOption);
 
-					                            $('#taskOption').hide()
-					                            $('#taskCategory').hide()
+					                            $('#taskOption').val('').hide()
+					                            $('#taskCategory').val('').hide()
 					                          
 					                        }
 				                        });
