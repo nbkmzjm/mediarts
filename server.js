@@ -253,11 +253,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 
 	// console.log('dateSC: '+dateSC)
-	if (taskSC=='SELECT' ||taskSC=='NEW OPTION'){
+	if (taskSC=='SELECT' ||taskSC=='NEW'){
 
-	}else if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')&& taskSC!="SWITCH-R"){
+	// }else if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')&& taskSC!="SWIT-R"){
 		
-		res.json({authorized: false});
+	// 	res.json({authorized: false});
 	} else {
 		db.user.findOne({
 			where: {

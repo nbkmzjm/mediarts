@@ -84,23 +84,33 @@ function calendarPick(){
 					
 				ul.appendChild(li)
 
-				var today = document.createElement('li');
+				var home = document.createElement('li');
 						var a = document.createElement('a')
 						a.href = "#"
-						a.appendChild(document.createTextNode('Today'))
-						today.appendChild(a)
-					// dateBackward.id = 'dateBackward';
-					// dateBackward.className = 'glyphicon glyphicon-step-backward'
-					today.addEventListener('click', function(){
+						home.appendChild(a)
+							var span = document.createElement('span');
+							span.className = 'glyphicon glyphicon-home'
+						a.appendChild(span)
+					home.addEventListener('click', function(){
+						location.reload();
+					})
+				ul.appendChild(home)
 
-						
+				var refesh = document.createElement('li');
+						var a = document.createElement('a')
+						a.href = "#"
+						refesh.appendChild(a)
+							var span = document.createElement('span');
+							span.className = 'glyphicon glyphicon-refresh'
+						a.appendChild(span)
+					refesh.addEventListener('click', function(){
+					var date = moment(dateCalender.value,'MM-DD-YYYY');
 					
-					// dateCalender.value = new Date().toLocaleDateString();
-					location.reload();
+					dateCalender.value = date.format('MM-DD-YYYY')
+					$.post('/ajaxUser', {clickedData:true}).done(mainSC);
 
 					})
-				ul.appendChild(today)
-
+				ul.appendChild(refesh)
 
 				var dateForward = document.createElement('li');
 						var a = document.createElement('a')
