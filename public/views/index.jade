@@ -797,11 +797,13 @@ append scripts
 				                        }).done(function(pData){
 				                        
 					                       	if (pData.created==1){
+					                       		location.reload();
 					                       		//- taskOptionUL(i, pData.taskOption);
 					                       		//- taskOptionFct(i, pData.taskOption);
+					                       		document.getElementById('optionTextL').click()
 
-					                            $('#taskOption').val('').hide()
-					                            $('#taskCategory').val('').hide()
+					                         //-    $('#taskOption').hide()
+					                         //-    $('#taskCategory').hide()
 					                          
 					                        }
 				                        });
