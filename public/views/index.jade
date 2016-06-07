@@ -704,47 +704,138 @@ append scripts
 			var arrCate = {}
 			//- arrCate.edit 
 			//- var arr = []
-			$.each(Rdata.taskOption, taskOptionUL)
+			$.each(Rdata.taskOption, function (i, taskOption){
+				if(arrCate[taskOption.category]!= undefined ){
+						arrCate[taskOption.category].push(taskOption.description)
+				}else{
+					arrCate[taskOption.category] = []
+					arrCate[taskOption.category].push(taskOption.description)
+				}
+			})
 
-			console.log(arrCate)
-			function taskOptionUL(i, taskOption){
-				//- console.log(countCate+'-'+taskOption.description+'-'+taskOption.category)
-				var description = taskOption.description
-				var category = taskOption.category
+			for(key in arrCate){
+				if(arrCate[key].length<10){
+					var ul = document.createElement('ul')
+					//- ul.id = key + 'ListOp'
+					ul.setAttribute('role', 'menu')
+					ul.className = 'col-sm-2'
+						li = document.createElement('li')
+						li.style.color = 'blue'
+						li.style.textDecoration= 'underline'
+						li.style.width = '200px'
+						li.style.listStyle = 'none'
+						li.style.fontWeight = 'bold'
+						li.appendChild(document.createTextNode(key))
+						ul.appendChild(li)
+
+					arrCate[key].forEach(function(val){
+					 	var li = document.createElement('li');
+						li.style.color = 'blue'
+						li.style.width = '200px'
+						li.style.listStyle = 'none'
+				
+
+							var radio = document.createElement('input');
+							radio.setAttribute('type','radio');
+							radio.setAttribute('name','PTO');
+							radio.setAttribute('value',val);
+						li.appendChild(radio);
+						li.appendChild(document.createTextNode(val));
+					ul.appendChild(li)
+					})
+					$('#taskOptionUL').append(ul)	
+
+				}else{
+
+					var nDiv = Math.ceil(arrCate[key].length/10)
+					for(var i=1; i<=nDiv; i++){
+						$('#taskOptionUL').append(ul)
+						var ul = document.createElement('ul')
+						//- ul.id = key + 'ListOp'+i
+						ul.setAttribute('role', 'menu')
+						ul.className = 'col-sm-2'
+							li = document.createElement('li')
+							li.style.color = 'blue'
+							li.style.textDecoration= 'underline'
+							li.style.width = '200px'
+							li.style.listStyle = 'none'
+							li.style.fontWeight = 'bold'
+							li.appendChild(document.createTextNode(key))
+							ul.appendChild(li)
+
+
+
+						if (i==1){
+
+							for(x=0;x<=9;x++){
+
+								//- arrCate[key][x].forEach(function(val, i){
+								//- console.log(i+'-'+val)
+							 	var li = document.createElement('li');
+								li.style.color = 'blue'
+								li.style.width = '200px'
+								li.style.listStyle = 'none'
+						
+
+									var radio = document.createElement('input');
+									radio.setAttribute('type','radio');
+									radio.setAttribute('name','PTO');
+									radio.setAttribute('value',arrCate[key][x]);
+								li.appendChild(radio);
+								li.appendChild(document.createTextNode(arrCate[key][x]));
+							arrCate[key][x]!=undefined?ul.appendChild(li):''
+							}
+							$('#taskOptionUL').append(ul)
+						}else if(i==2){
+
+							for(x=10;x<=19;x++){
+							var li = document.createElement('li');
+								li.style.color = 'blue'
+								li.style.width = '200px'
+								li.style.listStyle = 'none'
+						
+
+									var radio = document.createElement('input');
+									radio.setAttribute('type','radio');
+									radio.setAttribute('name','PTO');
+									radio.setAttribute('value',arrCate[key][x]);
+								li.appendChild(radio);
+								li.appendChild(document.createTextNode(arrCate[key][x]));
+							arrCate[key][x]!=undefined?ul.appendChild(li):''
+							}
+							$('#taskOptionUL').append(ul)
+
+						}else if (i==3){
+
+							for(x=20;x<i<=29;x++){
+							var li = document.createElement('li');
+								li.style.color = 'blue'
+								li.style.width = '200px'
+								li.style.listStyle = 'none'
+						
+
+									var radio = document.createElement('input');
+									radio.setAttribute('type','radio');
+									radio.setAttribute('name','PTO');
+									radio.setAttribute('value',arrCate[key][x]);
+								li.appendChild(radio);
+								li.appendChild(document.createTextNode(arrCate[key][x]));
+							arrCate[key][x]!=undefined?ul.appendChild(li):''
+							}
+							$('#taskOptionUL').append(ul)
+
+						}
+
+					}
+					
+					
+				}
+			}
 
 			
-					if(arrCate[category]!= undefined ){
-						arrCate[category].push(description)
-					}else{
-						arrCate[category] = []
-						arrCate[category].push(description)
-					}
-
-				
-				//- if (!document.getElementById(taskOption.category + 'ListOp')){
-				var ul = document.createElement('ul')
-				ul.id = taskOption.category + 'ListOp'
-				ul.setAttribute('role', 'menu')
-				ul.className = 'col-sm-2'
-					li = document.createElement('li')
-					li.style.color = 'blue'
-					li.style.textDecoration= 'underline'
-					li.style.width = '200px'
-					li.style.listStyle = 'none'
-					li.style.fontWeight = 'bold'
-					li.appendChild(document.createTextNode(taskOption.category))
-					ul.appendChild(li)
-				$('#taskOptionUL').append(ul)
-
-				//- }
-
-				
-				//- preCate = category
-
-			}
 			
 			//- execute taskOption function with rData
-			$.each(Rdata.taskOption, taskOptionFct);
+			//- $.each(Rdata.taskOption, taskOptionFct);
 			
 			//- function to list taskOption from return data
 			function taskOptionFct(i, taskOption){
