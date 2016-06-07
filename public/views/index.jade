@@ -701,32 +701,52 @@ append scripts
 			//- div.style.width= '500px'
 			$('#taskOptionDiv').prepend(div1)
 
-			
+			var preCate = ''
+			var x = 0
+			var arrCate = {}
+			var arr = []
 			$.each(Rdata.taskOption, taskOptionUL)
 
-
+			console.log(arrCate)
 			function taskOptionUL(i, taskOption){
-			
+				//- console.log(countCate+'-'+taskOption.description+'-'+taskOption.category)
+				//- var description = taskOption.description
+				//- var category = taskOption.category
+				//- if (category == arrCate.category){
+				//- 	arr.push(description)
+				//- }
+
+
+				//- arrCate[category] = arr
+				
+
+				
+				//- if(){
+
+				//- }
+				
 				if (!document.getElementById(taskOption.category + 'ListOp')){
-					var ul = document.createElement('ul')
-					ul.id = taskOption.category + 'ListOp'
-					ul.setAttribute('role', 'menu')
-					ul.className = 'col-sm-2'
-						li = document.createElement('li')
-						li.style.color = 'blue'
-						li.style.textDecoration= 'underline'
-						li.style.width = '200px'
-						li.style.listStyle = 'none'
-						li.style.fontWeight = 'bold'
-						li.appendChild(document.createTextNode(taskOption.category))
-						ul.appendChild(li)
-					$('#taskOptionUL').append(ul)
+				var ul = document.createElement('ul')
+				ul.id = taskOption.category + 'ListOp'
+				ul.setAttribute('role', 'menu')
+				ul.className = 'col-sm-2'
+					li = document.createElement('li')
+					li.style.color = 'blue'
+					li.style.textDecoration= 'underline'
+					li.style.width = '200px'
+					li.style.listStyle = 'none'
+					li.style.fontWeight = 'bold'
+					li.appendChild(document.createTextNode(taskOption.category))
+					ul.appendChild(li)
+				$('#taskOptionUL').append(ul)
 
-				}else{
-					console.log(document.getElementById(taskOption.category + 'ListOp').childNodes.length)
 				}
-			}
 
+				
+				//- preCate = category
+
+			}
+			
 			//- execute taskOption function with rData
 			$.each(Rdata.taskOption, taskOptionFct);
 			
@@ -737,7 +757,6 @@ append scripts
 				var curUserTitle = Rdata.curUserTitle;
 				
 				var ulOpList = document.getElementById(taskOption.category + 'ListOp')
-
 				var li = document.createElement('li');
 				li.style.color = 'blue'
 				li.style.width = '200px'
@@ -878,7 +897,11 @@ append scripts
 				radio.checked = 'checked'
 				})
 
+				//- if(ulOpList.childNodes.length<7){
 				ulOpList.appendChild(li);
+				//- }
+
+				
 				
 			}
 			
