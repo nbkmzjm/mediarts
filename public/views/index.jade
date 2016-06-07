@@ -701,31 +701,27 @@ append scripts
 			//- div.style.width= '500px'
 			$('#taskOptionDiv').prepend(div1)
 
-			var preCate = ''
-			var x = 0
 			var arrCate = {}
-			var arr = []
+			//- arrCate.edit 
+			//- var arr = []
 			$.each(Rdata.taskOption, taskOptionUL)
 
 			console.log(arrCate)
 			function taskOptionUL(i, taskOption){
 				//- console.log(countCate+'-'+taskOption.description+'-'+taskOption.category)
-				//- var description = taskOption.description
-				//- var category = taskOption.category
-				//- if (category == arrCate.category){
-				//- 	arr.push(description)
-				//- }
+				var description = taskOption.description
+				var category = taskOption.category
 
+			
+					if(arrCate[category]!= undefined ){
+						arrCate[category].push(description)
+					}else{
+						arrCate[category] = []
+						arrCate[category].push(description)
+					}
 
-				//- arrCate[category] = arr
 				
-
-				
-				//- if(){
-
-				//- }
-				
-				if (!document.getElementById(taskOption.category + 'ListOp')){
+				//- if (!document.getElementById(taskOption.category + 'ListOp')){
 				var ul = document.createElement('ul')
 				ul.id = taskOption.category + 'ListOp'
 				ul.setAttribute('role', 'menu')
@@ -740,7 +736,7 @@ append scripts
 					ul.appendChild(li)
 				$('#taskOptionUL').append(ul)
 
-				}
+				//- }
 
 				
 				//- preCate = category
