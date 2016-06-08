@@ -698,12 +698,9 @@ append scripts
 			var div1 = document.createElement('div')
 			div1.id = 'taskOptionUL'
 			div1.className = "col-sm-12"
-			//- div.style.width= '500px'
 			$('#taskOptionDiv').prepend(div1)
 
 			var arrCate = {}
-			//- arrCate.edit 
-			//- var arr = []
 			$.each(Rdata.taskOption, function (i, taskOption){
 				if(arrCate[taskOption.category]!= undefined ){
 						arrCate[taskOption.category].push(taskOption.description)
@@ -718,7 +715,6 @@ append scripts
 			for(key in arrCate){
 				if(arrCate[key].length<taskOpListLength){
 					var ul = document.createElement('ul')
-					//- ul.id = key + 'ListOp'
 					ul.setAttribute('role', 'menu')
 					ul.className = 'col-sm-2'
 						li = document.createElement('li')
@@ -785,12 +781,11 @@ append scripts
 					
 					
 					$('#memo').hide()
-					//- $('#taskOption').hide()
-					//- $('#taskCategory').hide()
 					activeOptionText(taskOptionDes)
 					radio.setAttribute('checked', 'checked')
 					li.addEventListener('click', function(){
 						$('#memo').hide()
+						$('#taskOption').length>0?$('#taskOption').remove():''
 						activeOptionText(taskOptionDes)
 					})
 					li.appendChild(radio);
@@ -799,6 +794,8 @@ append scripts
 					if(arrayTitle.indexOf(curUserTitle)!=-1){
 						li.addEventListener('click', function(){
 							activeOptionText(taskOptionDes)
+							$('#taskOption').length>0?$('#taskOption').remove():''
+							
 
 							var inputAddOp = document.createElement('input');
 							inputAddOp.className = "col-sm-3 col-sm-offset-1"
@@ -816,16 +813,15 @@ append scripts
 								inputAddOpCate.addEventListener('blur', function(){
 									var taskOptionData = $("#taskOption").val().toUpperCase();
 									var taskCategoryData = $("#taskCategory").val().toUpperCase();
-								  $.post('/taskOption',{
+									if (taskOptionData!=''&& taskCategoryData!=''){
+								 		 $.post('/taskOption',{
 				                          taskOption:taskOptionData,
 				                          taskCategory:taskCategoryData
 				                        }).done(function(pData){
 					                       	if (pData.created==1){
 					                       		$('#taskOption').remove()
 					                            $('#taskCategory').remove()
-					                       	//- 	//- location.reload();
-					                       	//- 	//- taskOptionUL(i, pData.taskOption);
-					                       	//- 	//- taskOptionFct(i, pData.taskOption);
+
 					                       		var ul = document.createElement('ul')
 												ul.setAttribute('role', 'menu')
 												ul.className = 'col-sm-2'
@@ -856,6 +852,10 @@ append scripts
 					                          
 					                        }
 				                        });
+				                    }else{
+				                    	$('#taskOption').remove()
+			                            $('#taskCategory').remove()
+				                    }
 								})
 
 								div.appendChild(inputAddOpCate)
