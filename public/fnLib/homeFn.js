@@ -89,10 +89,12 @@ function calendarPick(){
 						a.href = "#"
 						home.appendChild(a)
 							var span = document.createElement('span');
-							span.className = 'glyphicon glyphicon-home'
+							// span.className = 'glyphicon glyphicon-select'
+							span.appendChild(document.createTextNode('SELECT'))
 						a.appendChild(span)
 					home.addEventListener('click', function(){
-						location.reload();
+						document.getElementById('SELECT').checked = true
+						activeOptionText('SELECT')
 					})
 				ul.appendChild(home)
 

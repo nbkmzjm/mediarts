@@ -63,25 +63,25 @@ append scripts
 			
 			$.post('/ajaxUser').done(mainSC);
 
-
-
+			
 		});
 
 		function activeOptionText(x){
-			var span = document.createElement('span')
-			span.className = 'glyphicon glyphicon-tasks'
-			span.innerHTML = x
-			span.style.backgroundColor = 'yellow'
-			var optionText = document.getElementById('optionTextS')
-			optionText.replaceChild(span, optionText.childNodes[1])
-			
+				var span = document.createElement('span')
+				span.className = 'glyphicon glyphicon-tasks'
+				span.innerHTML = x
+				span.style.backgroundColor = 'yellow'
+				var optionText = document.getElementById('optionTextS')
+				optionText.replaceChild(span, optionText.childNodes[1])
+				
 
-			var span1 = document.createElement('span')
-			span1.className = 'glyphicon glyphicon-edit'
-			span1.innerHTML = x
-			span1.style.backgroundColor = 'yellow'
-			var optionText1 = document.getElementById('optionTextL')
-			optionText1.replaceChild(span1, optionText1.childNodes[1])
+				var span1 = document.createElement('span')
+				span1.className = 'glyphicon glyphicon-edit'
+				span1.innerHTML = x
+				span1.style.backgroundColor = 'yellow'
+				var optionText1 = document.getElementById('optionTextL')
+				optionText1.replaceChild(span1, optionText1.childNodes[1])
+
 		}
 
 		
@@ -594,7 +594,7 @@ append scripts
 							tdUser.appendChild(document.createTextNode(item.name));
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].style.borderTop = 'medium double #0321A1'
+							window['tr' + userId].style.borderTop = '5px groove #ABF7FE'
 							window['tr' + userId].appendChild(tdUser);
 							window['tr' + userId].appendChild(td);
 							//- table.appendChild(window['tr' + userId]);
@@ -782,6 +782,7 @@ append scripts
 					
 					$('#memo').hide()
 					activeOptionText(taskOptionDes)
+					radio.id = 'SELECT'
 					radio.setAttribute('checked', 'checked')
 					li.addEventListener('click', function(){
 						$('#memo').hide()
@@ -793,6 +794,7 @@ append scripts
 				}else if(taskOptionDes=='NEW'){
 					if(arrayTitle.indexOf(curUserTitle)!=-1){
 						li.addEventListener('click', function(){
+							$('#memo').hide()
 							activeOptionText(taskOptionDes)
 							$('#taskOption').length>0?$('#taskOption').remove():''
 							

@@ -54,7 +54,7 @@
 
 
 
-#eventAction td, tr{
+#eventAction td, #eventAction tr{
 	width: 80%;
 	border: 3px solid white;
 	text-align: center;
@@ -63,6 +63,7 @@
 
 #eventAction table{
 	width: 100%;
+	border: 2px outset #07926C;
 	margin: 0 auto;
 
 }
