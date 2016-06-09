@@ -25,7 +25,8 @@ block content
 		div(id='calendarPick' class = 'navbar-fixed-bottom')
 		#mainSC
 		#SCNoteDiv
-		//- #taskOptionDiv
+			p hello
+		#taskOptionDiv
 		//- nav(class="navbar navbar-default")
 		//- 	div(class="container-fluid" id="taskOptionDiv")
 	
@@ -61,7 +62,10 @@ append scripts
 			
 			calendarPick();
 			
-			$.post('/ajaxUser').done(mainSC);
+			$.post('/ajaxUser').done(mainSC, function(){
+				
+			});
+			
 
 			
 		});
@@ -145,13 +149,16 @@ append scripts
 				table.setAttribute('id', 'main');
 				table.setAttribute('class','table table-striped')
 				var tr = document.createElement('tr');
+					//- tr.setAttribute('style', 'position:fixed;')
 					var td = document.createElement('td');
 						td.appendChild(document.createTextNode('User'));
+						//- td.setAttribute('style', 'position:fixed;top:100px;')
 						
 					tr.appendChild(td);
 					for (var i=0; i<7; i++){
 						 
 						var td = document.createElement('td');
+						//- td.setAttribute('style', 'position:fixed;')
 						//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
 						//- td.appendChild(document.createElement('br'))
 						td.innerHTML = dateHeader.format('ddd , MMM DD')
@@ -604,22 +611,26 @@ append scripts
 							tdUser.appendChild(document.createTextNode(item.name));
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
-							
+							window['tr' + userId].id = 'user'+userId
 							window['tr' + userId].appendChild(tdUser);
 							window['tr' + userId].appendChild(td);
 							
 						}else{
 							window['tr' + userId].appendChild(td);
+							window['tr' + userId].id = 'user'+userId
 							table.appendChild(window['tr' + userId]);
 
 						}	
 						userDelta = userId;
 						titleDelta = userTitle;
 					})
+				//- alert(curUserId)
+				$.scrollTo(document.getElementById('user'+curUserId),800);
 				})	
 
 				//- output lock out Note 
 				mainSC.append(table);	
+				
 			});
 		}	
 

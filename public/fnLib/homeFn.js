@@ -115,14 +115,13 @@ function calendarPick(){
 				ul.appendChild(refesh)
 
 				var dateForward = document.createElement('li');
-						var button = document.createElement('button')
-						button.type = "button"
-						// button.className = 'btn btn-info'
-						button.appendChild(document.createTextNode('Week'))
-						dateForward.appendChild(button)
+						var a = document.createElement('a')
+						// a.href = "#"
+						a.appendChild(document.createTextNode('Week'))
+						dateForward.appendChild(a)
 							var span = document.createElement('span');
 							span.className = 'glyphicon glyphicon-step-forward'
-						button.appendChild(span)
+						a.appendChild(span)
 					dateForward.addEventListener('click', function(){
 					var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 					dateM7.add(7, 'days');
