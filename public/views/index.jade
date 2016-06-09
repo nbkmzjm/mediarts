@@ -22,7 +22,7 @@ block content
 			//- 	li
 			//- 		a(href="#") B
 		#eventAction.container
-		#calendarPick
+		div(id='calendarPick' class = 'navbar-fixed-bottom')
 		#mainSC
 		#SCNoteDiv
 		//- #taskOptionDiv
@@ -631,6 +631,25 @@ append scripts
 			arrayList.push(taskOption)
 			return arrayList
 		} 
+
+		function inputMemo(ul, lix){
+			var li = document.createElement('li')
+			li.style.color = 'blue'
+			li.style.textDecoration= 'underline'
+			li.style.width = '200px'
+			li.style.listStyle = 'none'
+				var inputMemo = document.createElement('input');
+				//- inputMemo.className = "col-sm-12"
+
+				inputMemo.setAttribute('placeholder','Add Memo');
+				inputMemo.setAttribute('type','text');
+				inputMemo.setAttribute('id','memo');
+			li.appendChild(inputMemo)
+			ul.insertBefore(li,lix)
+
+		}
+
+
 		var arrayOption = []
 		taskOptionGen('SELECT','EDIT', arrayOption)
 		taskOptionGen('NEW','EDIT', arrayOption)
@@ -668,13 +687,7 @@ append scripts
 			div.className = "col-sm-12"
 			//- div.style.width= '1000px'
 
-				var inputMemo = document.createElement('input');
-				inputMemo.className = "col-sm-3"
-
-				inputMemo.setAttribute('placeholder','Add Memo');
-				inputMemo.setAttribute('type','text');
-				inputMemo.setAttribute('id','memo');
-				div.appendChild(inputMemo)
+				
 
 				//- var inputAddOp = document.createElement('input');
 				//- inputAddOp.className = "col-sm-3 col-sm-offset-1"
@@ -798,107 +811,90 @@ append scripts
 							activeOptionText(taskOptionDes)
 							$('#taskOption').length>0?$('#taskOption').remove():''
 							
+							var taskOptionLI = document.createElement('li')
+							taskOptionLI.style.color = 'blue'
+							taskOptionLI.style.textDecoration= 'underline'
+							taskOptionLI.style.width = '200px'
+							taskOptionLI.style.listStyle = 'none'	
+							
 
-							var inputAddOp = document.createElement('input');
-							inputAddOp.className = "col-sm-3 col-sm-offset-1"
+								var inputAddOp = document.createElement('input');
+								inputAddOp.className = "col-sm-3 col-sm-offset-1"
 
-							inputAddOp.setAttribute('placeholder','Add Option');
-							inputAddOp.setAttribute('type','text');
-							inputAddOp.setAttribute('id','taskOption');
-							inputAddOp.addEventListener('blur', function(){
-								var inputAddOpCate = document.createElement('input');
-								inputAddOpCate.className = "col-sm-3 col-sm-offset-1"
+								inputAddOp.setAttribute('placeholder','Add Option');
+								inputAddOp.setAttribute('type','text');
+								inputAddOp.setAttribute('id','taskOption');
+								inputAddOp.addEventListener('blur', function(){
 
-								inputAddOpCate.setAttribute('placeholder','Add Category');
-								inputAddOpCate.setAttribute('type','text');
-								inputAddOpCate.setAttribute('id','taskCategory');
-								inputAddOpCate.addEventListener('blur', function(){
-									var taskOptionData = $("#taskOption").val().toUpperCase();
-									var taskCategoryData = $("#taskCategory").val().toUpperCase();
-									if (taskOptionData!=''&& taskCategoryData!=''){
-								 		 $.post('/taskOption',{
-				                          taskOption:taskOptionData,
-				                          taskCategory:taskCategoryData
-				                        }).done(function(pData){
-					                       	if (pData.created==1){
-					                       		$('#taskOption').remove()
+									var inputAddOpCateLI = document.createElement('li')
+									inputAddOpCateLI.style.color = 'blue'
+									inputAddOpCateLI.style.textDecoration= 'underline'
+									inputAddOpCateLI.style.width = '200px'
+									inputAddOpCateLI.style.listStyle = 'none'
+
+										var inputAddOpCate = document.createElement('input');
+										inputAddOpCate.className = "col-sm-3 col-sm-offset-1"
+
+										inputAddOpCate.setAttribute('placeholder','Add Category');
+										inputAddOpCate.setAttribute('type','text');
+										inputAddOpCate.setAttribute('id','taskCategory');
+										inputAddOpCate.addEventListener('blur', function(){
+											var taskOptionData = $("#taskOption").val().toUpperCase();
+											var taskCategoryData = $("#taskCategory").val().toUpperCase();
+											if (taskOptionData!=''&& taskCategoryData!=''){
+										 		 $.post('/taskOption',{
+						                          taskOption:taskOptionData,
+						                          taskCategory:taskCategoryData
+						                        }).done(function(pData){
+							                       	if (pData.created==1){
+							                       		$('#taskOption').remove()
+							                            $('#taskCategory').remove()
+
+							                       		var ul = document.createElement('ul')
+														ul.setAttribute('role', 'menu')
+														ul.className = 'col-sm-2'
+															li = document.createElement('li')
+															li.style.color = 'blue'
+															li.style.textDecoration= 'underline'
+															li.style.width = '200px'
+															li.style.listStyle = 'none'
+															li.style.fontWeight = 'bold'
+															li.appendChild(document.createTextNode('NEW'))
+															ul.appendChild(li)
+								                            
+								                            var li = document.createElement('li');
+															li.style.color = 'blue'
+															li.style.width = '200px'
+															li.style.listStyle = 'none'
+															
+
+																var radio = document.createElement('input');
+																radio.setAttribute('type','radio');
+																radio.setAttribute('name','PTO');
+																radio.setAttribute('value',pData.taskOption.description);
+															li.appendChild(radio);
+															li.appendChild(document.createTextNode(pData.taskOption.description))
+															ul.appendChild(li)
+
+														$('#taskOptionUL').append(ul)
+							                          
+							                        }
+						                        });
+						                    }else{
+						                    	$('#taskOption').remove()
 					                            $('#taskCategory').remove()
+						                    }
+										})
 
-					                       		var ul = document.createElement('ul')
-												ul.setAttribute('role', 'menu')
-												ul.className = 'col-sm-2'
-													li = document.createElement('li')
-													li.style.color = 'blue'
-													li.style.textDecoration= 'underline'
-													li.style.width = '200px'
-													li.style.listStyle = 'none'
-													li.style.fontWeight = 'bold'
-													li.appendChild(document.createTextNode('NEW'))
-													ul.appendChild(li)
-						                            
-						                            var li = document.createElement('li');
-													li.style.color = 'blue'
-													li.style.width = '200px'
-													li.style.listStyle = 'none'
-													
-
-														var radio = document.createElement('input');
-														radio.setAttribute('type','radio');
-														radio.setAttribute('name','PTO');
-														radio.setAttribute('value',pData.taskOption.description);
-													li.appendChild(radio);
-													li.appendChild(document.createTextNode(pData.taskOption.description))
-													ul.appendChild(li)
-
-												$('#taskOptionUL').append(ul)
-					                          
-					                        }
-				                        });
-				                    }else{
-				                    	$('#taskOption').remove()
-			                            $('#taskCategory').remove()
-				                    }
+									inputAddOpCateLI.appendChild(inputAddOpCate)
+									ul.insertBefore(inputAddOpCateLI, li)
+									inputAddOpCate.focus()
 								})
-
-								div.appendChild(inputAddOpCate)
-								inputAddOpCate.focus()
-							})
-							div.appendChild(inputAddOp)
-							//- $('#memo').hide()
-							//- $('#taskOption').toggle()
-							//- document.getElementById("taskOption").addEventListener('blur', function(){
-							//- 	$('#taskCategory').show()
-							//- 	$('#taskCategory').focus()
-							//- 	document.getElementById("taskCategory").addEventListener('blur', function(){
-							//- 	//- $('#taskCategory').blur(function(){
-							//- 		var taskOptionData = $("#taskOption").val().toUpperCase();
-							//- 		var taskCategoryData = $("#taskCategory").val().toUpperCase();
-							//- 		if (taskOptionData!=''&& taskCategoryData!=''){
-				                        //- $.post('/taskOption',{
-				                        //-   taskOption:taskOptionData,
-				                        //-   taskCategory:taskCategoryData
-				                        //- })
-				                        //- .done(function(pData){
-				                        
-					                       //- 	if (pData.created==1){
-					                       //- 		//- location.reload();
-					                       //- 		//- taskOptionUL(i, pData.taskOption);
-					                       //- 		//- taskOptionFct(i, pData.taskOption);
-
-					                       //-      $('#taskOption').hide()
-					                       //-      $('#taskCategory').hide()
-					                          
-					                       //-  }
-				                        //- });
-			     //-                    }else{
-				    //-                 	alert('New option is not added. Please retry.')
-				    //-                 	$('#taskOption').hide()
-					   //-                  $('#taskCategory').hide()
-			     //-                  }
-
-								//- })
-							//- })
-
+							taskOptionLI.appendChild(inputAddOp)
+							ul.insertBefore(taskOptionLI, li)
+							inputAddOp.focus()
+							//- div.appendChild(inputAddOp)
+							
 						})
 					
 						li.appendChild(radio);
@@ -915,9 +911,14 @@ append scripts
 				}else if(['SWIT-R','PTO-R','SWIT-X','SWIT-A'].indexOf(taskOptionDes)!=-1){
 					li.addEventListener('click', function(){
 						activeOptionText(taskOptionDes)
+						
+						$('#memo').length?$('#memo').remove():''
+						inputMemo(ul, li)
+						//- ul.appendChild(li)
+
 						$('#taskOption').hide()
-						$('#memo').show()
-						$('#memo').val('')
+						//- $('#memo').show()
+						//- $('#memo').val('')
 
 					})
 					li.appendChild(radio);
@@ -927,11 +928,8 @@ append scripts
 						li.addEventListener('click', function(){
 							activeOptionText(taskOptionDes)
 							$('#taskOption').hide()
-							$('#memo').show()
-							$('#memo').val('')
-							
-
-								
+							$('#memo').length?$('#memo').remove():''
+							inputMemo(ul, li)
 						})
 						li.appendChild(radio);
 						li.appendChild(document.createTextNode(taskOptionDes));

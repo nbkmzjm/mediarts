@@ -17,7 +17,7 @@ function calendarPick(){
 
 				var MBackward = document.createElement('li');
 						var a = document.createElement('a')
-						a.href = "#"
+						// a.href = "#"
 						
 						MBackward.appendChild(a)
 							var span = document.createElement('span');
@@ -36,7 +36,7 @@ function calendarPick(){
 
 				var dateBackward = document.createElement('li');
 						var a = document.createElement('a')
-						a.href = "#"
+						// a.href = "#"
 						
 						dateBackward.appendChild(a)
 							var span = document.createElement('span');
@@ -56,7 +56,7 @@ function calendarPick(){
 
 				var li = document.createElement('li');
 					var a = document.createElement('a')
-						a.href = "#"
+						// a.href = "#"
 							var dateCalender = document.createElement('input');
 							dateCalender.id = 'calendar';
 							
@@ -86,7 +86,7 @@ function calendarPick(){
 
 				var home = document.createElement('li');
 						var a = document.createElement('a')
-						a.href = "#"
+						// a.href = "#"
 						home.appendChild(a)
 							var span = document.createElement('span');
 							// span.className = 'glyphicon glyphicon-select'
@@ -100,7 +100,7 @@ function calendarPick(){
 
 				var refesh = document.createElement('li');
 						var a = document.createElement('a')
-						a.href = "#"
+						// a.href = "#"
 						refesh.appendChild(a)
 							var span = document.createElement('span');
 							span.className = 'glyphicon glyphicon-refresh'
@@ -115,13 +115,14 @@ function calendarPick(){
 				ul.appendChild(refesh)
 
 				var dateForward = document.createElement('li');
-						var a = document.createElement('a')
-						a.href = "#"
-						a.appendChild(document.createTextNode('Week'))
-						dateForward.appendChild(a)
+						var button = document.createElement('button')
+						button.type = "button"
+						// button.className = 'btn btn-info'
+						button.appendChild(document.createTextNode('Week'))
+						dateForward.appendChild(button)
 							var span = document.createElement('span');
 							span.className = 'glyphicon glyphicon-step-forward'
-						a.appendChild(span)
+						button.appendChild(span)
 					dateForward.addEventListener('click', function(){
 					var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 					dateM7.add(7, 'days');
@@ -134,7 +135,7 @@ function calendarPick(){
 
 				var MForward = document.createElement('li');
 						var a = document.createElement('a')
-						a.href = "#"
+						// a.href = "#"
 						a.appendChild(document.createTextNode('Month'))
 						MForward.appendChild(a)
 							var span = document.createElement('span');
