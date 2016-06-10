@@ -3,9 +3,10 @@
 }
 
 #mainSC{
-	max-width: 100%;
+	width: 100%;
 	position: relative;
 	top: 188px;
+
 }
 
 #mainSC table{
@@ -16,7 +17,7 @@
 
 #main thead td{
 	min-width: 65px;
-	width: 5%;
+	width: 6%;
 	border: 2px solid #FFFFFF;
 	padding: 2px;
 	/*color: #00A478;*/
@@ -26,7 +27,7 @@
 #main td{
 	/*width: 100%;*/
 	min-width: 65px;
-	width: 5%;
+	width: 8%;
 	border: 2px solid #FFFFFF;
 	padding: 2px;
 	/*color: #00A478;*/
