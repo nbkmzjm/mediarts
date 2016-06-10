@@ -25,6 +25,8 @@ function calendarPick(){
 						a.appendChild(span)
 						a.appendChild(document.createTextNode('Month'))
 					MBackward.addEventListener('click', function(){
+						$('#eventActionTable').length>0 ? 
+						$('#eventActionTable').remove():'';
 
 						var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 						dateM7.subtract(30, 'days');
@@ -44,6 +46,8 @@ function calendarPick(){
 						a.appendChild(span)
 						a.appendChild(document.createTextNode('Week'))
 					dateBackward.addEventListener('click', function(){
+						$('#eventActionTable').length>0 ? 
+						$('#eventActionTable').remove():'';
 
 					var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 					dateM7.subtract(7, 'days');
@@ -74,6 +78,8 @@ function calendarPick(){
 					li.appendChild(span)
 				
 					li.addEventListener('click', function(){
+						$('#eventActionTable').length>0 ? 
+						$('#eventActionTable').remove():'';
 						$("#calendar").datepicker({onSelect: function(){
 							$.post('/ajaxUser').done(mainSC);
 						}});
@@ -93,19 +99,25 @@ function calendarPick(){
 							span.appendChild(document.createTextNode('SELECT'))
 						a.appendChild(span)
 					home.addEventListener('click', function(){
+						$('#eventActionTable').length>0 ? 
+						$('#eventActionTable').remove():'';
 						document.getElementById('SELECT').checked = true
 						activeOptionText('SELECT')
 					})
 				ul.appendChild(home)
-
+					
 				var refesh = document.createElement('li');
 						var a = document.createElement('a')
+						a.appendChild(document.createTextNode('MY'))
 						// a.href = "#"
 						refesh.appendChild(a)
 							var span = document.createElement('span');
-							span.className = 'glyphicon glyphicon-refresh'
+
+							span.className = 'glyphicon glyphicon-bookmark'
 						a.appendChild(span)
 					refesh.addEventListener('click', function(){
+					$('#eventActionTable').length>0 ? 
+					$('#eventActionTable').remove():'';
 					var date = moment(dateCalender.value,'MM-DD-YYYY');
 					
 					dateCalender.value = date.format('MM-DD-YYYY')
@@ -123,6 +135,8 @@ function calendarPick(){
 							span.className = 'glyphicon glyphicon-step-forward'
 						a.appendChild(span)
 					dateForward.addEventListener('click', function(){
+					$('#eventActionTable').length>0 ? 
+					$('#eventActionTable').remove():'';
 					var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 					dateM7.add(7, 'days');
 					dateCalender.value = dateM7.format('MM-DD-YYYY')
@@ -142,6 +156,8 @@ function calendarPick(){
 						a.appendChild(span)
 						
 					MForward.addEventListener('click', function(){
+						$('#eventActionTable').length>0 ? 
+						$('#eventActionTable').remove():'';
 
 						var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 						dateM7.add(30, 'days');

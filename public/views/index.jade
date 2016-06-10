@@ -148,31 +148,34 @@ append scripts
 				var table = document.createElement('table');
 				table.setAttribute('id', 'main');
 				table.setAttribute('class','table table-striped')
-				var tr = document.createElement('tr');
-					//- tr.setAttribute('style', 'position:fixed;')
-					var td = document.createElement('td');
-						td.appendChild(document.createTextNode('User'));
-						//- td.setAttribute('style', 'position:fixed;top:100px;')
-						
-					tr.appendChild(td);
-					for (var i=0; i<7; i++){
-						 
+				var thead = document.createElement('thead')
+					var tr = document.createElement('tr');
+						//- tr.setAttribute('style', 'position:fixed;')
 						var td = document.createElement('td');
-						//- td.setAttribute('style', 'position:fixed;')
-						//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
-						//- td.appendChild(document.createElement('br'))
-						td.innerHTML = dateHeader.format('ddd , MMM DD')
-						dateHeader.isSame(lockoutDate)?
-						td.style.backgroundColor= 'red':''
-						dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
-						td.style.backgroundColor= 'green':''
-						dateHeader.isSame(moment(lockoutDate).subtract(21, 'days'))?
-						td.style.backgroundColor= 'yellow':''
+							td.appendChild(document.createTextNode('User'));
+							//- td.setAttribute('style', 'position:fixed;top:100px;')
+							
 						tr.appendChild(td);
+						for (var i=0; i<7; i++){
+							 
+							var td = document.createElement('td');
+							//- td.setAttribute('style', 'position:fixed;')
+							//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
+							//- td.appendChild(document.createElement('br'))
+							td.innerHTML = dateHeader.format('ddd , MMM DD')
+							dateHeader.isSame(lockoutDate)?
+							td.style.backgroundColor= 'red':''
+							dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
+							td.style.backgroundColor= 'green':''
+							dateHeader.isSame(moment(lockoutDate).subtract(21, 'days'))?
+							td.style.backgroundColor= 'yellow':''
+							tr.appendChild(td);
 
-						dateHeader.add(1, 'days');
+							dateHeader.add(1, 'days');
 						}
-				table.appendChild(tr);
+				thead.appendChild(tr)			
+
+				table.appendChild(thead);
 				
 
 				//- Create DateSC array with userID and dateSC
@@ -327,7 +330,8 @@ append scripts
 								
 								td.addEventListener('click', function(assign, userId){
 									return function(){
-
+										$('#eventAction').stop()
+										$('#eventAction').fadeIn()
 										var Note = assign.Note
 										var dateSC = assign.datePos
 										var selDate = moment(dateSC,'MM-DD-YYYY')
@@ -346,6 +350,9 @@ append scripts
 											var table = document.createElement('table');
 											table.setAttribute('id', 'eventActionTable');
 											table.draggable = true
+											table.addEventListener('click',function(){
+												$('#eventAction').stop()
+											})
 											table.addEventListener('mouseenter', function(){
 												
 												document.getElementById('eventAction').style.position = 'relative'
@@ -354,8 +361,8 @@ append scripts
 													span.innerHTML = '';
 													span.style.color = 'red'
 													span.style.position = 'absolute'
-													span.style.right = '17px'
-													span.style.top = '-12px'
+													span.style.right = '5px'
+													span.style.top = '3px'
 
 													span.className = "glyphicon glyphicon-remove-circle"
 													span.id = 'delGly';
@@ -500,7 +507,10 @@ append scripts
 													})
 												}
 											}
-											$('#eventAction').append(table)
+											$('#eventAction').append(table, $('#eventAction').fadeOut(5000, function(){
+												//- $('#eventAction').fadeIn()
+											}))
+											
 											
 											document.ondragover = function(event){
 												event.preventDefault()
@@ -625,7 +635,7 @@ append scripts
 						titleDelta = userTitle;
 					})
 				//- alert(curUserId)
-				$.scrollTo(document.getElementById('user'+curUserId),800);
+				$.scrollTo(document.getElementById('user'+curUserId),800, {offset:{top:-100}});
 				})	
 
 				//- output lock out Note 
