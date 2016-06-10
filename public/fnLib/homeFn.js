@@ -96,13 +96,12 @@ function calendarPick(){
 						home.appendChild(a)
 							var span = document.createElement('span');
 							// span.className = 'glyphicon glyphicon-select'
-							span.appendChild(document.createTextNode('SELECT'))
+							span.appendChild(document.createTextNode('TODAY'))
 						a.appendChild(span)
 					home.addEventListener('click', function(){
 						$('#eventActionTable').length>0 ? 
 						$('#eventActionTable').remove():'';
-						document.getElementById('SELECT').checked = true
-						activeOptionText('SELECT')
+						window.location.reload()
 					})
 				ul.appendChild(home)
 					
@@ -118,6 +117,8 @@ function calendarPick(){
 					refesh.addEventListener('click', function(){
 					$('#eventActionTable').length>0 ? 
 					$('#eventActionTable').remove():'';
+					document.getElementById('SELECT').checked = true
+						activeOptionText('SELECT')
 					var date = moment(dateCalender.value,'MM-DD-YYYY');
 					
 					dateCalender.value = date.format('MM-DD-YYYY')

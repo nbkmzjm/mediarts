@@ -353,29 +353,29 @@ append scripts
 											table.addEventListener('click',function(){
 												$('#eventAction').stop()
 											})
-											table.addEventListener('mouseenter', function(){
+											//- table.addEventListener('mouseenter', function(){
 												
-												document.getElementById('eventAction').style.position = 'relative'
-												if ($('#eventAction').children()[0].id != 'delGly'){
-													var span = document.createElement('span')
-													span.innerHTML = '';
-													span.style.color = 'red'
-													span.style.position = 'absolute'
-													span.style.right = '18px'
-													span.style.top = '40px'
+											//- 	document.getElementById('eventAction').style.position = 'relative'
+											//- 	if ($('#eventAction').children()[0].id != 'delGly'){
+											//- 		var span = document.createElement('span')
+											//- 		span.innerHTML = '';
+											//- 		span.style.color = 'red'
+											//- 		span.style.position = 'absolute'
+											//- 		span.style.right = '18px'
+											//- 		span.style.top = '40px'
 
-													span.className = "glyphicon glyphicon-remove-circle"
-													span.id = 'delGly';
-													//- click the 'x' to remove from list
-													span.addEventListener('click', function(){
-														$('#eventActionTable').length>0 ? 
-														$('#eventActionTable').remove():'';
-														$('#delGly').remove()
+											//- 		span.className = "glyphicon glyphicon-remove-circle"
+											//- 		span.id = 'delGly';
+											//- 		//- click the 'x' to remove from list
+											//- 		span.addEventListener('click', function(){
+											//- 			$('#eventActionTable').length>0 ? 
+											//- 			$('#eventActionTable').remove():'';
+											//- 			$('#delGly').remove()
 														
-													});
-													$('#eventAction').prepend(span)
-												}
-											});
+											//- 		});
+											//- 		$('#eventAction').prepend(span)
+											//- 	}
+											//- });
 
 											$('#eventAction').on('mouseleave', function(){
 												$('#delGly').remove()
