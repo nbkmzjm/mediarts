@@ -17,7 +17,7 @@
 
 #main thead td{
 	min-width: 65px;
-	width: 1%;
+	width: 6%;
 	border: 2px solid #FFFFFF;
 	padding: 2px;
 	/*color: #00A478;*/
@@ -27,7 +27,7 @@
 #main td{
 	/*width: 100%;*/
 	min-width: 65px;
-	width: 8%;
+	width: 5%;
 	border: 2px solid #FFFFFF;
 	padding: 2px;
 	/*color: #00A478;*/
