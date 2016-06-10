@@ -21,11 +21,11 @@ block content
 			//- 		a(href="#") A
 			//- 	li
 			//- 		a(href="#") B
-		#eventAction.container
+		#eventAction
 		div(id='calendarPick' class = 'navbar-fixed-bottom')
 		#mainSC
 		#SCNoteDiv
-		#taskOptionDiv
+		
 		//- nav(class="navbar navbar-default")
 		//- 	div(class="container-fluid" id="taskOptionDiv")
 	
@@ -161,7 +161,7 @@ append scripts
 							//- td.setAttribute('style', 'position:fixed;')
 							//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
 							//- td.appendChild(document.createElement('br'))
-							th.innerHTML = dateHeader.format('ddd , MMM DD')
+							th.innerHTML= dateHeader.format('ddd,')+ '<br>' + dateHeader.format('MMM DD')
 							dateHeader.isSame(lockoutDate)?
 							th.style.backgroundColor= 'red':''
 							dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
@@ -245,8 +245,7 @@ append scripts
 					var titleDelta = ''
 					var SCNote = document.createElement('p')
 					SCNote.id = 'SCNote'
-					SCNote.style.color = '#00A117'
-					SCNote.style.fontWeight = 'bold'
+					
 					
 					arrListDateSC.forEach(function(item,i){
 					
@@ -534,7 +533,7 @@ append scripts
 											SCNote.innerHTML= 'You are not authorized for this action'
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
-											$('#SCNote').show(1000, function(){
+											$('#SCNote').show(2000, function(){
 													$('#SCNote').hide()
 												})
 										}else if (taskSC=="PTO-R" && 
@@ -544,7 +543,7 @@ append scripts
 												SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
 												$('#SCNoteDiv').html('')
 												$('#SCNoteDiv').html(SCNote)
-												$('#SCNote').show(1000, function(){
+												$('#SCNote').show(2000, function(){
 													$('#SCNote').hide()
 												})
 											}
@@ -562,7 +561,7 @@ append scripts
 							td.addEventListener('click',function(userId,dateSC){
 								
 								return function(){
-									//- $('#SCNote').fadeIn()
+									//- $('#SCNote').stop()
 									var selDate = moment(dateSC,'MM-DD-YYYY')
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 
@@ -580,7 +579,7 @@ append scripts
 										SCNote.innerHTML= 'You are not authorized for this action'
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
-										$('#SCNote').show(1000, function(){
+										$('#SCNote').show(2000, function(){
 												$('#SCNote').hide()
 											})
 									}else if (taskSC=="PTO-R" && 
@@ -590,7 +589,7 @@ append scripts
 											SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
-											$('#SCNote').show(1000, function(){
+											$('#SCNote').show(2000, function(){
 												$('#SCNote').hide()
 											})
 										}
@@ -607,7 +606,8 @@ append scripts
 						
 
 						//- add new row for next user if user ID changed detected
-						if (userId != userDelta && userTitle != titleDelta ){
+						
+						if(userId != userDelta && userTitle != titleDelta ){
 							var tdUser = document.createElement('td');
 							tdUser.setAttribute('class','cell')
 							tdUser.appendChild(document.createTextNode(item.name));

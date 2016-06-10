@@ -5,7 +5,6 @@
 #horMenu{
 	max-width:1200px;
 	margin:0 auto;
-	border: 10px solid black;
 }
 
 #container{
@@ -18,7 +17,7 @@
 #mainSC{
 	width: 100%;
 	position: relative;
-	top: 188px;
+	top: 195px;
 
 }
 
@@ -26,8 +25,19 @@
 	/*table-layout: auto;*/
 	position: relative;
 	bottom: 100px;
-}
+	border-left: 6px groove #ABF7FE;
+	border-right: 6px groove #ABF7FE;
+	border-bottom: 6px groove #ABF7FE;
 
+}
+#main thead{
+	z-index: 1;
+	position: fixed;
+	top:50px;
+	/*left:0px;*/
+	max-width: 1200px;
+	margin-left: -7px;
+}
 #main thead th{
 	min-width: 65px;
 	width: 6%;
@@ -35,7 +45,7 @@
 	padding: 2px;
 	/*color: #00A478;*/
 	text-align: center;
-	margin-left: 0
+	margin-left: 0;
 }
 #main td{
 	/*width: 100%;*/
@@ -48,23 +58,23 @@
 	margin-left: 0
 
 }
-#taskOptionDiv{
-	position: relative;
-	top: 100px;
-}
 
 
-#user tr:nth-child(odd), #main tr:nth-child(odd), #eventAction tr:nth-child(odd){
+#user tr:nth-child(odd), 
+#main tr:nth-child(odd), 
+#eventAction tr:nth-child(odd){
 	background-color: #E6F4FF
 }
 
-#user tr:nth-child(1), #main tr:nth-child(1), #eventAction tr:nth-child(1){
+#user tr:nth-child(1),
+#main tr:nth-child(1),
+#eventAction tr:nth-child(1){
  	background-color: #759DAB;
 	color: #96E9FE;
 	/*width: auto;*/
 	height: 35px;
 	font-weight: bold;
-	border: 2px solid black;
+	/*border: 2px solid black;*/
 	padding: 15px;
 	text-align: center;
 	
@@ -80,12 +90,7 @@
 	font-weight: bold;
 }
 
-#main thead{
-	z-index: 1;
-	position: fixed;
-	top:50px;
-	max-width: 1200px;
-}
+
 
 #user tr:nth-child(even), #main tr:nth-child(even), #eventAction tr:nth-child(even){
 	background-color: #CEDBE5
@@ -103,15 +108,35 @@
 
 #eventAction{
 	position: relative;
-	top: 85px;
+	top: 95px;
 }
 
-#eventAction table{
-	width: 100%;
-	border: 2px outset #07926C;
+#eventActionTable{
+	width: 80%;
+	border: 6px groove #ABF7FE;
 	margin: 0 auto;
 
 }
+
+#taskOptionDiv{
+	position: relative;
+	top: 100px;
+}
+
+#SCNoteDiv{
+	z-index: 1;
+	position: fixed;
+	bottom:50px;
+	margin: 0 auto;
+	width: 100%;
+	text-align: center;
+	color: #16FA0B;
+	font: 25px bold;
+	font-variant: small-caps;
+	font-weight: bold
+
+}
+
 
 [draggable=true] {
   -khtml-user-drag: element;
