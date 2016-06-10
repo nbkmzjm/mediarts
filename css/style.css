@@ -2,10 +2,17 @@
 	color: red;
 }
 
-#container{
-
-	width: 1000px;
+#horMenu{
+	max-width:1200px;
+	margin:0 auto;
+	border: 10px solid black;
 }
+
+#container{
+	max-width:1200px;
+	margin:0 auto;
+}
+
 
 
 #mainSC{
@@ -15,60 +22,32 @@
 
 }
 
-
-	
-
-
 #mainSC table{
-	border: 10px solid green;
-	/*width: 80%;*/
+	/*table-layout: auto;*/
 	position: relative;
 	bottom: 100px;
-	/*table-layout: auto;*/
-
 }
 
-#main tr{
-	border: 5px solid #650A0A;
-
+#main thead th{
+	min-width: 65px;
+	width: 6%;
+	/*border: 2px solid #FFFFFF;*/
+	padding: 2px;
+	/*color: #00A478;*/
+	text-align: center;
+	margin-left: 0
 }
-
 #main td{
 	/*width: 100%;*/
 	min-width: 65px;
-	/*width: ;*/
-	border: 2px solid #F40606;
+	width: 5%;
+	border: 2px solid #FFFFFF;
 	padding: 2px;
 	/*color: #00A478;*/
 	text-align: center;
 	margin-left: 0
 
 }
-
-#main thead{
-	z-index: 1;
-	position: fixed;
-	left: -2px;
-	top:50px;
-	width: 100%;
-	border: 3px solid yellow;
-}
-
-#main thead tr{
-	border: 20px solid black;
-	width: 800px;
-}
-
-#main thead tr, th{
-	min-width: 65px;
-	width: auto;
-	border: 2px solid #080EF4;
-	padding: 2px;
-	/*color: #00A478;*/
-	text-align: center;
-	margin-left: 0
-}
-
 #taskOptionDiv{
 	position: relative;
 	top: 100px;
@@ -82,7 +61,7 @@
 #user tr:nth-child(1), #main tr:nth-child(1), #eventAction tr:nth-child(1){
  	background-color: #759DAB;
 	color: #96E9FE;
-	width: auto;
+	/*width: auto;*/
 	height: 35px;
 	font-weight: bold;
 	border: 2px solid black;
@@ -101,7 +80,12 @@
 	font-weight: bold;
 }
 
-
+#main thead{
+	z-index: 1;
+	position: fixed;
+	top:50px;
+	max-width: 1200px;
+}
 
 #user tr:nth-child(even), #main tr:nth-child(even), #eventAction tr:nth-child(even){
 	background-color: #CEDBE5
@@ -110,7 +94,7 @@
 
 
 #eventAction td, #eventAction tr{
-	width: 33.3%;
+	width: 80%;
 	border: 3px solid white;
 	text-align: center;
 
@@ -125,7 +109,7 @@
 #eventAction table{
 	width: 100%;
 	border: 2px outset #07926C;
-	/*margin: 0 auto;*/
+	margin: 0 auto;
 
 }
 

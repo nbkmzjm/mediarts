@@ -25,7 +25,6 @@ block content
 		div(id='calendarPick' class = 'navbar-fixed-bottom')
 		#mainSC
 		#SCNoteDiv
-			p hello
 		#taskOptionDiv
 		//- nav(class="navbar navbar-default")
 		//- 	div(class="container-fluid" id="taskOptionDiv")
@@ -176,6 +175,9 @@ append scripts
 				thead.appendChild(tr)			
 
 				table.appendChild(thead);
+
+				var tbody = document.createElement('tbody')
+				table.appendChild(tbody)
 				
 
 				//- Create DateSC array with userID and dateSC
@@ -628,7 +630,7 @@ append scripts
 						}else{
 							window['tr' + userId].appendChild(td);
 							window['tr' + userId].id = 'user'+userId
-							table.appendChild(window['tr' + userId]);
+							tbody.appendChild(window['tr' + userId]);
 
 						}	
 						userDelta = userId;
@@ -639,6 +641,7 @@ append scripts
 				})	
 
 				//- output lock out Note 
+				table.appendChild(tbody)
 				mainSC.append(table);	
 				
 			});
