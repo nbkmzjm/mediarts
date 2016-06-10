@@ -151,25 +151,25 @@ append scripts
 				var thead = document.createElement('thead')
 					var tr = document.createElement('tr');
 						//- tr.setAttribute('style', 'position:fixed;')
-						var td = document.createElement('td');
-							td.appendChild(document.createTextNode('User'));
+						var th = document.createElement('th');
+							th.appendChild(document.createTextNode('User'));
 							//- td.setAttribute('style', 'position:fixed;top:100px;')
 							
-						tr.appendChild(td);
+						tr.appendChild(th);
 						for (var i=0; i<7; i++){
 							 
-							var td = document.createElement('td');
+							var th = document.createElement('th');
 							//- td.setAttribute('style', 'position:fixed;')
 							//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
 							//- td.appendChild(document.createElement('br'))
-							td.innerHTML = dateHeader.format('ddd , MMM DD')
+							th.innerHTML = dateHeader.format('ddd , MMM DD')
 							dateHeader.isSame(lockoutDate)?
-							td.style.backgroundColor= 'red':''
+							th.style.backgroundColor= 'red':''
 							dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
-							td.style.backgroundColor= 'green':''
+							th.style.backgroundColor= 'green':''
 							dateHeader.isSame(moment(lockoutDate).subtract(21, 'days'))?
-							td.style.backgroundColor= 'yellow':''
-							tr.appendChild(td);
+							th.style.backgroundColor= 'yellow':''
+							tr.appendChild(th);
 
 							dateHeader.add(1, 'days');
 						}
