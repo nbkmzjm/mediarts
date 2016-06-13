@@ -137,6 +137,10 @@
 
 }
 
+#calendarPick{
+	bottom: -15px
+}
+
 
 [draggable=true] {
   -khtml-user-drag: element;
