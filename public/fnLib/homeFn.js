@@ -63,7 +63,7 @@ function calendarPick(){
 						// a.href = "#"
 							var dateCalender = document.createElement('input');
 							dateCalender.id = 'calendar';
-							
+							dateCalender.readonly = true
 							// dateCalender.type = 'hidden'
 							dateCalender.style.textAlign = 'center'
 							dateCalender.style.fontWeight = 'bold'
@@ -82,10 +82,10 @@ function calendarPick(){
 						$('#eventActionTable').length>0 ? 
 						$('#eventActionTable').remove():'';
 						$("#calendar").datepicker({
-							beforeShow: function(){
-								alert('blco')
-								$("#calendar").blur()
-							},
+							// beforeShow: function(){
+							// 	// alert('blco')
+							// 	$("#calendar").blur()
+							// },
 							onSelect: function(){
 								$.post('/ajaxUser').done(mainSC);
 							}
