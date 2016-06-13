@@ -62,7 +62,15 @@ append scripts
 			calendarPick();
 			
 			$.post('/ajaxUser').done(mainSC, function(){
-				
+				setInterval(function(){
+					//- alert('5 second')
+					document.getElementById('SELECT').checked = true
+					activeOptionText('SELECT')
+				}, 30000)
+
+				document.getElementById('optionTextS').addEventListener('click',function(){
+					$.scrollTo(document.getElementById(SELECT),800, {offset:{top:-100}});
+				})
 			});
 			
 
@@ -146,7 +154,7 @@ append scripts
 
 				var table = document.createElement('table');
 				table.setAttribute('id', 'main');
-				table.setAttribute('class','table table-striped')
+				//- table.setAttribute('class','table table-striped')
 				var thead = document.createElement('thead')
 					var tr = document.createElement('tr');
 						//- tr.setAttribute('style', 'position:fixed;')
@@ -834,7 +842,6 @@ append scripts
 							$('#memo').hide()
 							activeOptionText(taskOptionDes)
 							$('#taskOption').length>0?$('#taskOption').remove():''
-							
 							var taskOptionLI = document.createElement('li')
 							taskOptionLI.style.color = 'blue'
 							taskOptionLI.style.textDecoration= 'underline'
@@ -843,7 +850,6 @@ append scripts
 							
 
 								var inputAddOp = document.createElement('input');
-								inputAddOp.className = "col-sm-3 col-sm-offset-1"
 
 								inputAddOp.setAttribute('placeholder','Add Option');
 								inputAddOp.setAttribute('type','text');
@@ -857,7 +863,6 @@ append scripts
 									inputAddOpCateLI.style.listStyle = 'none'
 
 										var inputAddOpCate = document.createElement('input');
-										inputAddOpCate.className = "col-sm-3 col-sm-offset-1"
 
 										inputAddOpCate.setAttribute('placeholder','Add Category');
 										inputAddOpCate.setAttribute('type','text');

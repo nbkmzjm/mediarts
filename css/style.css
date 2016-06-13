@@ -17,7 +17,7 @@
 #mainSC{
 	width: 100%;
 	position: relative;
-	top: 195px;
+	top: 200px;
 
 }
 
@@ -40,7 +40,7 @@
 }
 #main thead th{
 	min-width: 65px;
-	width: 6%;
+	width: 1200px;
 	/*border: 2px solid #FFFFFF;*/
 	padding: 2px;
 	/*color: #00A478;*/
@@ -50,7 +50,7 @@
 #main td{
 	/*width: 100%;*/
 	min-width: 65px;
-	width: 5%;
+	width: 1200px;
 	border: 2px solid #FFFFFF;
 	padding: 2px;
 	/*color: #00A478;*/
@@ -108,7 +108,7 @@
 
 #eventAction{
 	position: relative;
-	top: 95px;
+	top: 98px;
 }
 
 #eventActionTable{
