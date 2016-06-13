@@ -92,7 +92,7 @@ function calendarPick(){
 							
 						});
 
-						dateCalender.focus()
+						// dateCalender.focus()
 
 					})
 					
