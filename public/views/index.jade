@@ -62,14 +62,14 @@ append scripts
 			calendarPick();
 			
 			$.post('/ajaxUser').done(mainSC, function(){
-				setInterval(function(){
-					//- alert('5 second')
-					document.getElementById('SELECT').checked = true
-					activeOptionText('SELECT')
-				}, 30000)
+				//- setInterval(function(){
+				//- 	//- alert('5 second')
+				//- 	document.getElementById('SELECT').checked = true
+				//- 	activeOptionText('SELECT')
+				//- }, 30000)
 
 				document.getElementById('optionTextS').addEventListener('click',function(){
-					//- $.scrollTo(document.getElementById('SELECT'),800, {offset:{top:-200}});
+					$.scrollTo(document.getElementById('SELECT'),800, {offset:{top:-200}});
 				})
 			});
 			
@@ -670,9 +670,11 @@ append scripts
 			li.style.textDecoration= 'underline'
 			li.style.width = '200px'
 			li.style.listStyle = 'none'
+			//- li.setAttribute('style','z-index:-1;')
+
 				var inputMemo = document.createElement('input');
 				//- inputMemo.className = "col-sm-12"
-
+				inputMemo.setAttribute('style','z-index:1')
 				inputMemo.setAttribute('placeholder','Add Memo');
 				inputMemo.setAttribute('type','text');
 				inputMemo.setAttribute('id','memo');
