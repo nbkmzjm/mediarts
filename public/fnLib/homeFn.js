@@ -78,11 +78,19 @@ function calendarPick(){
 					li.appendChild(span)
 				
 					li.addEventListener('click', function(){
+						// $("#calendar").blur()
 						$('#eventActionTable').length>0 ? 
 						$('#eventActionTable').remove():'';
-						$("#calendar").datepicker({onSelect: function(){
-							$.post('/ajaxUser').done(mainSC);
-						}});
+						$("#calendar").datepicker({
+							beforeShow: function(){
+								alert('blco')
+								$("#calendar").blur()
+							},
+							onSelect: function(){
+								$.post('/ajaxUser').done(mainSC);
+							}
+							
+						});
 
 						dateCalender.focus()
 
