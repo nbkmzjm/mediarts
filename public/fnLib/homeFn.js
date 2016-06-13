@@ -63,7 +63,7 @@ function calendarPick(){
 						// a.href = "#"
 							var dateCalender = document.createElement('input');
 							dateCalender.id = 'calendar';
-							dateCalender.readonly = true
+							dateCalender.setAttribute('readonly', true)
 							// dateCalender.type = 'hidden'
 							dateCalender.style.textAlign = 'center'
 							dateCalender.style.fontWeight = 'bold'
