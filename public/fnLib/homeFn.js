@@ -79,8 +79,8 @@ function calendarPick(){
 				
 					li.addEventListener('click', function(){
 						// $("#calendar").blur()
-						$('#eventActionTable').length>0 ? 
-						$('#eventActionTable').remove():'';
+						// $('#eventActionTable').length>0 ? 
+						// $('#eventActionTable').remove():'';
 						$("#calendar").datepicker({
 							// beforeShow: function(){
 							// 	// alert('blco')
