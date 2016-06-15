@@ -63,9 +63,29 @@ var umzug = new Umzug({
 	}
 });
 
+io.on('connection', function(socket) {
+	console.log('user connect to socket io');
+
+	socket.emit('message', {
+		text: 'welcomex to schedule app',
+		Note: 'first'
+	});
+
+	socket.emit('test', {
+		text1: 'testtext',
+		Note: 'testNote'
+	});
+
+
+});
+
+app.get('/message', function(req, res){
+	res.render('message/messageHome')
+	
+})
 
 app.get('/test', function(req, res){
-	res.render('test')
+	
 	// res.send('hey hey')
 })
 
@@ -96,7 +116,6 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 
 app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
 	var varList = req.body.pData
-	console.log(varList)
 	
 	db.sysObj.findAll({
 		where:{
@@ -135,8 +154,6 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
 	var sDate = moment(new Date(req.body.sDate)).format('MM-DD-YYYY')
 
-	console.log(sDate)
-	console.log(eDate)
 	db.assign.findAll({
 		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
 		include:[{
@@ -212,8 +229,6 @@ app.post('/assignTracerReadWeek', middleware.requireAuthentication, function(req
 	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
 	var sDate = moment(new Date(req.body.sDate)).format('MM-DD-YYYY')
 
-	console.log(sDate)
-	console.log(eDate)
 	db.assign.findAll({
 		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
 		include:[{
@@ -236,7 +251,7 @@ app.post('/assignTracerReadWeek', middleware.requireAuthentication, function(req
 			]
 	}).then(function(assigns){
 		
-		console.log(JSON.stringify(assigns, null, 4))
+		// console.log(JSON.stringify(assigns, null, 4))
 		res.json({
 			assigns
 		})
@@ -390,7 +405,6 @@ app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 	}).spread(function(created, taskOption){
 		
 		taskOption.category = category
-		console.log(JSON.stringify(taskOption, null, 4))
 		res.json({
 				created,
 				taskOption:taskOption

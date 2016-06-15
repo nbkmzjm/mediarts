@@ -138,6 +138,11 @@
 
 }
 
+#msgMonitor{
+	position: relative;;
+	top: 100px;
+}
+
 #calendarPick{
 	bottom: -15px
 }
