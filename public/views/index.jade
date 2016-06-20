@@ -342,6 +342,8 @@ append scripts
 									return function(){
 										$('#eventAction').stop()
 										$('#eventAction').fadeIn()
+										$('#SCNote').stop()
+										$('#SCNote').fadeIn()
 										var Note = assign.Note
 										var dateSC = assign.datePos
 										var selDate = moment(dateSC,'MM-DD-YYYY')
@@ -429,9 +431,15 @@ append scripts
 																td.innerHTML = tracer
 																window['tr' + i].appendChild(td)
 																var td2 = document.createElement('td')
-																i==0?
-																td2.innerHTML = datePos:
-																td2.innerHTML = ''
+																if(i==0 && dateSC == datePos){
+																	
+																	td2.innerHTML = datePos
+																	td2.style.backgroundColor = 'yellow'
+																}else if(i==0){
+																	td2.innerHTML = datePos
+																}else{
+																	td2.innerHTML = ''
+																}
 																td2.style.fontWeight = 'bold'
 																
 																window['tr' + i].appendChild(td2)
@@ -517,7 +525,7 @@ append scripts
 													})
 												}
 											}
-											$('#eventAction').append(table, $('#eventAction').fadeOut(5000, function(){
+											$('#eventAction').append(table, $('#eventAction').fadeOut(4000, function(){
 												//- $('#eventAction').fadeIn()
 											}))
 											
@@ -540,11 +548,14 @@ append scripts
 										arrayTitle_manager.indexOf(curUserTitle) == -1&&
 										["SWIT-R","SWIT-A","SWIT-X"].indexOf(taskSC) == -1){
 											SCNote.innerHTML= 'You are not authorized for this action'
+											
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
-											$('#SCNote').show(2000, function(){
-													$('#SCNote').hide()
-												})
+											$('#SCNote').fadeIn(1000, function(){
+													setTimeout(function(){
+													$('#SCNote').fadeOut()
+												}, 3000)
+											})
 										}else if (taskSC=="PTO-R" && 
 										selDate.isBefore(lockoutDate) && 
 										arrayTitle_manager.indexOf(curUserTitle) == -1){
@@ -552,8 +563,10 @@ append scripts
 												SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
 												$('#SCNoteDiv').html('')
 												$('#SCNoteDiv').html(SCNote)
-												$('#SCNote').show(2000, function(){
-													$('#SCNote').hide()
+												$('#SCNote').fadeIn(1000, function(){
+													setTimeout(function(){
+													$('#SCNote').fadeOut()
+													}, 3000)
 												})
 											}
 										
@@ -570,7 +583,9 @@ append scripts
 							td.addEventListener('click',function(userId,dateSC){
 								
 								return function(){
-									//- $('#SCNote').stop()
+									$('#SCNote').stop()
+									$('#SCNote').fadeIn()
+
 									var selDate = moment(dateSC,'MM-DD-YYYY')
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 
@@ -588,9 +603,11 @@ append scripts
 										SCNote.innerHTML= 'You are not authorized for this action'
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
-										$('#SCNote').show(2000, function(){
-												$('#SCNote').hide()
-											})
+										$('#SCNote').fadeIn(1000, function(){
+											setTimeout(function(){
+												$('#SCNote').fadeOut()
+											}, 3000)
+										})
 									}else if (taskSC=="PTO-R" && 
 									selDate.isBefore(lockoutDate) && 
 									arrayTitle_manager.indexOf(curUserTitle) == -1){
@@ -598,8 +615,10 @@ append scripts
 											SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
-											$('#SCNote').show(2000, function(){
-												$('#SCNote').hide()
+											$('#SCNote').fadeIn(1000, function(){
+													setTimeout(function(){
+													$('#SCNote').fadeOut()
+												}, 3000)
 											})
 										}
 									
