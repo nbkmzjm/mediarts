@@ -560,7 +560,7 @@ append scripts
 										selDate.isBefore(lockoutDate) && 
 										arrayTitle_manager.indexOf(curUserTitle) == -1){
 											if(selDate.isBefore(lockoutDate) && arrayTitle_manager.indexOf(curUserTitle) == -1){
-												SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
+												SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
 												$('#SCNoteDiv').html('')
 												$('#SCNoteDiv').html(SCNote)
 												$('#SCNote').fadeIn(1000, function(){
@@ -612,7 +612,7 @@ append scripts
 									selDate.isBefore(lockoutDate) && 
 									arrayTitle_manager.indexOf(curUserTitle) == -1){
 										if(selDate.isBefore(lockoutDate) && arrayTitle_manager.indexOf(curUserTitle) == -1){
-											SCNote.innerHTML = 'PTO input will not be available after '+ lockoutDate.format('MM-DD-YYYY')
+											SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
 											$('#SCNoteDiv').html('')
 											$('#SCNoteDiv').html(SCNote)
 											$('#SCNote').fadeIn(1000, function(){
