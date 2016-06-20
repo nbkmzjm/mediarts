@@ -686,7 +686,7 @@ append scripts
 
 		function inputMemo(ul, lix){
 			var li = document.createElement('li')
-			li.style.color = 'blue'
+			
 			li.style.textDecoration= 'underline'
 			li.style.width = '200px'
 			li.style.listStyle = 'none'
@@ -694,7 +694,9 @@ append scripts
 
 				var inputMemo = document.createElement('input');
 				//- inputMemo.className = "col-sm-12"
-				inputMemo.setAttribute('style','z-index:1')
+				inputMemo.setAttribute('style','z-index:-1')
+				inputMemo.style.backgroundColor = 'black'
+				inputMemo.style.color = 'white'
 				inputMemo.setAttribute('placeholder','Add Memo');
 				inputMemo.setAttribute('type','text');
 				inputMemo.setAttribute('id','memo');
