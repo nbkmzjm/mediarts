@@ -64,33 +64,7 @@ var umzug = new Umzug({
 });
 
 
-var serialPort = require('serialport')
-SerialPort = serialPort.SerialPort
-serialPort.list(function(err, ports){
-	ports.forEach(function(port){
-		console.log(port.comName)
-	})
-})
 
-portName = process.argv[2]
-var myPort = new SerialPort('COM3', {
-	baudRate: 9600,
-	parser: serialPort.parsers.readline('\n')
-})
-
-myPort.on('open', function(){
-	console.log('port open at: ' + myPort.options.baudRate)
-})
-
-myPort.on('error', function(error){
-	console.log('errorx: ' + error)
-})
-
-myPort.on('data', sendSerial)
-
-function sendSerial(data){
-	console.log(data)
-}
 
 io.on('connection', function(socket) {
 	console.log('user connect to socket io');
