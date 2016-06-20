@@ -556,7 +556,7 @@ append scripts
 													$('#SCNote').fadeOut()
 												}, 3000)
 											})
-										}else if (taskSC=="PTO-R" && 
+										}else if ((taskSC=="PTO-R" || taskSC=="DELETE") && 
 										selDate.isBefore(lockoutDate) && 
 										arrayTitle_manager.indexOf(curUserTitle) == -1){
 											if(selDate.isBefore(lockoutDate) && arrayTitle_manager.indexOf(curUserTitle) == -1){
