@@ -175,8 +175,8 @@ append scripts
 							th.style.backgroundColor= 'red':''
 							dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
 							th.style.backgroundColor= 'green':''
-							dateHeader.isSame(moment(lockoutDate).subtract(21, 'days'))?
-							th.style.backgroundColor= 'yellow':''
+							//- dateHeader.isSame(moment(lockoutDate).subtract(49, 'days'))?
+							//- th.style.backgroundColor= 'yellow':''
 							tr.appendChild(th);
 
 							dateHeader.add(1, 'days');
@@ -223,10 +223,10 @@ append scripts
 				var today = moment()
 
 				
-				var date21LK = moment(lockoutDate).subtract(21, 'days')
+				//- var date21LK = moment(lockoutDate).subtract(21, 'days')
 				var date28LK = moment(lockoutDate).subtract(28, 'days')
 				
-				if (today > date21LK){
+				if (today > date28LK){
 
 					lockoutDate.add(28, 'days')
 
