@@ -13,66 +13,67 @@ block horMenu
 
 block content
 	#container
-		ul(class="nav nav-tabs")
-			li(class="active" id='userListTab')
-				a(data-toggle="tab" href="#userList") Users
-			li(id='userFormTab')
-				a(data-toggle="tab"  href="#userForm") Add User
+		#userContainer
+			ul(class="nav nav-tabs")
+				li(class="active" id='userListTab')
+					a(data-toggle="tab" href="#userList") Users
+				li(id='userFormTab')
+					a(data-toggle="tab"  href="#userForm") Add User
 
-		div(class="tab-content")
-			div(id="userList" class="tab-pane fade in active")
+			div(class="tab-content")
+				div(id="userList" class="tab-pane fade in active")
 
-			div(id="userForm" class="tab-pane")
-				br
-				form(class="form-horizontal" autocomplete="off" id='form' action="/users/addUser" method="POST")
-					div(class="form-group")
-						label(class="control-label col-sm-2" for="name") Full Name
-						div(class="col-sm-4")
-							input(type="hidden" class="form-control" id="id" name="id" value='0')
-							input(type="text" class="form-control" id="name" name="name" placeholder="Enter Full Name" )
-					div(class="form-group")
-						label(class="control-label col-sm-2" for="email") Email
-						div(class="col-sm-4")
-							input(type="email" class="form-control" id="email" name="email" placeholder="Enter Email")
-					div(class="form-group")
-						label(class="control-label col-sm-2" for="username") Username
-						div(class="col-sm-4")
-							input(type="text" class="form-control" id="username" name="usern" placeholder="Enter Username")
-					div(class="form-group")
-						label(class="control-label col-sm-2" for="password") Password
-						div(class="col-sm-4")
-							input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" )
-					div(class="form-group")
-						label(class="control-label col-sm-2" for="title") Title
-						div(class="col-sm-4")
-							select(name="title" class="form-control" id="title")
-								option(value="") Select One
-								option(value="Admin") Administrator
-								option(value="RPh") RPh
-								option(value="RPh Float") RPh Float
-								option(value="Manager") Manager
-								option(value="Techn 2") Technician 2
-								option(value="Techn 3") Technician 3
-								option(value="Techn TPN") Technician TPN
-								option(value="Techn Float") Technician Float
-					div(class="form-group")
-						label(class="control-label col-sm-2" for="active") Active
-						div(class="col-sm-1")
-							input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
-						label(class="control-label col-sm-2" for="passreset") Reset Password
-						div(class="col-sm-1")
-							input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value=true disabled=true)
+				div(id="userForm" class="tab-pane")
+					br
+					form(class="form-horizontal" autocomplete="off" id='form' action="/users/addUser" method="POST")
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="name") Full Name
+							div(class="col-sm-4")
+								input(type="hidden" class="form-control" id="id" name="id" value='0')
+								input(type="text" class="form-control" id="name" name="name" placeholder="Enter Full Name" )
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="email") Email
+							div(class="col-sm-4")
+								input(type="email" class="form-control" id="email" name="email" placeholder="Enter Email")
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="username") Username
+							div(class="col-sm-4")
+								input(type="text" class="form-control" id="username" name="usern" placeholder="Enter Username")
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="password") Password
+							div(class="col-sm-4")
+								input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" )
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="title") Title
+							div(class="col-sm-4")
+								select(name="title" class="form-control" id="title")
+									option(value="") Select One
+									option(value="Admin") Administrator
+									option(value="RPh") RPh
+									option(value="RPh Float") RPh Float
+									option(value="Manager") Manager
+									option(value="Techn 2") Technician 2
+									option(value="Techn 3") Technician 3
+									option(value="Techn TPN") Technician TPN
+									option(value="Techn Float") Technician Float
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="active") Active
+							div(class="col-sm-1")
+								input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
+							label(class="control-label col-sm-2" for="passreset") Reset Password
+							div(class="col-sm-1")
+								input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value=true disabled=true)
 
 
-					div(class="form-group")
-						div(class="col-sm-offset-2 col-sm-3")
-							button(type="submit" id='submit' class="btn btn-primary") Submit
+						div(class="form-group")
+							div(class="col-sm-offset-2 col-sm-3")
+								button(type="submit" id='submit' class="btn btn-primary") Submit
 
-					- if (errors)
-						p.error Please check following items:
-						- each error in errors
-							li.error= error.msg
-				div#errors
+						- if (errors)
+							p.error Please check following items:
+							- each error in errors
+								li.error= error.msg
+					div#errors
 
 
 		
