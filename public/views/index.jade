@@ -394,7 +394,7 @@ append scripts
 											})
 
 											
-											
+											console.log(JSON.stringify(userTitle, null, 4))
 											if(assign.userId==curUserId){
 												console.log(true)
 												var tr = document.createElement('tr')
@@ -478,7 +478,7 @@ append scripts
 
 
 											}else{
-												if(arrayTitle_manager.indexOf(curUserTitle) != -1){
+												if(arrayTitle_manager.indexOf(curUserTitle) != -1||userTitle=="Admin"){
 													var tr = document.createElement('tr')
 													var arrayField = ['Event Changes for '+ assign.datePos, 'Acknowledged']
 
