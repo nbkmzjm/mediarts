@@ -301,7 +301,7 @@ append scripts
 											
 											if(assignTracer.Read == false){
 												if (i == 0){
-													firstTracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>xxxxxx'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
+													firstTracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
 												}else{
 													tracer += assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b><br>"
 												}
