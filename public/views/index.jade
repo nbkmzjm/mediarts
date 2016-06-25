@@ -301,7 +301,7 @@ append scripts
 											
 											if(assignTracer.Read == false){
 												if (i == 0){
-													firstTracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
+													firstTracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>xxxxxx'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
 												}else{
 													tracer += assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b><br>"
 												}
@@ -349,7 +349,7 @@ append scripts
 										var selDate = moment(dateSC,'MM-DD-YYYY')
 										var memo = $('#memo').val()
 										var taskSC = $('input[name=PTO]:checked').attr('value');
-											
+										
 										var arrayTitle_manager = ['Admin', 'Manager']
 
 
@@ -445,24 +445,29 @@ append scripts
 																window['tr' + i].appendChild(td2)
 																var td1 = document.createElement('td')
 																	var input = document.createElement('input')
-																	input.type = 'checkbox'
-																	input.id = 'read'
-																	input.name = 'read'
-																	if (assignTracer.Read == true){
-																		input.checked = true
-																		input.disabled = true
-																	} else{
+																	if (assignTracer.Read == '0'){
+																		input.type = 'checkbox'
+																		input.id = 'read'
+																		input.name = 'read'
 																		input.checked = false
-																	}
-																	input.addEventListener('click',function(){
-																		$.post('/assignTracerReadUpd',{assignTracerId:assignTracer.id}).done(function(Rdata){
-																			if(Rdata.updated==1){
-																			input.checked = true
-																			input.disabled = true
-																			}
-																		})
 																		
-																	})
+																		input.addEventListener('click',function(){
+																			$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
+																				curUserName:curUser.name
+
+																			}).done(function(Rdata){
+																				if(Rdata.updated==1){
+																				input.checked = true
+																				input.disabled = true
+																				}
+																			})
+																			
+																		})
+																	}else{
+																		var input = document.createElement('span')
+																		input.id = 'read'
+																		input.innerHTML = assignTracer.Read
+																	}
 																td1.appendChild(input)
 																window['tr' + i].appendChild(td1)
 															
@@ -499,24 +504,29 @@ append scripts
 																window['tr' + i].appendChild(td)
 																var td1 = document.createElement('td')
 																	var input = document.createElement('input')
-																	input.type = 'checkbox'
-																	input.id = 'read'
-																	input.name = 'read'
-																	if (assignTracer.Read == true){
-																		input.checked = true
-																		input.disabled = true
-																	} else{
+																	if (assignTracer.Read == '0'){
+																		input.type = 'checkbox'
+																		input.id = 'read'
+																		input.name = 'read'
 																		input.checked = false
-																	}
-																	input.addEventListener('click',function(){
-																		$.post('/assignTracerReadUpd',{assignTracerId:assignTracer.id}).done(function(Rdata){
-																			if(Rdata.updated==1){
-																			input.checked = true
-																			input.disabled = true
-																			}
-																		})
 																		
-																	})
+																		input.addEventListener('click',function(){
+																			$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
+																				curUserName:curUser.name
+
+																			}).done(function(Rdata){
+																				if(Rdata.updated==1){
+																				input.checked = true
+																				input.disabled = true
+																				}
+																			})
+																			
+																		})
+																	}else{
+																		var input = document.createElement('span')
+																		input.id = 'read'
+																		input.innerHTML = assignTracer.Read
+																	}
 																td1.appendChild(input)
 																window['tr' + i].appendChild(td1)
 															
@@ -583,8 +593,10 @@ append scripts
 							td.addEventListener('click',function(userId,dateSC){
 								
 								return function(){
+									var memo = $('#memo').val()
 									$('#SCNote').stop()
 									$('#SCNote').fadeIn()
+
 
 									var selDate = moment(dateSC,'MM-DD-YYYY')
 									var taskSC = $('input[name=PTO]:checked').attr('value');

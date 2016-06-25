@@ -187,8 +187,9 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 
 app.post('/assignTracerReadUpd', middleware.requireAuthentication, function(req, res) {
 	var assignTracerId = req.body.assignTracerId;
+	var curUserName = req.body.curUserName;
 	db.assignTracer.update({
-		Read:true
+		Read:curUserName
 	}, {
 		where:{id:assignTracerId}
 	}).then(function(updated){
