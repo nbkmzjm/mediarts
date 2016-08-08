@@ -502,7 +502,7 @@ app.use('/users', user);
 
 
 db.sequelize.sync(
-	{force: false}
+	{force: true}
 	).then(function() {
 		
 		http.listen(PORT, function() {
