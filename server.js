@@ -485,23 +485,11 @@ var user = require('./server/serverUser.js');
 app.use('/users', user);
 
 
-umzug.up().then(function (migrations) {
-	console.log(migrations)
-  // "migrations" will be an Array with the names of
-  // pending migrations.
-  	db.sequelize.sync(
-	{force: false}
-	).then(function() {
-		
-		http.listen(PORT, function() {
-			console.log('Helllo Express server started on PORT ' + PORT);
-		});
-
-	});
-});
-
-
-// db.sequelize.sync(
+// umzug.up().then(function (migrations) {
+// 	console.log(migrations)
+//   // "migrations" will be an Array with the names of
+//   // pending migrations.
+//   	db.sequelize.sync(
 // 	{force: false}
 // 	).then(function() {
 		
@@ -510,3 +498,15 @@ umzug.up().then(function (migrations) {
 // 		});
 
 // 	});
+// });
+
+
+db.sequelize.sync(
+	{force: false}
+	).then(function() {
+		
+		http.listen(PORT, function() {
+			console.log('Helllo Express server started on PORT ' + PORT);
+		});
+
+	});
