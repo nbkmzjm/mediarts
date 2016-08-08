@@ -31,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
 		,
 		Read:{
 			type: DataTypes.STRING,
-			defaultValue: false
+			defaultValue: "0"
 		}
 		
 
